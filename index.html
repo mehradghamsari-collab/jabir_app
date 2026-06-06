@@ -986,7 +986,7 @@ let S = {
 };
 let uidc=1; const uid=()=>'r'+(uidc++)+'-'+Date.now().toString(36);
 
-function persist(){ Store.set('olfact:'+S.email, JSON.stringify({prefs:S.prefs,product:S.product,formula:S.formula,accords:S.accords,collections:S.collections,library:S.library,equipment:S.equipment,densities:S.densities,costs:S.costs,costUnits:S.costUnits,account:S.account})); }
+function persist(){ Store.set('olfact:'+S.email, JSON.stringify({name:S.name,prefs:S.prefs,product:S.product,formula:S.formula,accords:S.accords,collections:S.collections,library:S.library,equipment:S.equipment,densities:S.densities,costs:S.costs,costUnits:S.costUnits,account:S.account})); }
 function load(email){
   const raw = Store.get('olfact:'+email);
   if(raw){ try{ const d=JSON.parse(raw); Object.assign(S,{email},d); if(!S.densities)S.densities={}; if(!S.costs)S.costs={}; if(!S.costUnits)S.costUnits={}; if(!S.equipment)S.equipment=[]; if(!S.account)S.account={paid:false,plan:'free',since:null}; if(!S.prefs.currency)S.prefs.currency='$'; }catch(e){ S.email=email; } }
@@ -1142,8 +1142,8 @@ const SEC=id=>SECTIONS.find(s=>s.id===id);
 
 /* tabs = the navigation views */
 const TABS=[
- {id:'perfumery', icon:'🧪', summary:true, sections:['product','ai','inspiration','type','accord','formula','matrix','analysis']},
- {id:'library', icon:'🌿', sections:['psearch','library']},
+ {id:'perfumery', icon:'🧪', summary:true, sections:['product','ai','psearch','inspiration','type','accord','formula','matrix','analysis']},
+ {id:'library', icon:'🌿', sections:['library']},
  {id:'collections', icon:'📚', sections:['collection','commercial']},
  {id:'education', icon:'🎓', sections:['education']},
  {id:'equipment', icon:'🧰', sections:['equipment']},
@@ -1537,12 +1537,40 @@ function topDescriptors(layer){
 }
 
 /* ---- COLLECTIONS ---- */
+function suggestColor(formula){
+  const tally={}; (formula||[]).forEach(r=>{const m=MAT_BY_ID[r.matId]; if(m&&isAromatic(m)) tally[m.family]=(tally[m.family]||0)+(+r.finalPct||0);});
+  const top=Object.entries(tally).sort((a,b)=>b[1]-a[1])[0];
+  const cmap={citrus:'#f0d060',floral:'#f5a0c0',woody:'#a07848',resin:'#c89040',spice:'#d06030',green:'#90c060',aquatic:'#60b8c0',gourmand:'#c0904a',musk:'#c0b4d0',amber:'#d09040',leather:'#6a4030',animalic:'#907060',mossy:'#607850',aldehyde:'#d0d4dc',fruity:'#f0a070',herb:'#80a050'};
+  return top?(cmap[top[0]]||'#bd9a4e'):'#bd9a4e';
+}
+function suggestName(formula){
+  const tally={}; (formula||[]).forEach(r=>{const m=MAT_BY_ID[r.matId]; if(m&&isAromatic(m)){(m.tags||[]).forEach(t=>{tally[t]=(tally[t]||0)+(+r.finalPct||0);});}});
+  const top3=Object.entries(tally).sort((a,b)=>b[1]-a[1]).slice(0,3).map(x=>x[0]);
+  const moods={fresh:'Breeze',warm:'Ember',sweet:'Nectar',woody:'Grove',smoky:'Smoke',citrus:'Zest',floral:'Bloom',spicy:'Flame',powdery:'Velvet',amber:'Amber',green:'Fern',aquatic:'Wave',creamy:'Silk',vanilla:'Caramel',leather:'Saddle',earthy:'Moss',fruity:'Orchard',musk:'Haze'};
+  return top3.map(t=>moods[t]||t).slice(0,2).join(' ')||'Untitled';
+}
 function renderCollection(){
-  if(!S.collections.length) return `<div class="empty">${LANG==='fa'?'هنوز فرمولی ذخیره نشده. یکی در ماشین‌حساب بسازید و سپس «ذخیره در مجموعه».':'No saved formulas yet. Build one in the calculator, then “Save to collection”.'}</div>${funBlock('collection')}`;
-  return `<div class="collgrid">${S.collections.map(c=>{
+  const fa=LANG==='fa';
+  if(!S.collections.length) return `<div class="empty">${fa?'هنوز فرمولی ذخیره نشده.':'No saved formulas yet. Build one in the calculator, then save.'}</div>${funBlock('collection')}`;
+  const allFams={}; S.collections.forEach(c=>(c.snapshot.formula||[]).forEach(r=>{const m=MAT_BY_ID[r.matId]; if(m&&isAromatic(m)) allFams[m.family]=(allFams[m.family]||0)+(+r.finalPct||0);}));
+  const famArr=Object.entries(allFams).sort((a,b)=>b[1]-a[1]).map(([f,v])=>({f,v}));
+  const famTot=famArr.reduce((s,x)=>s+x.v,0)||1;
+  return `
+  <div class="an-block"><div class="an-h">${fa?'تحلیل مجموعه':'Collection analytics'}</div>
+    <div class="summary-bar" style="margin-bottom:10px"><div class="chip-stat"><span>${fa?'فرمول‌ها':'Formulas'}</span><b>${S.collections.length}</b></div></div>
+    ${famArr.length?`<div class="muted" style="font-size:12px;margin-bottom:6px">${fa?'تنوع خانوادهٔ بویایی':'Scent family diversity'}</div>
+    <div class="costbars">${famArr.slice(0,8).map(x=>`<div class="cb-row"><span class="cb-n">${famLabel(x.f)}</span><div class="cb-track"><div class="cb-fill" style="width:${Math.round(x.v/famTot*100)}%;background:${famColor(x.f)}"></div></div><b class="cb-v">${Math.round(x.v/famTot*100)}%</b></div>`).join('')}</div>`:''}</div>
+  <div class="divider"></div>
+  <div class="collgrid">${S.collections.map(c=>{
     const prod=PRODUCTS.find(p=>p.id===c.snapshot.product.id)||{};
-    return `<div class="collcard"><h4>📖 ${c.name}</h4>
-      <div class="meta2">${prod.id?productName(prod):'—'} · ${c.snapshot.product.conc}% · ${c.snapshot.formula.length} ${LANG==='fa'?'ماده':'ingredients'}<br>${c.date}</div>
+    const col=suggestColor(c.snapshot.formula);
+    const autoName=suggestName(c.snapshot.formula);
+    return `<div class="collcard" style="border-left:4px solid ${col}">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
+        <div style="width:20px;height:20px;border-radius:5px;background:${col};flex:none" title="${fa?'رنگ پیشنهادی':'Suggested dye'}"></div>
+        <h4 style="flex:1">📖 ${c.name}</h4></div>
+      <div class="meta2">${prod.id?productName(prod):'—'} · ${c.snapshot.product.conc}% · ${c.snapshot.formula.length} ${fa?'ماده':'ingredients'}<br>${c.date}</div>
+      <div class="muted" style="font-size:11px;margin:4px 0 6px">💡 ${fa?'نام':'Name'}: <b>${autoName}</b></div>
       <button class="btn ghost tiny" onclick="loadCollection('${c.id}')">${t('btn_load')}</button>
       <button class="btn ghost tiny" onclick="delCollection('${c.id}')">${t('btn_delete')}</button></div>`;
   }).join('')}</div>${funBlock('collection')}`;
@@ -1649,8 +1677,16 @@ function renderAI(){
       ${lockGate()}</div>`;
   }
   const hasKey=true; /* Pro users use the server-side key */
+  const fa=LANG==='fa';
   return `
   <div class="muted" style="font-size:14px;margin-bottom:10px">${t('ai_intro')}</div>
+  <label class="lab">${fa?'این عطر برای چه کسی است؟':'Who is this perfume for?'}</label>
+  <div class="opt-grid" style="grid-template-columns:1fr 1fr 1fr;margin-bottom:12px;max-width:360px" id="aiGenderGrid">
+    <button class="opt sel" data-gender="unisex"><div class="t">${fa?'یونیسکس':'Unisex'}</div></button>
+    <button class="opt" data-gender="feminine"><div class="t">${fa?'زنانه':'Feminine'}</div></button>
+    <button class="opt" data-gender="masculine"><div class="t">${fa?'مردانه':'Masculine'}</div></button>
+  </div>
+  <label class="lab">${fa?'حس، حال‌وهوا یا خاطره':'Feeling, mood or memory'}</label>
   <textarea class="inp" id="aiIn" data-i18n-ph="ai_ph" placeholder="${t('ai_ph')}"></textarea>
   <div style="margin-top:10px;display:flex;gap:10px;align-items:center;flex-wrap:wrap">
     <button class="btn primary" id="aiGo">${t('btn_compose')}</button>
@@ -2117,22 +2153,25 @@ function aiPalette(){
 }
 function buildAIPrompt(feeling){
   const langName = LANG==='fa' ? 'Persian (Farsi)' : 'English';
-  return `You are a master perfumer composing a professional starting formula. The user will describe a feeling, mood, or memory.
-Design a balanced, COMPLETE perfume using ONLY materials from this palette, referenced by their EXACT names:
+  const genderEl=document.querySelector('#aiGenderGrid .opt.sel');
+  const gender=genderEl?genderEl.dataset.gender:'unisex';
+  const genderLabel={unisex:'unisex (for anyone)',feminine:'feminine (for women)',masculine:'masculine (for men)'}[gender]||'unisex';
+  return `You are a master perfumer composing a professional starting formula. The user describes a feeling, mood, or memory.
+This perfume is for: ${genderLabel}. Tailor the note selection accordingly.
+Design a balanced, COMPLETE perfume using ONLY materials from this palette (EXACT names):
 ${aiPalette()}
 
-CRITICAL REQUIREMENTS:
-- Use 8 to 14 materials total.
-- Include a clear top (15-25%), heart (30-45%) and base (25-40%) structure.
-- MUST include at least 1 fixative (e.g. Benzyl Benzoate, Ambroxan, Cetalox, Exaltolide, Vertofix).
-- MUST include at least 1 booster/blender (e.g. Hedione, Iso E Super, Linalool, Triethyl Citrate).
-- Include a solvent recommendation (e.g. Perfumer's Alcohol for spray, DPG for oil).
-- "percent" values are each material's share of the aromatic concentrate and should sum to about 100.
-- For EACH aromatic material, suggest 2 alternatives from the palette that could substitute it, with a similarity score 0-5 (5=nearly identical, 0=very different).
-- Write the "description" and each "why" in ${langName}.
+REQUIREMENTS:
+- 8 to 14 materials. Clear top (15-25%), heart (30-45%), base (25-40%).
+- MUST include at least 1 fixative and 1 booster/blender.
+- Include a solvent recommendation.
+- Percentages sum to ~100.
+- For EACH material, suggest 2 alternatives with similarity 0-5.
+- Write ALL text in ${langName}.
+- Add an "explanation" field: 2-3 sentences explaining WHY these specific notes were chosen together, how they create the desired mood, and why this combination works for ${genderLabel}.
 
-Return ONLY valid JSON, no markdown, in exactly this shape:
-{"description":"one vivid sentence","fragranceType":"short label","materials":[{"name":"EXACT name","percent":number,"role":"top|heart|base|fixative|booster|solvent","why":"a few words","alternatives":[{"name":"EXACT name","similarity":0-5},{"name":"EXACT name","similarity":0-5}]}]}
+Return ONLY valid JSON:
+{"description":"one vivid sentence","fragranceType":"label","explanation":"2-3 sentences on why these notes were chosen and how they work together for the target audience","materials":[{"name":"EXACT name","percent":number,"role":"top|heart|base|fixative|booster|solvent","why":"brief","alternatives":[{"name":"EXACT name","similarity":0-5},{"name":"EXACT name","similarity":0-5}]}]}
 
 User feeling: """${feeling.replace(/"/g,"'").slice(0,600)}"""`;
 }
@@ -2156,7 +2195,7 @@ async function composeWithAI(){
       return m?{m, percent:+r.percent||0, why:r.why||'', role:r.role||m.pos, alts}:null;
     }).filter(Boolean);
     if(!mapped.length) throw new Error('no-match');
-    lastAI={description:obj.description||'', type:obj.fragranceType||'', mats:mapped};
+    lastAI={description:obj.description||'', type:obj.fragranceType||'', mats:mapped, explanation:obj.explanation||''};
     out.innerHTML=renderAIResult(lastAI);
   }catch(e){
     out.innerHTML=`<div class="sugg"><div class="muted">⚠️ ${t('ai_error')}</div><div class="muted" style="font-size:11px;margin-top:6px;opacity:.7">${(e.message||'').slice(0,160)}</div></div>`;
@@ -2182,6 +2221,10 @@ function renderAIResult(r){
        </div>`:''}
      </div>`).join('')}
     <div style="margin-top:10px"><button class="btn primary tiny" onclick="applyAIFormula()">${t('ai_accept')}</button></div>
+    ${r.explanation?`<div class="funfact" style="margin-top:14px">
+      <div class="fi">🧠</div>
+      <div class="ft"><b>${fa?'چرا این نت‌ها؟':'Why these notes?'}</b><br>${r.explanation}</div>
+    </div>`:''}
   </div>`;
 }
 window.applyAIFormula=()=>{
@@ -2239,6 +2282,7 @@ function bindSection(id){
   }
   if(id==='ai'){
     const go=$('#aiGo'); if(go) go.onclick=composeWithAI;
+    $$('#aiGenderGrid .opt').forEach(b=>b.onclick=()=>{ $$('#aiGenderGrid .opt').forEach(x=>x.classList.remove('sel')); b.classList.add('sel'); });
   }
   if(id==='profile'){
     const bs=$('#pBasis'); if(bs) bs.onchange=e=>{ S.prefs.basis=e.target.value; persist(); renderSection('formula'); renderSection('product'); toast('Now measuring by '+(e.target.value==='weight'?'weight':'volume')); };
