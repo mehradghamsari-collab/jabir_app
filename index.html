@@ -391,6 +391,7 @@ footer{padding:34px 0 50px;text-align:center;color:var(--ink-soft);font-size:12.
         <label class="lab">Password</label>
         <input class="inp" id="passIn" type="password" placeholder="At least 6 characters" autocomplete="new-password">
         <div id="obAuthMsg" class="muted" style="font-size:12.5px;margin-top:10px;color:var(--spice)"></div>
+        <div style="margin-top:8px"><a href="#" id="forgotPass" style="font-size:12.5px;color:var(--gold-deep)">Forgot password?</a></div>
       </div>
       <!-- step 2: product -->
       <div class="step" data-step="1">
@@ -441,8 +442,14 @@ footer{padding:34px 0 50px;text-align:center;color:var(--ink-soft);font-size:12.
   <div id="view-container"></div>
 
   <footer>
-    JABIR · a perfumer's calculator. Always observe IFRA usage limits and patch-test before skin application.<br>
-    Concentration conventions and material data are educational starting points, not a substitute for professional safety assessment.
+    JABIR · a perfumer's calculator.<br>
+    Always observe IFRA usage limits and patch-test before skin application.<br>
+    Concentration conventions and material data are educational starting points, not a substitute for professional safety assessment.<br>
+    <div style="margin-top:12px;font-size:12px;opacity:.8">
+      Designed by <b>Mehrad Niasari</b> ·
+      <a href="https://youtube.com/@mehrad.explains" target="_blank" style="color:var(--gold-deep)">📺 mehrad.explains</a> ·
+      <a href="https://instagram.com/mehrad.knows" target="_blank" style="color:var(--gold-deep)">📸 mehrad.knows</a>
+    </div>
   </footer>
 </main>
 
@@ -517,6 +524,8 @@ const I18N={
   vibe_ph:'e.g. a warm, sensual winter evening by a fireplace — cosy, a little smoky, sweet but grown-up',
   nav_education:'Learn', vt_education:'<em>Learn</em> perfumery.', vi_education:'Video lessons, guides and articles on building fragrances — for members.',
   st_education:'Lessons & Articles', ss_education:'Watch, read, and level up your craft',
+  nav_equipment:'Assets', st_equipment:'Equipment & Assets', ss_equipment:'Your materials, tools and spending',
+  vt_equipment:'Your <em>assets.</em>', vi_equipment:'Track materials you own, lab tools, suppliers and total spend.',
   st_membership:'Membership', ss_membership:'Your plan and how to upgrade',
   st_admin:'Admin', ss_admin:'Codes, members and tools',
   lock_title:'A Jabir membership feature', lock_desc:'Unlock the AI composer, scent map and lessons with Jabir Pro — or enter an access code.',
@@ -574,6 +583,8 @@ const I18N={
   vibe_ph:'مثلاً یک شب گرم و دلنشین زمستانی کنار شومینه — دنج، کمی دودی، شیرین اما پخته',
   nav_education:'آموزش', vt_education:'<em>آموزش</em> عطرسازی.', vi_education:'ویدیوها، راهنماها و مقالات ساخت عطر — ویژهٔ اعضا.',
   st_education:'درس‌ها و مقالات', ss_education:'تماشا کنید، بخوانید و مهارتتان را بالا ببرید',
+  nav_equipment:'دارایی‌ها', st_equipment:'تجهیزات و دارایی‌ها', ss_equipment:'مواد، ابزارها و هزینه‌های شما',
+  vt_equipment:'<em>دارایی‌های</em> شما.', vi_equipment:'مواد خریداری‌شده، ابزارها، تأمین‌کنندگان و مجموع هزینه‌ها را پیگیری کنید.',
   st_membership:'عضویت', ss_membership:'طرح شما و نحوهٔ ارتقا',
   st_admin:'مدیریت', ss_admin:'کدها، اعضا و ابزارها',
   lock_title:'ویژگی عضویت جابر', lock_desc:'با جابر پرو به آهنگساز هوش مصنوعی، نقشهٔ رایحه و درس‌ها دسترسی پیدا کنید — یا یک کد دسترسی وارد کنید.',
@@ -932,7 +943,9 @@ window.resetDensity=(id)=>{ if(S.densities){ delete S.densities[id]; persist(); 
 const COST_FAM={citrus:0.5,fruity:0.8,floral:3,green:0.6,herb:0.5,aromatic:0.6,spice:1.2,woody:2,resin:1.5,amber:1.2,mossy:1.8,leather:1.2,animalic:6,musk:0.8,gourmand:1.2,aquatic:0.7,aldehyde:0.6,solvent:0.05,colour:0.2};
 const COST_OVERRIDE={'oud-agarwood':40,'oud-accord':3,'rose-absolute':12,'rose-otto':30,'jasmine-absolute':14,'jasmine-sambac':12,'tuberose-absolute':10,'orris-iris-butter':35,'saffron-safranal-':8,'ambrette-seed':9,'orange-blossom-absolute':9,'vanilla-absolute':6,'oakmoss':4,'sandalwood':6,'neroli':9,'frankincense-olibanum-':3,'beeswax-absolute':4,'cocoa-absolute':3,'immortelle-helichrysum-':7,'davana':6,'honey-absolute':5,'violet-leaf-absolute':12,'hyraceum-tincture':5,'myrrh':2.5,'guaiacwood':2};
 function baseCost(m){ if(COST_OVERRIDE[m.id]!=null) return COST_OVERRIDE[m.id]; const f=COST_FAM[m.family]!=null?COST_FAM[m.family]:1; const mult=(m.family==='solvent'||m.family==='colour')?1:(m.type==='n'?1.6:0.8); return Math.round(f*mult*100)/100; }
-function costOf(m){ return (S.costs&&S.costs[m.id]!=null)?+S.costs[m.id]:baseCost(m); }
+function costOf(m){ const raw=(S.costs&&S.costs[m.id]!=null)?+S.costs[m.id]:baseCost(m); const unit=(S.costUnits&&S.costUnits[m.id])||'g'; if(unit==='ml') return raw/den(m); return raw; }
+function costUnit(m){ return (S.costUnits&&S.costUnits[m.id])||'g'; }
+window.setCostUnit=(id,u)=>{ if(!S.costUnits)S.costUnits={}; S.costUnits[id]=u; persist(); renderSection('library'); renderSection('formula'); const ap=$('#pad-analysis'); if(ap) renderSection('analysis'); };
 function cur(){ return (S.prefs&&S.prefs.currency)||'$'; }
 window.setCost=(id,v)=>{ v=parseFloat(v); if(!isFinite(v)||v<0)return; if(!S.costs)S.costs={}; S.costs[id]=v; persist(); renderSection('formula'); const ap=$('#pad-analysis'); if(ap) renderSection('analysis'); toast(LANG==='fa'?'هزینه به‌روزرسانی شد':'Cost updated'); };
 window.resetCost=(id)=>{ if(S.costs){ delete S.costs[id]; persist(); } renderSection('library'); renderSection('formula'); };
@@ -944,20 +957,22 @@ let S = {
   email:'guest',
   prefs:{basis:'weight', fun:true, lang:LANG, currency:'$'},
   densities:{},        // {matId: density override}
-  costs:{},            // {matId: cost/g override}
+  costs:{},            // {matId: cost value}
+  costUnits:{},        // {matId: 'g'|'ml'} default g
   account:{paid:false, plan:'free', since:null},
   product:{id:'edt', conc:10, batch:30, unit:'ml'},
   formula:[],          // {uid, matId, kind:'material'|'accord', refId, finalPct, fixed}
   accords:[],          // {id,name,components:[{matId,pct}]}
   collections:[],      // {id,name,date,snapshot:{product,formula}}
   library:[],          // {id,name,brand,type,notes}
+  equipment:[],        // {id,type:'material'|'tool',name,supplier,price,volume,unit,matId,notes}
 };
 let uidc=1; const uid=()=>'r'+(uidc++)+'-'+Date.now().toString(36);
 
-function persist(){ Store.set('olfact:'+S.email, JSON.stringify({prefs:S.prefs,product:S.product,formula:S.formula,accords:S.accords,collections:S.collections,library:S.library,densities:S.densities,costs:S.costs,account:S.account})); }
+function persist(){ Store.set('olfact:'+S.email, JSON.stringify({prefs:S.prefs,product:S.product,formula:S.formula,accords:S.accords,collections:S.collections,library:S.library,equipment:S.equipment,densities:S.densities,costs:S.costs,costUnits:S.costUnits,account:S.account})); }
 function load(email){
   const raw = Store.get('olfact:'+email);
-  if(raw){ try{ const d=JSON.parse(raw); Object.assign(S,{email},d); if(!S.densities)S.densities={}; if(!S.costs)S.costs={}; if(!S.account)S.account={paid:false,plan:'free',since:null}; if(!S.prefs.currency)S.prefs.currency='$'; }catch(e){ S.email=email; } }
+  if(raw){ try{ const d=JSON.parse(raw); Object.assign(S,{email},d); if(!S.densities)S.densities={}; if(!S.costs)S.costs={}; if(!S.costUnits)S.costUnits={}; if(!S.equipment)S.equipment=[]; if(!S.account)S.account={paid:false,plan:'free',since:null}; if(!S.prefs.currency)S.prefs.currency='$'; }catch(e){ S.email=email; } }
   else { S.email=email; }
 }
 const ADMIN_EMAIL='rezaghamighami@gmail.com';
@@ -1099,6 +1114,7 @@ const SECTIONS=[
  {id:'collection', icon:'📚', g1:'#a87bb0',g2:'#9aa0c4'},
  {id:'commercial', icon:'🏛️', g1:'#8a5a44',g2:'#c95f3f'},
  {id:'education', icon:'🎓', g1:'#4fb0b8',g2:'#bd9a4e'},
+ {id:'equipment', icon:'🧰', g1:'#9c6b3f',g2:'#86b06a'},
  {id:'membership', icon:'⭐', g1:'#bd9a4e',g2:'#ef8a6a'},
  {id:'admin', icon:'🛠️', g1:'#211a17',g2:'#8a5a44'},
  {id:'account', icon:'👤', g1:'#bd9a4e',g2:'#e0789a'},
@@ -1112,6 +1128,7 @@ const TABS=[
  {id:'library', icon:'🌿', sections:['library']},
  {id:'collections', icon:'📚', sections:['collection','commercial']},
  {id:'education', icon:'🎓', sections:['education']},
+ {id:'equipment', icon:'🧰', sections:['equipment']},
  {id:'account', icon:'👤', sections:['account','membership','admin','profile']},
 ];
 let activeTab='perfumery';
@@ -1191,6 +1208,7 @@ function renderSection(id){
   if(id==='account') pad.innerHTML=renderAccount();
   if(id==='profile') pad.innerHTML=renderProfile();
   if(id==='education') pad.innerHTML=renderEducation();
+  if(id==='equipment') pad.innerHTML=renderEquipment();
   if(id==='membership') pad.innerHTML=renderMembership();
   if(id==='admin') pad.innerHTML=renderAdmin();
   bindSection(id);
@@ -1281,9 +1299,13 @@ function renderLibrary(pad){
 function paintGrid(){
   const grid=$('#matgrid'); if(!grid)return;
   const q=libSearch.toLowerCase();
+  const ownedIds=(S.equipment||[]).filter(e=>e.matId).map(e=>e.matId);
+  const isOwned=q.startsWith('owned:');
+  const realQ=isOwned?q.slice(6).trim():q;
   const list=MATERIALS.filter(m=>{
     if(libFilter!=='all'&&m.family!==libFilter)return false;
-    if(q){ return (m.name+' '+(MAT_FA[m.id]?MAT_FA[m.id].join(' '):'')+' '+m.desc+' '+m.tags.join(' ')+' '+m.family).toLowerCase().includes(q); }
+    if(isOwned&&!ownedIds.includes(m.id))return false;
+    if(realQ){ return (m.name+' '+(MAT_FA[m.id]?MAT_FA[m.id].join(' '):'')+' '+m.desc+' '+m.tags.join(' ')+' '+m.family).toLowerCase().includes(realQ); }
     return true;
   });
   grid.innerHTML = list.length? list.map(m=>`
@@ -1298,8 +1320,11 @@ function paintGrid(){
         <input class="deninp" type="number" step="0.001" min="0.5" max="1.5" value="${den(m)}" onchange="setDensity('${m.id}',this.value)">
         <span class="denunit">g/mL</span>${S.densities&&S.densities[m.id]!=null?`<button class="denreset" title="reset" onclick="resetDensity('${m.id}')">↺</button>`:''}</div>
       <div class="denrow"><span>${LANG==='fa'?'هزینه':'Cost'}</span>
-        <input class="deninp" type="number" step="0.01" min="0" value="${costOf(m)}" onchange="setCost('${m.id}',this.value)">
-        <span class="denunit">${cur()}/g</span>${S.costs&&S.costs[m.id]!=null?`<button class="denreset" title="reset" onclick="resetCost('${m.id}')">↺</button>`:''}</div>
+        <input class="deninp" type="number" step="0.01" min="0" value="${(S.costs&&S.costs[m.id]!=null)?S.costs[m.id]:baseCost(m)}" onchange="setCost('${m.id}',this.value)">
+        <select class="deninp" style="width:62px;padding:4px" onchange="setCostUnit('${m.id}',this.value)">
+          <option value="g" ${costUnit(m)==='g'?'selected':''}>${cur()}/g</option>
+          <option value="ml" ${costUnit(m)==='ml'?'selected':''}>${cur()}/mL</option>
+        </select>${S.costs&&S.costs[m.id]!=null?`<button class="denreset" title="reset" onclick="resetCost('${m.id}')">↺</button>`:''}</div>
       <button class="addbtn" title="${LANG==='fa'?'افزودن به فرمول':'Add to formula'}" onclick="addMaterial('${m.id}')">＋</button>
     </div>`).join('') : `<div class="empty">${LANG==='fa'?'ماده‌ای با این جستجو پیدا نشد.':'No materials match.'}</div>`;
 }
@@ -1499,7 +1524,10 @@ function renderAccount(){
     <div class="fi">🔒</div>
     <div class="ft"><b>${fa?'دربارهٔ داده‌های شما':'About your data'}</b><br>${fa?'این نمونه همه‌چیز را به‌صورت خصوصی در همین مرورگر و متصل به ایمیل شما نگه می‌دارد. چیزی آپلود نمی‌شود. راهنمای انتشار، روش افزودن حساب ابری واقعی با ورود بین دستگاه‌ها را توضیح می‌دهد.':'This prototype keeps everything privately in this browser, tied to your email. Nothing is uploaded. See the guide for real cloud accounts with sign-in across devices.'}</div>
   </div>
-  <div style="margin-top:16px"><button class="btn ghost" id="signOut">${t('btn_signout')}</button></div>`;
+  <div style="margin-top:16px;display:flex;gap:10px;flex-wrap:wrap">
+    <button class="btn ghost" id="signOut">${t('btn_signout')}</button>
+    <button class="btn ghost" id="switchAcct">${LANG==='fa'?'تعویض حساب':'Switch account'}</button>
+  </div>`;
 }
 
 /* ---- PROFILE / PREFERENCES ---- */
@@ -1660,22 +1688,33 @@ function donutSVG(arr){
   return `<svg viewBox="0 0 100 100" class="donut-svg">${seg}<circle cx="50" cy="50" r="${r-1}" fill="#fff"/></svg>`;
 }
 function journeySVG(top,heart,base){
-  const W=300,H=120,n=60,T=10; // hours
+  const W=320,H=140,pad=22,n=80,T=12;
   const f=(t,peak,decay,rise)=>{ const up=1-Math.exp(-t/rise); const dn=Math.exp(-Math.max(0,t-peak)/decay); return up*dn; };
   const curves=[
     {w:top, peak:0.1, rise:0.05, decay:0.8, c:'#e8b13a', n:LANG==='fa'?'سر':'Top'},
     {w:heart,peak:1.2, rise:0.5,  decay:2.2, c:'#e0789a', n:LANG==='fa'?'قلب':'Heart'},
     {w:base, peak:3.0, rise:1.2,  decay:7.0, c:'#9c6b3f', n:LANG==='fa'?'پایه':'Base'}
   ];
+  const x=t=>pad+t/T*(W-pad);
+  const y=v=>pad+(1-v)*(H-pad-16);
+  // grid + hour ticks
+  const hours=[0,0.5,1,2,3,4,5,6,8,10,12];
+  const grid=hours.map(h=>`<line x1="${x(h)}" y1="${pad}" x2="${x(h)}" y2="${H-16}" stroke="#00000009" stroke-width=".5"/>
+    <text x="${x(h)}" y="${H-4}" class="jt" text-anchor="middle">${h<1?h*60+'m':h+'h'}</text>`).join('');
+  // area + line paths
   const paths=curves.map(cv=>{
-    let pts=[]; for(let i=0;i<=n;i++){ const t=i/n*T; const y=cv.w*f(t,cv.peak,cv.decay,cv.rise); pts.push([i/n*W, H-y*H*0.9-2]); }
+    let pts=[]; for(let i=0;i<=n;i++){ const t=i/n*T; pts.push([x(t), y(cv.w*f(t,cv.peak,cv.decay,cv.rise))]); }
     const line=pts.map((p,i)=>(i?'L':'M')+p[0].toFixed(1)+' '+p[1].toFixed(1)).join(' ');
-    const area=line+` L${W} ${H} L0 ${H} Z`;
-    return `<path d="${area}" fill="${cv.c}" opacity=".16"/><path d="${line}" fill="none" stroke="${cv.c}" stroke-width="2.2"/>`;
+    return `<path d="${line} L${x(T)} ${y(0)} L${x(0)} ${y(0)} Z" fill="${cv.c}" opacity=".13"/><path d="${line}" fill="none" stroke="${cv.c}" stroke-width="2"/>`;
   }).join('');
-  const ticks=[0,2,4,6,8,10].map(h=>`<text x="${h/T*W}" y="${H-3}" class="jt">${h}${LANG==='fa'?'':'h'}</text>`).join('');
-  return `<svg viewBox="0 0 ${W} ${H}" class="journey-svg">${paths}${ticks}</svg>
-   <div class="jlegend">${curves.map(c=>`<span><i style="background:${c.c}"></i>${c.n}</span>`).join('')}</div>`;
+  // overall projection line (sum)
+  let projPts=[]; for(let i=0;i<=n;i++){ const t=i/n*T; let s=0; curves.forEach(cv=>s+=cv.w*f(t,cv.peak,cv.decay,cv.rise)); projPts.push([x(t),y(Math.min(1,s))]); }
+  const projLine=projPts.map((p,i)=>(i?'L':'M')+p[0].toFixed(1)+' '+p[1].toFixed(1)).join(' ');
+  const projPath=`<path d="${projLine}" fill="none" stroke="var(--ink)" stroke-width="2.5" stroke-dasharray="6 3" opacity=".5"/>`;
+  return `<svg viewBox="0 0 ${W} ${H}" class="journey-svg">${grid}${paths}${projPath}
+    <text x="${pad}" y="${pad-6}" class="jt" font-weight="700">${LANG==='fa'?'شدت':'Intensity'}</text>
+    <text x="${W-4}" y="${H-4}" class="jt" text-anchor="end">${LANG==='fa'?'ساعت':'hours'}</text></svg>
+   <div class="jlegend">${curves.map(c=>`<span><i style="background:${c.c}"></i>${c.n}</span>`).join('')}<span><i style="background:var(--ink);height:2px;border-top:2px dashed var(--ink)"></i>${LANG==='fa'?'کل پخش':'Overall'}</span></div>`;
 }
 function renderAnalysis(){
   const c=calc();
@@ -1730,6 +1769,14 @@ function renderAnalysis(){
     <div class="pyramid" style="margin-top:14px">
       <div class="pyrow"><div class="ttl">${fa?'پخش':'Projection'}</div><div class="pytrack"><div class="pyfill" style="width:${Math.round(perf.proj*100)}%;background:#c95f3f"></div></div><div class="v">${Math.round(perf.proj*100)}</div></div>
       <div class="pyrow"><div class="ttl">${fa?'ماندگاری':'Durability'}</div><div class="pytrack"><div class="pyfill" style="width:${Math.round(perf.dur*100)}%;background:#4fb0b8"></div></div><div class="v">${Math.round(perf.dur*100)}</div></div>
+    </div>
+    <div class="muted" style="font-size:12.5px;margin-top:10px;line-height:1.7">
+      <b>${fa?'چرا؟':'Why?'}</b>
+      ${perf.top>.35?`${fa?'نت‌های سر زیاد پخش اولیه را بالا می‌برند اما سریع محو می‌شوند.':'High top-note proportion boosts initial projection but fades quickly.'}`:''} 
+      ${perf.base>.4?`${fa?'پایهٔ قوی ماندگاری را افزایش می‌دهد — مولکول‌های سنگین‌تر آهسته‌تر تبخیر می‌شوند.':'Strong base increases durability — heavier molecules evaporate slowly.'}`:''} 
+      ${perf.heart>.45?`${fa?'قلب غالب به معنی پخش متعادل و مداوم است.':'Dominant heart means balanced, sustained projection.'}`:''} 
+      ${(+S.product.conc||10)>=15?`${fa?'غلظت بالا ('+S.product.conc+'٪) هم پخش و هم ماندگاری را تقویت می‌کند.':'High concentration ('+S.product.conc+'%) amplifies both projection and longevity.'}`:''} 
+      ${(+S.product.conc||10)<=6?`${fa?'غلظت پایین ('+S.product.conc+'٪) پخش و ماندگاری را محدود می‌کند.':'Low concentration ('+S.product.conc+'%) limits both sillage and wear time.'}`:''} 
     </div>
   </div>
   <!-- cost -->
@@ -1797,6 +1844,53 @@ function renderEducation(){
     </div>`;
   }).join('');
 }
+
+/* ---- EQUIPMENT & ASSETS ---- */
+function renderEquipment(){
+  const fa=LANG==='fa';
+  const eq=S.equipment||[];
+  const mats=eq.filter(e=>e.type==='material'), tools=eq.filter(e=>e.type==='tool');
+  const totalSpend=eq.reduce((s,e)=>s+(+e.price||0),0);
+  const ownedIds=mats.map(e=>e.matId).filter(Boolean);
+  return `
+  <div class="summary-bar" style="margin-bottom:14px">
+    <div class="chip-stat"><span>${fa?'مواد':'Materials'}</span><b>${mats.length}</b></div>
+    <div class="chip-stat"><span>${fa?'ابزارها':'Tools'}</span><b>${tools.length}</b></div>
+    <div class="chip-stat"><span>${fa?'مجموع هزینه':'Total spend'}</span><b>${cur()}${fmt(totalSpend,2)}</b></div>
+  </div>
+  <label class="lab">${fa?'افزودن دارایی جدید':'Add new asset'}</label>
+  <div class="row" style="gap:8px;flex-wrap:wrap">
+    <select class="inp" id="eqType" style="width:120px"><option value="material">${fa?'ماده':'Material'}</option><option value="tool">${fa?'ابزار':'Tool'}</option></select>
+    <input class="inp" id="eqName" placeholder="${fa?'نام (مثلاً برگاموت)':'Name (e.g. Bergamot)'}" style="flex:2;min-width:140px">
+    <input class="inp" id="eqSupplier" placeholder="${fa?'تأمین‌کننده':'Supplier'}" style="flex:1;min-width:100px">
+  </div>
+  <div class="row" style="gap:8px;flex-wrap:wrap;margin-top:8px">
+    <input class="inp" id="eqPrice" type="number" step="0.01" placeholder="${fa?'قیمت کل':'Total price'}" style="width:100px">
+    <input class="inp" id="eqVol" type="number" step="0.1" placeholder="${fa?'حجم/وزن':'Volume/weight'}" style="width:100px">
+    <select class="inp" id="eqUnit" style="width:70px"><option value="ml">mL</option><option value="g">g</option></select>
+    <select class="inp" id="eqLink" style="flex:1;min-width:120px"><option value="">${fa?'اتصال به کتابخانه (اختیاری)':'Link to library (optional)'}</option>${MATERIALS.filter(isAromatic).map(m=>`<option value="${m.id}">${matName(m)}</option>`).join('')}</select>
+    <button class="btn primary" id="eqAdd">+</button>
+  </div>
+  ${eq.length?`<div class="divider"></div>
+  <label class="lab">${fa?'دارایی‌های شما':'Your assets'}</label>
+  <div class="collgrid">${eq.map(e=>`<div class="collcard">
+    <h4 style="font-size:15px">${e.type==='tool'?'🔧':'🧪'} ${e.name}</h4>
+    <div class="meta2">${e.supplier||'—'} · ${e.volume?e.volume+' '+e.unit:''} · ${cur()}${fmt(+e.price||0,2)}${e.matId?` · → ${matName(MAT_BY_ID[e.matId]||{name:e.matId})}`:''}</div>
+    <button class="btn ghost tiny" onclick="delEquip('${e.id}')">${t('btn_remove')}</button>
+  </div>`).join('')}</div>`:''}
+  ${ownedIds.length?`<div class="divider"></div>
+  <button class="btn ghost" onclick="setTab('library');setTimeout(()=>{libSearch='owned:';renderSection('library');},150)">🔍 ${fa?'فقط نت‌هایی که دارم را ببین':'Show only notes I own in Library'}</button>`:''}
+  <div class="divider"></div>
+  <div class="muted" style="font-size:12.5px">${fa?'پیشنهاد: مواد پایه‌ای که هر عطرساز نیاز دارد: الکل عطرسازی، وانیلین، لینالول، ایزو ای سوپر، امبروکسان، هدیون، برگاموت و صندل. اگر اینها را ندارید، ابتدا تهیه کنید.':'Suggestion: essential starter materials every perfumer needs — perfumer\'s alcohol, vanillin, linalool, Iso E Super, ambroxan, Hedione, bergamot, and sandalwood. Stock these first if you don\'t have them.'}</div>`;
+}
+window.addEquip=()=>{
+  const name=($('#eqName')&&$('#eqName').value||'').trim(); if(!name){toast(LANG==='fa'?'نام را وارد کنید':'Enter a name');return;}
+  S.equipment.push({id:uid(),type:$('#eqType').value,name,supplier:$('#eqSupplier').value.trim(),
+    price:$('#eqPrice').value,volume:$('#eqVol').value,unit:$('#eqUnit').value,
+    matId:$('#eqLink').value||null,notes:''});
+  persist(); renderSection('equipment'); toast(LANG==='fa'?'افزوده شد':'Added');
+};
+window.delEquip=(id)=>{ S.equipment=S.equipment.filter(e=>e.id!==id); persist(); renderSection('equipment'); };
 
 /* ============================================================
    MEMBERSHIP + REDEEM CODES
@@ -2053,6 +2147,9 @@ function bindSection(id){
     const rb=$('#redeemBtn'); if(rb) rb.onclick=redeemCode;
     const ri=$('#redeemIn'); if(ri) ri.onkeydown=e=>{ if(e.key==='Enter') redeemCode(); };
   }
+  if(id==='equipment'){
+    const add=$('#eqAdd'); if(add) add.onclick=addEquip;
+  }
   if(id==='ai'){
     const go=$('#aiGo'); if(go) go.onclick=composeWithAI;
   }
@@ -2063,7 +2160,8 @@ function bindSection(id){
     const cu=$('#pCur'); if(cu) cu.onchange=e=>{ S.prefs.currency=e.target.value; persist(); renderSection('library'); const ap=$('#pad-analysis'); if(ap) renderSection('analysis'); toast(LANG==='fa'?'واحد پول تغییر کرد':'Currency updated'); };
   }
   if(id==='account'){
-    const so=$('#signOut'); if(so) so.onclick=()=>{ if(confirm('Sign out? Your saved work stays on this device for next time you sign in with the same email.')){ location.reload(); } };
+    const so=$('#signOut'); if(so) so.onclick=async()=>{ if(window.sb) await sb.auth.signOut().catch(()=>{}); location.reload(); };
+    const sw=$('#switchAcct'); if(sw) sw.onclick=async()=>{ if(window.sb) await sb.auth.signOut().catch(()=>{}); S.email='guest'; persist(); location.reload(); };
   }
 }
 
@@ -2146,6 +2244,14 @@ $('#nextBtn').onclick=async()=>{
 };
 
 /* prefill known account if returning is not possible without email; start fresh */
+/* forgot password handler */
+const fp=$('#forgotPass'); if(fp) fp.onclick=async(e)=>{
+  e.preventDefault(); const email=$('#emailIn').value.trim(); const msg=$('#obAuthMsg');
+  if(!email){msg.textContent='Enter your email first, then click Forgot password.';msg.style.color='var(--spice)';return;}
+  if(window.sb){ const r=await sb.auth.resetPasswordForEmail(email); if(r.error){msg.textContent=r.error.message;msg.style.color='var(--spice)';}
+    else{msg.textContent='Password reset email sent! Check your inbox.';msg.style.color='var(--herb)';}}
+  else{msg.textContent='Password reset requires the database connection.';msg.style.color='var(--spice)';}
+};
 showStep(0);
 applyLang(LANG);
 
