@@ -91,24 +91,29 @@ header.top{
 /* ---------- BOTTOM TAB BAR (mobile) ---------- */
 .bottomnav{display:none}
 @media(max-width:860px){
+  html{touch-action:manipulation}
   .bottomnav{
-    display:flex;position:fixed;inset:auto 0 0 0;z-index:120;align-items:stretch;gap:2px;
-    background:rgba(251,246,238,.96);backdrop-filter:blur(18px);
-    border-top:1px solid var(--line);
-    padding:6px max(8px,env(safe-area-inset-left)) calc(6px + env(safe-area-inset-bottom)) max(8px,env(safe-area-inset-right));
-    box-shadow:0 -10px 30px -18px rgba(60,40,20,.4);
+    display:flex;position:fixed;left:0;right:0;bottom:0;z-index:9999;align-items:stretch;gap:0;
+    background:rgba(251,246,238,.97);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
+    border-top:1.5px solid var(--line);
+    padding:4px 6px calc(4px + env(safe-area-inset-bottom,0px)) 6px;
+    box-shadow:0 -8px 24px -12px rgba(60,40,20,.35);
   }
   .tabbtn{
     flex:1 1 0;min-width:0;border:0;background:transparent;cursor:pointer;
-    display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:3px;
-    padding:4px 2px;color:var(--ink-soft);transition:color .16s;-webkit-tap-highlight-color:transparent;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
+    padding:8px 2px;color:var(--ink-soft);transition:color .12s;
+    -webkit-tap-highlight-color:transparent;touch-action:manipulation;
+    min-height:52px;
   }
-  .tabbtn .tic{width:48px;height:28px;border-radius:999px;display:flex;align-items:center;justify-content:center;font-size:20px;line-height:1;transition:background .2s,transform .2s}
-  .tabbtn .tl{font-size:10px;font-weight:700;letter-spacing:0;line-height:1.15;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  html[lang="fa"] .tabbtn .tl{font-family:'Vazirmatn',sans-serif;font-size:10.5px}
+  .tabbtn .tic{width:44px;height:28px;border-radius:999px;display:flex;align-items:center;justify-content:center;font-size:19px;line-height:1;transition:background .15s,transform .15s}
+  .tabbtn .tl{font-size:9.5px;font-weight:700;letter-spacing:0;line-height:1.15;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  html[lang="fa"] .tabbtn .tl{font-family:'Vazirmatn',sans-serif;font-size:10px}
   .tabbtn.on{color:var(--gold-deep)}
-  .tabbtn.on .tic{background:linear-gradient(135deg,rgba(189,154,78,.22),rgba(189,154,78,.08));transform:scale(1.05)}
+  .tabbtn.on .tic{background:linear-gradient(135deg,rgba(189,154,78,.25),rgba(189,154,78,.10));transform:scale(1.06)}
+  .tabbtn:active{opacity:.7}
   .topnav{display:none}
+  main.wrap{padding-bottom:96px!important}
 }
 
 /* ---------- VIEWS + PANELS ---------- */
@@ -372,10 +377,20 @@ footer{padding:34px 0 50px;text-align:center;color:var(--ink-soft);font-size:12.
       <!-- step 1: account -->
       <div class="step active" data-step="0">
         <h3 style="font-size:22px" data-i18n="ob_welcome">Welcome</h3>
-        <p class="muted" style="margin:6px 0 16px" data-i18n="ob_welcome_sub">Sign in with your email to keep your formulas, accords and collections.</p>
+        <p class="muted" style="margin:6px 0 12px">Sign up or sign in to save your work.</p>
+        <div class="langtoggle" style="margin-bottom:14px" id="obMode">
+          <button class="on" data-mode="signup" onclick="obSetMode('signup')">Sign up</button>
+          <button data-mode="signin" onclick="obSetMode('signin')">Sign in</button>
+        </div>
+        <div id="obNameRow">
+          <label class="lab">Your name</label>
+          <input class="inp" id="nameIn" type="text" placeholder="e.g. Reza" autocomplete="name" style="margin-bottom:10px">
+        </div>
         <label class="lab" data-i18n="ob_email">Email address</label>
-        <input class="inp" id="emailIn" type="email" placeholder="you@studio.com" data-i18n-ph="ob_email_ph" autocomplete="email">
-        <p class="muted" style="font-size:11.5px;margin-top:8px" data-i18n="ob_proto">Prototype mode stores data in this browser. The deployment guide explains how to wire real, secure accounts.</p>
+        <input class="inp" id="emailIn" type="email" placeholder="you@studio.com" data-i18n-ph="ob_email_ph" autocomplete="email" style="margin-bottom:10px">
+        <label class="lab">Password</label>
+        <input class="inp" id="passIn" type="password" placeholder="At least 6 characters" autocomplete="new-password">
+        <div id="obAuthMsg" class="muted" style="font-size:12.5px;margin-top:10px;color:var(--spice)"></div>
       </div>
       <!-- step 2: product -->
       <div class="step" data-step="1">
@@ -927,7 +942,7 @@ function costBreakdown(c){ const map={}; (c.detail||[]).forEach(d=>d.sub.forEach
 
 let S = {
   email:'guest',
-  prefs:{basis:'weight', fun:true, lang:LANG, geminiKey:'', geminiModel:'gemini-2.5-flash', currency:'$'},
+  prefs:{basis:'weight', fun:true, lang:LANG, currency:'$'},
   densities:{},        // {matId: density override}
   costs:{},            // {matId: cost/g override}
   account:{paid:false, plan:'free', since:null},
@@ -1489,7 +1504,6 @@ function renderAccount(){
 
 /* ---- PROFILE / PREFERENCES ---- */
 function renderProfile(){
-  const k=S.prefs.geminiKey||'';
   return `
   <label class="lab">${t('lang_label')}</label>
   <div class="langtoggle" style="margin-bottom:4px">
@@ -1514,11 +1528,8 @@ function renderProfile(){
   <label class="lab">${LANG==='fa'?'واحد پول (برای هزینه‌ها)':'Currency (for costs)'}</label>
   <select class="inp" id="pCur" style="max-width:220px">${['$','€','£','﷼','تومان','₺','₽','¥'].map(s=>`<option ${cur()===s?'selected':''}>${s}</option>`).join('')}</select>
   <div class="divider"></div>
-  <label class="lab">🪄 ${LANG==='fa'?'هوش مصنوعی (Gemini)':'AI composer (Gemini)'}</label>
-  <div class="muted" style="font-size:12.5px;margin-bottom:8px">${LANG==='fa'?'یک کلید رایگان Gemini از Google AI Studio بگیرید و اینجا بچسبانید تا بخش «یک حس را توصیف کنید» فعال شود. کلید فقط در همین مرورگر ذخیره می‌شود.':'Get a free Gemini key from Google AI Studio and paste it here to enable the “Describe a Feeling” composer. The key is stored only in this browser.'}</div>
-  <input class="inp" id="pKey" type="password" placeholder="AIza…" value="${k.replace(/"/g,'&quot;')}" style="max-width:420px" autocomplete="off">
-  <div style="margin-top:8px"><a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener" class="btn ghost tiny">${LANG==='fa'?'دریافت کلید رایگان ↗':'Get a free key ↗'}</a>
-   <span class="muted" style="font-size:12px;margin:0 8px">${k?'🔑 '+(LANG==='fa'?'کلید ذخیره شد':'key saved'):''}</span></div>`;
+  <label class="lab">🪄 ${LANG==='fa'?'هوش مصنوعی':'AI composer'}</label>
+  <div class="muted" style="font-size:13px">${LANG==='fa'?'هوش مصنوعی برای اعضای پرو فعال است. نیازی به تنظیمات نیست — فقط در بخش «یک حس را توصیف کنید» استفاده کنید.':'AI is included for Pro members. No setup needed — just use the "Describe a Feeling" panel in the Perfumery tab.'}</div>`;
 }
 
 /* ---- AI COMPOSER (Gemini) ---- */
@@ -1540,13 +1551,12 @@ function renderAI(){
       <div style="margin-top:10px"><button class="btn primary">${t('btn_compose')}</button></div></div>
       ${lockGate()}</div>`;
   }
-  const hasKey=!!(S.prefs.geminiKey||'').trim();
+  const hasKey=true; /* Pro users use the server-side key */
   return `
   <div class="muted" style="font-size:14px;margin-bottom:10px">${t('ai_intro')}</div>
   <textarea class="inp" id="aiIn" data-i18n-ph="ai_ph" placeholder="${t('ai_ph')}"></textarea>
   <div style="margin-top:10px;display:flex;gap:10px;align-items:center;flex-wrap:wrap">
     <button class="btn primary" id="aiGo">${t('btn_compose')}</button>
-    ${hasKey?'':`<span class="muted" style="font-size:12.5px">${t('ai_nokey')}</span>`}
   </div>
   <div id="aiOut" style="margin-top:12px"></div>
   ${funBlock('inspiration')}`;
@@ -1928,13 +1938,15 @@ function openFormula(){
    ============================================================ */
 let lastAI=null;
 async function callGemini(prompt){
-  const key=(S.prefs.geminiKey||'').trim();
-  const model=S.prefs.geminiModel||'gemini-2.5-flash';
-  const url=`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${encodeURIComponent(key)}`;
-  const body={ contents:[{parts:[{text:prompt}]}], generationConfig:{ responseMimeType:'application/json', temperature:0.95, topP:0.95 } };
-  const res=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+  /* Calls YOUR server proxy at /api/gemini which holds the Gemini key secretly.
+     Pro users use AI for free (you pay the Gemini quota). No key in the browser. */
+  const url = (location.protocol==='file:'?'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent':'/api/gemini');
+  const isProxy = !url.includes('googleapis');
+  const body = isProxy ? {prompt} : {contents:[{parts:[{text:prompt}]}],generationConfig:{responseMimeType:'application/json',temperature:0.95}};
+  const res = await fetch(url, {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
   if(!res.ok){ let tx=''; try{tx=await res.text();}catch(e){} throw new Error('HTTP '+res.status+' '+tx.slice(0,300)); }
-  const data=await res.json();
+  const data = await res.json();
+  if(isProxy) return data.text||'';
   const parts=(((data.candidates||[])[0]||{}).content||{}).parts||[];
   return parts.map(p=>p.text||'').join('');
 }
@@ -1961,7 +1973,6 @@ User feeling: """${feeling.replace(/"/g,"'").slice(0,600)}"""`;
 }
 async function composeWithAI(){
   const out=$('#aiOut'); const txt=($('#aiIn')&&$('#aiIn').value||'').trim();
-  if(!(S.prefs.geminiKey||'').trim()){ out.innerHTML=`<div class="sugg"><div class="muted">${t('ai_nokey')}</div><div style="margin-top:8px"><button class="btn ghost tiny" onclick="setTab('profile')">${LANG==='fa'?'رفتن به پروفایل ↗':'Open Profile ↗'}</button></div></div>`; return; }
   if(!txt){ out.innerHTML=`<div class="sugg"><div class="muted">${t('ai_intro')}</div></div>`; return; }
   const go=$('#aiGo'); if(go){ go.disabled=true; go.style.opacity=.6; }
   out.innerHTML=`<div class="sugg"><div class="muted">⏳ ${t('ai_thinking')}</div></div>`;
@@ -2050,7 +2061,6 @@ function bindSection(id){
     const bs=$('#pBasis'); if(bs) bs.onchange=e=>{ S.prefs.basis=e.target.value; persist(); renderSection('formula'); renderSection('product'); toast('Now measuring by '+(e.target.value==='weight'?'weight':'volume')); };
     const fn=$('#pFun'); if(fn) fn.onclick=()=>{ S.prefs.fun=!S.prefs.fun; persist(); renderSection('profile'); TABS.find(x=>x.id==='perfumery').sections.forEach(renderSection); };
     const pd=$('#pProd'); if(pd) pd.onchange=e=>{ S.product.id=e.target.value; const p=PRODUCTS.find(x=>x.id===e.target.value); S.product.conc=p.def; persist(); renderSection('product'); renderSection('formula'); refreshSummary(); };
-    const key=$('#pKey'); if(key) key.oninput=e=>{ S.prefs.geminiKey=e.target.value.trim(); persist(); const ai=$('#pad-ai'); if(ai) renderSection('ai'); };
     const cu=$('#pCur'); if(cu) cu.onchange=e=>{ S.prefs.currency=e.target.value; persist(); renderSection('library'); const ap=$('#pad-analysis'); if(ap) renderSection('analysis'); toast(LANG==='fa'?'واحد پول تغییر کرد':'Currency updated'); };
   }
   if(id==='account'){
@@ -2090,16 +2100,42 @@ function showStep(n){
   step=n; $$('.step').forEach(s=>s.classList.toggle('active',+s.dataset.step===n));
   $$('.dots i').forEach((d,i)=>d.classList.toggle('on',i===n));
   $('#backBtn').style.visibility=n===0?'hidden':'visible';
-  $('#nextBtn').textContent=n===2?'Enter the atelier →':'Continue →';
+  $('#nextBtn').textContent=n===2?t('ob_enter'):t('ob_continue');
 }
+let obAuthMode='signup';
+window.obSetMode=(mode)=>{ obAuthMode=mode; $$('#obMode button').forEach(b=>b.classList.toggle('on',b.dataset.mode===mode));
+  const nr=$('#obNameRow'); if(nr) nr.style.display=mode==='signin'?'none':''; };
 $('#backBtn').onclick=()=>showStep(Math.max(0,step-1));
-$('#nextBtn').onclick=()=>{
-  if(step===0){ const email=$('#emailIn').value.trim();
-    if(!email||!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){toast('Please enter a valid email');return;} ob.email=email; }
+$('#nextBtn').onclick=async()=>{
+  if(step===0){
+    const email=$('#emailIn').value.trim();
+    const pass=$('#passIn').value;
+    const name=($('#nameIn')&&$('#nameIn').value||'').trim();
+    const msg=$('#obAuthMsg');
+    if(!email||!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){toast(LANG==='fa'?'ایمیل معتبر وارد کنید':'Enter a valid email');return;}
+    if(!pass||pass.length<6){msg.textContent=LANG==='fa'?'رمز عبور حداقل ۶ کاراکتر':'Password must be at least 6 characters';return;}
+    msg.textContent='';
+    // Try Supabase auth if available
+    if(window.sb){
+      try{
+        let result;
+        if(obAuthMode==='signup'){
+          result=await sb.auth.signUp({email,password:pass,options:{data:{name}}});
+        }else{
+          result=await sb.auth.signInWithPassword({email,password:pass});
+        }
+        if(result.error){ msg.textContent=result.error.message; return; }
+        ob.email=email; ob.name=name;
+      }catch(e){ msg.textContent=String(e).slice(0,200); return; }
+    } else {
+      ob.email=email; ob.name=name;
+    }
+  }
   if(step<2){ showStep(step+1); return; }
   // finish
   load(ob.email);
   S.prefs.basis=ob.basis; S.prefs.fun=ob.fun;
+  if(ob.name) S.name=ob.name;
   if(!S.prefs.lang) S.prefs.lang=LANG;
   if(!Store.get('olfact:'+ob.email)){ const p=PRODUCTS.find(x=>x.id===ob.product); S.product={id:ob.product,conc:p.def,batch:30,unit:'ml'}; }
   persist();
@@ -2121,6 +2157,6 @@ if('serviceWorker' in navigator && location.protocol.startsWith('http')){
 </script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 
-<script>window.sb = supabase.createClient("https:// khiyyawehbacrrqqrhra.supabase.co","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtoaXl5YXdlaGJhY3JycXFyaHJhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA3MzUxODEsImV4cCI6MjA5NjMxMTE4MX0.fkaSfnzfpo9-1MBGSKXaofLdAyLvJhkkbvRSEZKTks4");</script>
+<script>window.sb = supabase.createClient("https://khiyyawehbacrrqqrhra.supabase.co","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtoaXl5YXdlaGJhY3JycXFyaHJhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA3MzUxODEsImV4cCI6MjA5NjMxMTE4MX0.fkaSfnzfpo9-1MBGSKXaofLdAyLvJhkkbvRSEZKTks4");</script>
 </body>
 </html>
