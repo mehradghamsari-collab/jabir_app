@@ -2033,7 +2033,7 @@ function openFormula(){
 let lastAI=null;
 /* Pro users' Gemini key — calls Google directly from the browser.
    Move to a server proxy (/api/gemini) when you scale up. */
-const GEMINI_API_KEY='AQ.Ab8RN6KOhwv8Gh0NPm7yzwep-COi4JGrtOH7ytA10awNckpbVA';
+const GEMINI_API_KEY='AIzaSyCFI8uJEa5rT0mqdrJ2NPWCSKKW4_xaBfo';
 async function callGemini(prompt){
   const url='https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key='+encodeURIComponent(GEMINI_API_KEY);
   const body={contents:[{parts:[{text:prompt}]}],generationConfig:{responseMimeType:'application/json',temperature:0.95,topP:0.95}};
