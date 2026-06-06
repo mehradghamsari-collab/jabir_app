@@ -1937,16 +1937,15 @@ function openFormula(){
    GEMINI AI COMPOSER
    ============================================================ */
 let lastAI=null;
+/* Pro users' Gemini key — calls Google directly from the browser.
+   Move to a server proxy (/api/gemini) when you scale up. */
+const GEMINI_API_KEY='AQ.Ab8RN6KOhwv8Gh0NPm7yzwep-COi4JGrtOH7ytA10awNckpbVA';
 async function callGemini(prompt){
-  /* Calls YOUR server proxy at /api/gemini which holds the Gemini key secretly.
-     Pro users use AI for free (you pay the Gemini quota). No key in the browser. */
-  const url = (location.protocol==='file:'?'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent':'/api/gemini');
-  const isProxy = !url.includes('googleapis');
-  const body = isProxy ? {prompt} : {contents:[{parts:[{text:prompt}]}],generationConfig:{responseMimeType:'application/json',temperature:0.95}};
-  const res = await fetch(url, {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+  const url='https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key='+encodeURIComponent(GEMINI_API_KEY);
+  const body={contents:[{parts:[{text:prompt}]}],generationConfig:{responseMimeType:'application/json',temperature:0.95,topP:0.95}};
+  const res=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
   if(!res.ok){ let tx=''; try{tx=await res.text();}catch(e){} throw new Error('HTTP '+res.status+' '+tx.slice(0,300)); }
-  const data = await res.json();
-  if(isProxy) return data.text||'';
+  const data=await res.json();
   const parts=(((data.candidates||[])[0]||{}).content||{}).parts||[];
   return parts.map(p=>p.text||'').join('');
 }
