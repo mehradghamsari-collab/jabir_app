@@ -2119,5 +2119,8 @@ if('serviceWorker' in navigator && location.protocol.startsWith('http')){
   window.addEventListener('load',()=>{ navigator.serviceWorker.register('service-worker.js').catch(()=>{}); });
 }
 </script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+
+<script>window.sb = supabase.createClient("https:// khiyyawehbacrrqqrhra.supabase.co","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtoaXl5YXdlaGJhY3JycXFyaHJhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA3MzUxODEsImV4cCI6MjA5NjMxMTE4MX0.fkaSfnzfpo9-1MBGSKXaofLdAyLvJhkkbvRSEZKTks4");</script>
 </body>
 </html>
