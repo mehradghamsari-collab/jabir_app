@@ -1,0 +1,2123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#3c2b22">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Jabir">
+<link rel="manifest" href="manifest.webmanifest">
+<title>Jabir — جابر · The Perfumer's Atelier</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..700&family=Manrope:wght@300..800&family=Vazirmatn:wght@300..800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#211a17; --ink-soft:#5c504a; --paper:#fbf6ee; --paper-2:#f4ecdf;
+  --line:#e4d8c6; --gold:#bd9a4e; --gold-deep:#9a7a33;
+  --rose:#e0789a; --coral:#ef8a6a; --citrus:#e8b13a; --woody:#9c6b3f;
+  --resin:#cf8a3a; --spice:#c95f3f; --herb:#7fa05a; --animalic:#a87bb0;
+  --musk:#9aa0c4; --aquatic:#4fb0b8; --green:#86b06a; --gourmand:#c79a5e;
+  --leather:#8a5a44; --floral:#e0789a; --fruity:#ef8a6a; --mossy:#6f8a55;
+  --amber:#d39a44; --aldehyde:#cdd1da;
+  --shadow:0 14px 40px -18px rgba(60,40,20,.45);
+  --r:18px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Manrope',system-ui,sans-serif; color:var(--ink);
+  background:
+    radial-gradient(1200px 600px at 85% -10%, #fce9d4 0%, transparent 55%),
+    radial-gradient(900px 500px at 0% 100%, #efe4ff 0%, transparent 50%),
+    radial-gradient(700px 500px at 50% 120%, #d8f0ee 0%, transparent 45%),
+    var(--paper);
+  background-attachment:fixed; line-height:1.5; -webkit-font-smoothing:antialiased;
+  min-height:100vh;
+}
+h1,h2,h3,h4{font-family:'Fraunces',serif;font-weight:600;line-height:1.05;letter-spacing:-.01em}
+button,input,select,textarea{font-family:inherit;font-size:inherit;color:inherit}
+button{cursor:pointer;border:none;background:none}
+.wrap{max-width:1080px;margin:0 auto;padding:0 18px}
+
+/* ---------- LANGUAGE / RTL ---------- */
+html[dir="rtl"]{direction:rtl}
+html[lang="fa"] body{font-family:'Vazirmatn',system-ui,sans-serif}
+html[lang="fa"] h1,html[lang="fa"] h2,html[lang="fa"] h3,html[lang="fa"] h4,html[lang="fa"] .brand,html[lang="fa"] .opt .t,html[lang="fa"] .chip-stat b,html[lang="fa"] .class-card .big,html[lang="fa"] .collcard h4{font-family:'Vazirmatn',serif;letter-spacing:0}
+html[dir="rtl"] .top .spacer,html[dir="rtl"] .topnav .wrap{}
+html[dir="rtl"] label.lab{margin:0 2px 6px 0}
+html[dir="rtl"] .ftable th,html[dir="rtl"] .ftable td{text-align:right}
+html[dir="rtl"] .pctin,html[dir="rtl"] .amt{text-align:left}
+.langtoggle{display:inline-flex;border:1px solid var(--line);border-radius:999px;overflow:hidden;background:#fff}
+.langtoggle button{padding:6px 13px;font-size:12.5px;font-weight:700;color:var(--ink-soft);transition:.15s}
+.langtoggle button.on{background:linear-gradient(135deg,var(--gold),var(--gold-deep));color:#fff}
+
+/* ---------- HEADER ---------- */
+header.top{
+  position:sticky;top:0;z-index:50;backdrop-filter:blur(14px);
+  background:rgba(251,246,238,.78);border-bottom:1px solid var(--line);
+}
+.top .wrap{display:flex;align-items:center;gap:14px;padding:14px 18px}
+.brand{font-family:'Fraunces';font-weight:600;font-size:24px;letter-spacing:.06em;display:flex;align-items:center;gap:10px}
+.brand .dot{width:11px;height:11px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--rose));box-shadow:0 0 0 4px rgba(189,154,78,.18)}
+.brand small{font-family:'Manrope';font-weight:600;font-size:10px;letter-spacing:.32em;color:var(--gold-deep);text-transform:uppercase;margin-top:3px}
+.top .spacer{flex:1}
+.pill{display:inline-flex;align-items:center;gap:7px;padding:7px 13px;border-radius:999px;border:1px solid var(--line);background:#fff;font-size:13px;font-weight:600}
+.pill b{color:var(--gold-deep)}
+.icon-btn{width:38px;height:38px;border-radius:50%;border:1px solid var(--line);background:#fff;display:grid;place-items:center;font-size:16px;transition:.2s}
+.icon-btn:hover{transform:translateY(-1px);box-shadow:var(--shadow)}
+
+/* ---------- HERO STRIP ---------- */
+.hero{padding:30px 0 6px}
+.hero h1{font-size:clamp(34px,6vw,58px);font-weight:600}
+.hero h1 em{font-style:italic;color:var(--gold-deep)}
+.hero p{max-width:620px;color:var(--ink-soft);margin-top:10px;font-size:16px}
+.summary-bar{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
+.chip-stat{background:#fff;border:1px solid var(--line);border-radius:14px;padding:9px 14px;font-size:13px}
+.chip-stat b{font-family:'Fraunces';font-size:18px;display:block;color:var(--ink)}
+.chip-stat span{color:var(--ink-soft);font-size:11px;letter-spacing:.08em;text-transform:uppercase}
+
+/* ---------- TAB NAVIGATION (desktop top rail) ---------- */
+.topnav{position:sticky;top:64px;z-index:40;background:rgba(251,246,238,.82);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.topnav .wrap{display:flex;gap:4px;padding:8px 18px;overflow-x:auto;scrollbar-width:none}
+.topnav .wrap::-webkit-scrollbar{display:none}
+.navbtn{display:inline-flex;align-items:center;gap:9px;padding:10px 16px;border-radius:12px;font-weight:700;font-size:14px;color:var(--ink-soft);white-space:nowrap;transition:.18s;border:1px solid transparent}
+.navbtn .nic{font-size:17px}
+.navbtn:hover{background:var(--paper-2);color:var(--ink)}
+.navbtn.on{color:var(--ink);background:#fff;border-color:var(--line);box-shadow:0 6px 16px -10px rgba(120,90,40,.5)}
+.navbtn.on .nic{filter:saturate(1.2)}
+
+/* ---------- BOTTOM TAB BAR (mobile) ---------- */
+.bottomnav{display:none}
+@media(max-width:860px){
+  .bottomnav{
+    display:flex;position:fixed;inset:auto 0 0 0;z-index:120;align-items:stretch;gap:2px;
+    background:rgba(251,246,238,.96);backdrop-filter:blur(18px);
+    border-top:1px solid var(--line);
+    padding:6px max(8px,env(safe-area-inset-left)) calc(6px + env(safe-area-inset-bottom)) max(8px,env(safe-area-inset-right));
+    box-shadow:0 -10px 30px -18px rgba(60,40,20,.4);
+  }
+  .tabbtn{
+    flex:1 1 0;min-width:0;border:0;background:transparent;cursor:pointer;
+    display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:3px;
+    padding:4px 2px;color:var(--ink-soft);transition:color .16s;-webkit-tap-highlight-color:transparent;
+  }
+  .tabbtn .tic{width:48px;height:28px;border-radius:999px;display:flex;align-items:center;justify-content:center;font-size:20px;line-height:1;transition:background .2s,transform .2s}
+  .tabbtn .tl{font-size:10px;font-weight:700;letter-spacing:0;line-height:1.15;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  html[lang="fa"] .tabbtn .tl{font-family:'Vazirmatn',sans-serif;font-size:10.5px}
+  .tabbtn.on{color:var(--gold-deep)}
+  .tabbtn.on .tic{background:linear-gradient(135deg,rgba(189,154,78,.22),rgba(189,154,78,.08));transform:scale(1.05)}
+  .topnav{display:none}
+}
+
+/* ---------- VIEWS + PANELS ---------- */
+.view{display:none}
+.view.on{display:block;animation:viewIn .42s cubic-bezier(.2,.85,.2,1)}
+@keyframes viewIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.view-head{padding:24px 0 4px}
+.view-head h2{font-size:clamp(26px,4.5vw,38px);font-weight:600}
+.view-head h2 em{font-style:italic;color:var(--gold-deep)}
+.view-head p{color:var(--ink-soft);max-width:620px;margin-top:6px;font-size:15px}
+
+.panel{background:#fff;border:1px solid var(--line);border-radius:var(--r);margin:14px 0;overflow:hidden;box-shadow:0 2px 0 rgba(0,0,0,.01)}
+.cbar{height:4px;background:linear-gradient(90deg,var(--g1,var(--gold)),var(--g2,var(--rose)));opacity:.9}
+.panel-head{display:flex;align-items:center;gap:14px;padding:18px 20px;user-select:none;transition:background .2s}
+.panel-head.clickable{cursor:pointer}
+.panel-head.clickable:hover{background:var(--paper-2)}
+.panel-head .ix{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;font-size:20px;color:#fff;flex:none;box-shadow:inset 0 0 0 1px rgba(255,255,255,.25)}
+.panel-head h3{font-size:21px}
+.panel-head .sub{font-size:12.5px;color:var(--ink-soft);margin-top:2px}
+.panel-head .arrow{margin-left:auto;font-size:14px;color:var(--gold-deep);transition:transform .35s cubic-bezier(.2,.8,.2,1);flex:none}
+.panel.collapsed .arrow{transform:rotate(-90deg)}
+.panel-body{padding:4px 20px 22px;animation:bodyIn .4s ease}
+.panel.collapsed .panel-body{display:none}
+@keyframes bodyIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+
+/* ---------- GENERIC UI ---------- */
+.row{display:flex;gap:12px;flex-wrap:wrap}
+.field{flex:1;min-width:150px}
+label.lab{display:block;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold-deep);font-weight:700;margin:0 0 6px 2px}
+.inp,select.inp{width:100%;padding:11px 13px;border:1px solid var(--line);border-radius:11px;background:var(--paper);transition:.2s;font-weight:500}
+.inp:focus{outline:none;border-color:var(--gold);background:#fff;box-shadow:0 0 0 3px rgba(189,154,78,.16)}
+textarea.inp{resize:vertical;min-height:74px}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:11px 18px;border-radius:12px;font-weight:700;font-size:14px;transition:.18s;border:1px solid transparent}
+.btn.primary{background:linear-gradient(135deg,var(--gold),var(--gold-deep));color:#fff;box-shadow:0 8px 22px -10px rgba(154,122,51,.8)}
+.btn.primary:hover{transform:translateY(-2px)}
+.btn.ghost{background:#fff;border-color:var(--line)}
+.btn.ghost:hover{background:var(--paper-2)}
+.btn.tiny{padding:6px 11px;font-size:12.5px;border-radius:9px}
+.muted{color:var(--ink-soft);font-size:13.5px}
+.tag{display:inline-block;padding:3px 9px;border-radius:999px;font-size:11px;font-weight:700;letter-spacing:.02em;color:#fff}
+.note-badge{display:inline-flex;gap:5px;align-items:center;padding:3px 9px;border-radius:999px;font-size:11px;font-weight:700;border:1px solid}
+.nb-top{color:#c98a1f;border-color:#e7c98f;background:#fdf4e0}
+.nb-heart{color:#c0507a;border-color:#f0bcd0;background:#fdeef4}
+.nb-base{color:#7a5a39;border-color:#d8c2a4;background:#f6ecdc}
+.divider{height:1px;background:var(--line);margin:16px 0}
+
+/* ---------- ONBOARDING ---------- */
+.overlay{position:fixed;inset:0;z-index:200;background:rgba(33,26,23,.55);backdrop-filter:blur(8px);display:grid;place-items:center;padding:14px;opacity:0;pointer-events:none;transition:.4s}
+.overlay.show{opacity:1;pointer-events:auto}
+.modal{width:100%;max-width:560px;max-height:calc(100dvh - 28px);display:flex;flex-direction:column;background:var(--paper);border-radius:26px;box-shadow:0 40px 90px -30px rgba(0,0,0,.6);overflow:hidden;transform:translateY(20px) scale(.98);transition:.45s cubic-bezier(.2,.9,.2,1)}
+.overlay.show .modal{transform:none}
+.modal .mcap{padding:24px 28px;background:linear-gradient(135deg,#2a201a,#3c2b22);color:#f6ecdc;flex:none}
+.modal .mcap .brand{color:#fff}
+.modal .mcap p{color:#e8d6bf;font-size:13.5px;margin-top:6px}
+.modal .mbody{padding:22px 28px 14px;overflow-y:auto;flex:1 1 auto;-webkit-overflow-scrolling:touch}
+.modal .mfoot{flex:none;padding:12px 28px calc(16px + env(safe-area-inset-bottom));border-top:1px solid var(--line);background:var(--paper)}
+.step{display:none}.step.active{display:block;animation:fade .4s}
+@keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1}}
+.opt-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-top:6px}
+.opt{border:1.5px solid var(--line);background:#fff;border-radius:15px;padding:13px;text-align:left;transition:.18s}
+.opt:hover{border-color:var(--gold);transform:translateY(-2px);box-shadow:var(--shadow)}
+.opt.sel{border-color:var(--gold);background:linear-gradient(135deg,#fff,#fcf2dd);box-shadow:var(--shadow)}
+.opt .t{font-family:'Fraunces';font-size:17px;font-weight:600}
+.opt .d{font-size:11.5px;color:var(--ink-soft);margin-top:3px}
+.opt .pc{font-size:11px;color:var(--gold-deep);font-weight:700;margin-top:6px}
+.dots{display:flex;gap:6px;justify-content:center;margin-bottom:12px}
+.dots i{width:7px;height:7px;border-radius:50%;background:var(--line);transition:.3s}
+.dots i.on{background:var(--gold);width:22px;border-radius:999px}
+
+/* ---------- TABLE / FORMULA ---------- */
+.ftable{width:100%;border-collapse:collapse;font-size:13.5px}
+.ftable th{text-align:left;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--gold-deep);padding:8px 8px;border-bottom:1px solid var(--line);font-weight:800}
+.ftable td{padding:9px 8px;border-bottom:1px solid #f0e7d8;vertical-align:middle}
+.ftable tr:hover td{background:var(--paper-2)}
+.fname{font-weight:700}
+.fname .em{font-style:italic;font-weight:400;color:var(--ink-soft);font-size:12px;display:block}
+.pctin{width:74px;text-align:right;padding:6px 8px;border:1px solid var(--line);border-radius:8px;background:var(--paper)}
+.pctin:focus{outline:none;border-color:var(--gold);background:#fff}
+.lockbtn{width:30px;height:30px;border-radius:8px;border:1px solid var(--line);background:#fff;font-size:13px}
+.lockbtn.on{background:var(--gold);color:#fff;border-color:var(--gold)}
+.amt{font-variant-numeric:tabular-nums;font-weight:700}
+.amt small{font-weight:500;color:var(--ink-soft)}
+.delx{color:#c0392b;font-weight:800;font-size:16px;width:28px;height:28px;border-radius:8px}
+.delx:hover{background:#fdecea}
+
+/* ---------- LIBRARY GRID ---------- */
+.lib-controls{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:14px}
+.famfilter{display:flex;gap:7px;flex-wrap:wrap}
+.fam-pill{padding:6px 12px;border-radius:999px;border:1.5px solid var(--line);background:#fff;font-size:12px;font-weight:700;transition:.15s;display:inline-flex;align-items:center;gap:6px}
+.fam-pill .swatch{width:9px;height:9px;border-radius:50%}
+.fam-pill.on{color:#fff;border-color:transparent}
+.matgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:11px;max-height:520px;overflow:auto;padding:3px;scrollbar-width:thin}
+.matcard{border:1px solid var(--line);border-radius:14px;padding:13px;background:#fff;transition:.16s;position:relative;overflow:hidden}
+.matcard:hover{transform:translateY(-3px);box-shadow:var(--shadow);border-color:var(--gold)}
+.matcard .fbar{position:absolute;left:0;top:0;bottom:0;width:5px}
+.matcard h4{font-size:15.5px;padding-left:6px}
+.matcard .syn{font-size:10px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;padding:2px 7px;border-radius:6px}
+.syn.nat{background:#eaf3df;color:#5d7c39}
+.syn.syngen{background:#e9ecf7;color:#5b62a0}
+.matcard .desc{font-size:12px;color:var(--ink-soft);margin:7px 0 9px;padding-left:6px;font-style:italic}
+.matcard .meta{display:flex;gap:6px;align-items:center;flex-wrap:wrap;padding-left:6px}
+.addbtn{position:absolute;right:10px;bottom:10px;width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,var(--gold),var(--gold-deep));color:#fff;font-size:18px;font-weight:700;line-height:1;box-shadow:0 6px 14px -6px rgba(154,122,51,.9)}
+.addbtn:hover{transform:scale(1.1)}
+
+/* ---------- PYRAMID ---------- */
+.pyramid{display:flex;flex-direction:column;gap:8px}
+.pyrow{display:grid;grid-template-columns:64px 1fr 54px;align-items:center;gap:10px}
+.pyrow .ttl{font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;text-align:right;color:var(--ink-soft)}
+.pytrack{height:26px;background:var(--paper-2);border-radius:8px;overflow:hidden;border:1px solid var(--line)}
+.pyfill{height:100%;border-radius:7px;transition:width .6s cubic-bezier(.2,.9,.2,1);min-width:2px}
+.pyrow .v{font-weight:800;font-variant-numeric:tabular-nums;text-align:right;font-size:13px}
+
+/* scent map / matrix */
+.scentmap{position:relative;width:100%;max-width:440px;margin:6px auto 0;aspect-ratio:1/1;border:1px solid var(--line);border-radius:18px;overflow:hidden;box-shadow:var(--shadow)}
+.smap-svg{position:absolute;inset:0;width:100%;height:100%;display:block}
+.smap-lab{position:absolute;font-family:'Fraunces',serif;font-weight:600;font-size:14px;color:var(--ink);text-transform:uppercase;letter-spacing:.08em;opacity:.78;pointer-events:none}
+html[lang="fa"] .smap-lab{font-family:'Vazirmatn',sans-serif;letter-spacing:0}
+.smap-lab.top{top:10px;left:50%;transform:translateX(-50%)}
+.smap-lab.bottom{bottom:10px;left:50%;transform:translateX(-50%)}
+.smap-lab.left{left:12px;top:50%;transform:translateY(-50%)}
+.smap-lab.right{right:12px;top:50%;transform:translateY(-50%)}
+.smap-dot{position:absolute;width:22px;height:22px;border-radius:50%;transform:translate(-50%,-50%);background:radial-gradient(circle at 35% 30%,#fff,var(--gold) 55%,var(--gold-deep));box-shadow:0 0 0 5px rgba(189,154,78,.25),0 6px 18px -4px rgba(120,90,40,.7);transition:left .7s cubic-bezier(.2,.9,.2,1),top .7s cubic-bezier(.2,.9,.2,1);animation:dotPulse 2.4s ease-in-out infinite}
+@keyframes dotPulse{0%,100%{box-shadow:0 0 0 5px rgba(189,154,78,.25),0 6px 18px -4px rgba(120,90,40,.7)}50%{box-shadow:0 0 0 9px rgba(189,154,78,.12),0 6px 18px -4px rgba(120,90,40,.7)}}
+
+/* density editor */
+.denrow{display:flex;align-items:center;gap:6px;margin:8px 0 2px;font-size:11.5px;color:var(--ink-soft)}
+.deninp{width:74px;padding:5px 7px;border:1px solid var(--line);border-radius:8px;font:inherit;font-size:12px;background:var(--paper)}
+.denunit{font-size:10.5px;opacity:.7}
+.denreset{margin-inline-start:auto;border:1px solid var(--line);border-radius:7px;width:24px;height:24px;color:var(--gold-deep);background:#fff}
+
+/* paywall lock / blur */
+.lockwrap{position:relative}
+.blurred{filter:blur(9px) saturate(.7);opacity:.6;pointer-events:none;user-select:none}
+.lockoverlay{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;text-align:center;padding:18px;background:radial-gradient(circle at 50% 40%,rgba(251,246,238,.55),rgba(251,246,238,.86));border-radius:14px;z-index:5}
+.lockoverlay .lk{font-size:30px}
+.lockoverlay .lt{font-family:'Fraunces',serif;font-size:18px;font-weight:600}
+html[lang="fa"] .lockoverlay .lt{font-family:'Vazirmatn',sans-serif}
+.lockoverlay .ld{font-size:13px;color:var(--ink-soft);max-width:300px}
+
+/* membership / pricing */
+.price-card{border:1.5px solid var(--gold);border-radius:18px;padding:20px;background:linear-gradient(135deg,#fff,#fcf2dd);box-shadow:var(--shadow);max-width:360px}
+.price-card .amt{font-family:'Fraunces',serif;font-size:40px;font-weight:600}
+.price-card .amt small{font-size:15px;color:var(--ink-soft);font-weight:400}
+.price-card ul{list-style:none;margin:12px 0}
+.price-card li{padding:5px 0;font-size:14px;display:flex;gap:8px;align-items:center}
+.badge-pro{display:inline-flex;align-items:center;gap:6px;padding:5px 12px;border-radius:999px;background:linear-gradient(135deg,var(--gold),var(--gold-deep));color:#fff;font-weight:800;font-size:12.5px}
+.badge-free{display:inline-flex;padding:5px 12px;border-radius:999px;background:var(--paper-2);color:var(--ink-soft);font-weight:700;font-size:12.5px}
+.codebox{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:8px}
+.codechip{font-family:ui-monospace,monospace;background:var(--ink);color:#f6ecdc;padding:7px 12px;border-radius:9px;letter-spacing:.12em;font-weight:700;font-size:13px}
+.codechip.used{opacity:.4;text-decoration:line-through}
+
+/* education */
+.edu-card{display:flex;gap:14px;border:1px solid var(--line);border-radius:16px;padding:0;overflow:hidden;background:#fff;margin:12px 0;box-shadow:0 2px 0 rgba(0,0,0,.01)}
+.edu-thumb{position:relative;width:160px;flex:none;aspect-ratio:16/10;background:#2a201a center/cover}
+.edu-thumb .play{position:absolute;inset:0;display:grid;place-items:center;color:#fff;font-size:30px;text-shadow:0 2px 10px rgba(0,0,0,.5)}
+.edu-body{padding:14px 16px;flex:1}
+.edu-body h4{font-size:17px}
+.edu-body .tag2{font-size:11px;font-weight:700;color:var(--gold-deep);text-transform:uppercase;letter-spacing:.05em}
+.edu-frame{aspect-ratio:16/9;width:100%;border:0;border-radius:12px;margin-top:8px}
+@media(max-width:560px){.edu-card{flex-direction:column}.edu-thumb{width:100%}}
+
+/* analysis visuals */
+.an-block{margin:6px 0 18px}
+.an-h{font-family:'Fraunces',serif;font-size:16px;font-weight:600;margin-bottom:8px;color:var(--ink)}
+html[lang="fa"] .an-h{font-family:'Vazirmatn',sans-serif}
+.comp-row{display:flex;gap:18px;align-items:center;flex-wrap:wrap}
+.donut-svg{width:130px;height:130px;flex:none}
+.comp-legend{flex:1;min-width:180px;display:flex;flex-direction:column;gap:4px}
+.cl-row{display:flex;align-items:center;gap:8px;font-size:13px}
+.cl-sw{width:11px;height:11px;border-radius:3px;flex:none}
+.cl-n{flex:1}
+.journey-svg{width:100%;height:auto;display:block;border:1px solid var(--line);border-radius:12px;background:#fff}
+.journey-svg .jt{font-size:7px;fill:var(--ink-soft)}
+.jlegend{display:flex;gap:16px;margin-top:8px;font-size:12.5px;color:var(--ink-soft)}
+.jlegend span{display:inline-flex;align-items:center;gap:6px}
+.jlegend i{width:14px;height:3px;border-radius:2px;display:inline-block}
+.costbars{display:flex;flex-direction:column;gap:7px}
+.cb-row{display:grid;grid-template-columns:1.3fr 2fr auto;align-items:center;gap:10px}
+.cb-n{font-size:12.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cb-track{height:16px;background:var(--paper-2);border-radius:6px;overflow:hidden;border:1px solid var(--line)}
+.cb-fill{height:100%;border-radius:5px;transition:width .5s cubic-bezier(.2,.9,.2,1)}
+.cb-v{font-variant-numeric:tabular-nums;font-weight:800;font-size:12.5px}
+@media(max-width:560px){.cb-row{grid-template-columns:1fr 1.4fr auto}}
+
+/* family classification card */
+.class-card{background:linear-gradient(135deg,#2a201a,#3c2b22);color:#f6ecdc;border-radius:18px;padding:20px 22px;margin-top:6px}
+.class-card .k{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#d8b87a}
+.class-card .big{font-family:'Fraunces';font-size:28px;font-weight:600;margin:4px 0 8px;color:#fff}
+.class-card .imp{font-size:14px;color:#ecd9bf;line-height:1.55}
+.famtags{display:flex;gap:7px;flex-wrap:wrap;margin-top:12px}
+
+/* suggestion chips */
+.sugg{border:1px dashed var(--gold);background:#fffaf0;border-radius:14px;padding:14px;margin-top:12px}
+.sugg .srow{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px dashed #ecd9b5}
+.sugg .srow:last-child{border:none}
+.sugg .srow .n{font-weight:700;flex:1}
+.typechips{display:flex;flex-wrap:wrap;gap:9px}
+.tchip{padding:9px 15px;border-radius:13px;border:1.5px solid var(--line);background:#fff;font-weight:700;font-size:13.5px;transition:.16s}
+.tchip:hover{transform:translateY(-2px);box-shadow:var(--shadow);border-color:var(--gold)}
+
+/* fun fact */
+.funfact{display:flex;gap:11px;align-items:flex-start;background:linear-gradient(135deg,#fdf2e2,#fce9f0);border:1px solid #f0d9c6;border-radius:14px;padding:13px 15px;margin-top:14px}
+.funfact .fi{font-size:20px}
+.funfact .ft{font-size:13px}
+.funfact .ft b{font-family:'Fraunces';font-weight:600}
+
+/* collections */
+.collgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px}
+.collcard{border:1px solid var(--line);border-radius:16px;padding:16px;background:#fff;transition:.16s}
+.collcard:hover{box-shadow:var(--shadow);transform:translateY(-2px)}
+.collcard h4{font-size:18px;display:flex;align-items:center;gap:8px}
+.collcard .meta2{font-size:12px;color:var(--ink-soft);margin:6px 0 12px}
+
+/* toast */
+.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(40px);background:var(--ink);color:#fff;padding:12px 20px;border-radius:13px;font-weight:600;font-size:14px;z-index:300;opacity:0;transition:.35s;box-shadow:var(--shadow)}
+.toast.show{transform:translateX(-50%);opacity:1}
+.empty{text-align:center;padding:26px;color:var(--ink-soft);font-style:italic}
+footer{padding:34px 0 50px;text-align:center;color:var(--ink-soft);font-size:12.5px}
+::-webkit-scrollbar{width:9px;height:9px}::-webkit-scrollbar-thumb{background:var(--line);border-radius:9px}
+/* ---------- RESPONSIVE ---------- */
+@media(max-width:860px){
+  main.wrap{padding-bottom:92px}            /* clear the fixed bottom bar */
+  .topnav{display:none}
+  .ftable{font-size:12.5px}
+  .ftable-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:0 -4px;border-radius:12px}
+  .ftable-scroll > .ftable{min-width:560px}
+  .matgrid{grid-template-columns:1fr;max-height:none}
+  .panel-head{padding:15px 15px}
+  .panel-body{padding:4px 15px 18px}
+  .hero{padding:18px 0 4px}
+  .pyrow{grid-template-columns:54px 1fr 46px}
+}
+@media(max-width:560px){
+  .opt-grid{grid-template-columns:1fr}
+  .panel-head h3{font-size:18px}
+  .panel-head .ix{width:38px;height:38px;font-size:18px}
+  .row{gap:10px}
+  .field{min-width:130px}
+  .summary-bar{gap:7px}
+  .chip-stat{padding:7px 11px}
+  .view-head h2{font-size:26px}
+}
+</style>
+</head>
+<body>
+
+<!-- ============ ONBOARDING ============ -->
+<div class="overlay show" id="onboard">
+  <div class="modal">
+    <div class="mcap">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+        <div class="brand"><span class="dot"></span>JABIR</div>
+        <div class="langtoggle" style="background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.25)">
+          <button data-lang="en" class="on" onclick="applyLang('en')">EN</button>
+          <button data-lang="fa" onclick="applyLang('fa')">فا</button>
+        </div>
+      </div>
+      <p data-i18n="ob_tagline">Your perfumer's atelier — formula design grounded in real fragrance chemistry, made simple.</p>
+    </div>
+    <div class="mbody">
+      <!-- step 1: account -->
+      <div class="step active" data-step="0">
+        <h3 style="font-size:22px" data-i18n="ob_welcome">Welcome</h3>
+        <p class="muted" style="margin:6px 0 16px" data-i18n="ob_welcome_sub">Sign in with your email to keep your formulas, accords and collections.</p>
+        <label class="lab" data-i18n="ob_email">Email address</label>
+        <input class="inp" id="emailIn" type="email" placeholder="you@studio.com" data-i18n-ph="ob_email_ph" autocomplete="email">
+        <p class="muted" style="font-size:11.5px;margin-top:8px" data-i18n="ob_proto">Prototype mode stores data in this browser. The deployment guide explains how to wire real, secure accounts.</p>
+      </div>
+      <!-- step 2: product -->
+      <div class="step" data-step="1">
+        <h3 style="font-size:22px" data-i18n="ob_prod_q">What are you making?</h3>
+        <p class="muted" style="margin:6px 0 12px" data-i18n="ob_prod_sub">This sets the concentrate strength. You can fine-tune it later.</p>
+        <div class="opt-grid" id="productOpts"></div>
+      </div>
+      <!-- step 3: prefs -->
+      <div class="step" data-step="2">
+        <h3 style="font-size:22px" data-i18n="ob_prefs">Two quick preferences</h3>
+        <label class="lab" style="margin-top:14px" data-i18n="ob_measure">Measure by</label>
+        <div class="opt-grid">
+          <button class="opt sel" data-basis="weight"><div class="t" data-i18n="ob_w_t">Weight %</div><div class="d" data-i18n="ob_w_d">Grams — the accurate, professional standard</div></button>
+          <button class="opt" data-basis="volume"><div class="t" data-i18n="ob_v_t">Volume %</div><div class="d" data-i18n="ob_v_d">Millilitres — converted using density</div></button>
+        </div>
+        <label class="lab" style="margin-top:16px" data-i18n="ob_funfacts">Fun facts</label>
+        <div class="opt-grid">
+          <button class="opt sel" data-fun="yes"><div class="t" data-i18n="ob_fy_t">Yes please ✨</div><div class="d" data-i18n="ob_fy_d">Sprinkle perfumery trivia through each section</div></button>
+          <button class="opt" data-fun="no"><div class="t" data-i18n="ob_fn_t">Keep it clean</div><div class="d" data-i18n="ob_fn_d">Just the tools, no extras</div></button>
+        </div>
+      </div>
+    </div>
+    <div class="mfoot">
+      <div class="dots"><i class="on"></i><i></i><i></i></div>
+      <div class="row">
+        <button class="btn ghost" id="backBtn" style="visibility:hidden">← Back</button>
+        <div style="flex:1"></div>
+        <button class="btn primary" id="nextBtn">Continue →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ HEADER ============ -->
+<header class="top">
+  <div class="wrap">
+    <div class="brand"><span class="dot"></span>JABIR <small data-i18n="brand_sub">atelier</small></div>
+    <div class="spacer"></div>
+    <span class="pill" id="acctPill">👤 <b id="acctEmail">guest</b></span>
+    <button class="icon-btn" id="settingsBtn" title="Profile & settings">⚙</button>
+  </div>
+</header>
+
+<!-- ============ DESKTOP TAB NAV ============ -->
+<nav class="topnav"><div class="wrap" id="topNav"></div></nav>
+
+<main class="wrap">
+  <div id="view-container"></div>
+
+  <footer>
+    JABIR · a perfumer's calculator. Always observe IFRA usage limits and patch-test before skin application.<br>
+    Concentration conventions and material data are educational starting points, not a substitute for professional safety assessment.
+  </footer>
+</main>
+
+<!-- ============ MOBILE BOTTOM TAB BAR ============ -->
+<nav class="bottomnav" id="bottomNav"></nav>
+
+<div class="toast" id="toast"></div>
+
+<script>
+"use strict";
+
+/* ============================================================
+   STORAGE (safe — falls back to memory if localStorage blocked)
+   ============================================================ */
+const Store = (()=>{
+  let mem = {};
+  let ok = true;
+  try{ const t='__t'; localStorage.setItem(t,'1'); localStorage.removeItem(t);}catch(e){ ok=false; }
+  return {
+    get(k){ try{ return ok? localStorage.getItem(k): mem[k]; }catch(e){ return mem[k]; } },
+    set(k,v){ try{ ok? localStorage.setItem(k,v): (mem[k]=v); }catch(e){ mem[k]=v; } }
+  };
+})();
+
+/* ============================================================
+   LANGUAGE / I18N  (English + Persian, with RTL)
+   ============================================================ */
+const I18N={
+ en:{
+  brand_sub:'atelier',
+  nav_perfumery:'Perfumery', nav_library:'Library', nav_collections:'Collections', nav_account:'Account', nav_profile:'Profile',
+  vt_perfumery:'Compose with <em>confidence.</em>',
+  vi_perfumery:'Set the final concentration of each material, lock the ones you love, and Jabir weighs out the exact grams or millilitres of raw material, accord and solvent for your batch.',
+  vt_library:'Material <em>library.</em>', vi_library:'Naturals and aroma chemicals. Search, filter by scent family, and add anything straight to your formula.',
+  vt_collections:'Your <em>collections.</em>', vi_collections:'Save finished formulas to revisit anytime, load classic archetypes as a starting point, and keep a library of perfumes you own or admire.',
+  vt_account:'Your <em>account.</em>', vi_account:'Your sign-in identity and where your work is stored.',
+  vt_profile:'Profile & <em>preferences.</em>', vi_profile:'Language, how Jabir measures, what it shows you, and your default product.',
+  st_product:'Product & Batch', ss_product:'Choose form, strength and batch size',
+  st_ai:'Describe a Feeling', ss_ai:'Tell the AI a mood or memory — get a starting formula',
+  st_inspiration:'Inspiration & Vibe', ss_inspiration:'Describe a feeling — get real note suggestions',
+  st_type:'Fragrance Type', ss_type:'Pick a family to seed a starting palette',
+  st_accord:'Accord Builder', ss_accord:'Blend notes into a reusable accord',
+  st_formula:'Formula & Calculator', ss_formula:'Set final %, lock & let Jabir weigh it out',
+  st_matrix:'Scent Map', ss_matrix:'See where your blend sits: fresh · warm · sweet · smoky',
+  st_analysis:'Analysis & Visuals', ss_analysis:'Composition, scent journey, performance & cost',
+  st_library:'Material Library', ss_library:'Naturals & synthetics — search & add',
+  st_collection:'Saved Formulas', ss_collection:'Save & revisit your finished formulas',
+  st_commercial:'Archetypes & Owned Perfumes', ss_commercial:'Public starter formulas + log perfumes you own',
+  st_account:'Account', ss_account:'Your sign-in identity and saved work',
+  st_profile:'Preferences', ss_profile:'Language, measurement, fun facts & defaults',
+  sum_making:'Making', sum_strength:'Strength', sum_batch:'Batch', sum_ingredients:'Ingredients', sum_accords:'Accords saved',
+  ob_tagline:"Your perfumer's atelier — formula design grounded in real fragrance chemistry, made simple.",
+  ob_welcome:'Welcome', ob_welcome_sub:'Sign in with your email to keep your formulas, accords and collections.',
+  ob_email:'Email address', ob_email_ph:'you@studio.com',
+  ob_proto:'Prototype mode stores data in this browser. The deployment guide explains how to wire real, secure accounts.',
+  ob_prod_q:'What are you making?', ob_prod_sub:'This sets the concentrate strength. You can fine-tune it later.',
+  ob_prefs:'Two quick preferences', ob_measure:'Measure by',
+  ob_w_t:'Weight %', ob_w_d:'Grams — the accurate, professional standard',
+  ob_v_t:'Volume %', ob_v_d:'Millilitres — converted using density',
+  ob_funfacts:'Fun facts', ob_fy_t:'Yes please ✨', ob_fy_d:'Sprinkle perfumery trivia through each section',
+  ob_fn_t:'Keep it clean', ob_fn_d:'Just the tools, no extras',
+  ob_continue:'Continue →', ob_enter:'Enter the atelier →', ob_back:'← Back',
+  btn_addformula:'Add to formula +', btn_save:'Save', btn_delete:'Delete', btn_remove:'Remove', btn_load:'Load formula ↗',
+  btn_clear:'Clear', btn_autobal:'Auto-balance', btn_savecoll:'💾 Save to collection', btn_suggest:'✨ Suggest notes',
+  btn_compose:'✨ Compose with AI', btn_signout:'Sign out',
+  lang_label:'Language', basis_label:'Measure ingredients by', defprod_label:'Default product type', funfacts_label:'Fun facts',
+  ai_ph:'e.g. a warm winter evening by a fireplace — cosy, a little smoky, sweet but grown-up; reminds me of my grandmother’s amber necklace',
+  ai_nokey:'Add your free Gemini API key in Profile → AI to use this. It takes two minutes.',
+  ai_thinking:'Composing your formula…', ai_error:'Could not reach Gemini. Check your key and connection (and see the guide on hosting).',
+  ai_accept:'Use this formula →', ai_intro:'Describe the feeling, mood or memory you want to bottle. The AI suggests a balanced starting formula using real materials — then you adjust everything.',
+  m_fresh:'Fresh', m_warm:'Warm', m_sweet:'Sweet', m_smoky:'Smoky', m_empty:'Add notes to see your blend mapped here.',
+  vibe_ph:'e.g. a warm, sensual winter evening by a fireplace — cosy, a little smoky, sweet but grown-up',
+  nav_education:'Learn', vt_education:'<em>Learn</em> perfumery.', vi_education:'Video lessons, guides and articles on building fragrances — for members.',
+  st_education:'Lessons & Articles', ss_education:'Watch, read, and level up your craft',
+  st_membership:'Membership', ss_membership:'Your plan and how to upgrade',
+  st_admin:'Admin', ss_admin:'Codes, members and tools',
+  lock_title:'A Jabir membership feature', lock_desc:'Unlock the AI composer, scent map and lessons with Jabir Pro — or enter an access code.',
+  lock_cta:'See membership →', lock_code:'I have a code',
+  mem_free:'Free plan', mem_pro:'Jabir Pro', mem_active:'Active', mem_upgrade:'Upgrade to Pro',
+  mem_perks:'AI composer · Scent map & diagrams · Education library · Future Pro features',
+  mem_subscribe:'Subscribe — $5 / month', mem_haveCode:'Have an access code?', mem_redeem:'Redeem',
+  mem_code_ok:'Welcome to Jabir Pro ✨', mem_code_bad:'That code isn’t valid or is already used.',
+  edu_locked:'Subscribe to unlock the full lesson.'
+ },
+ fa:{
+  brand_sub:'آتلیه',
+  nav_perfumery:'عطرسازی', nav_library:'کتابخانه', nav_collections:'مجموعه‌ها', nav_account:'حساب', nav_profile:'پروفایل',
+  vt_perfumery:'با <em>اطمینان</em> بسازید.',
+  vi_perfumery:'غلظت نهایی هر ماده را تعیین کنید، موارد دلخواه را قفل کنید و جابر مقدار دقیق گرم یا میلی‌لیتر هر ماده، آکورد و حلال را برای دسته شما محاسبه می‌کند.',
+  vt_library:'کتابخانهٔ <em>مواد.</em>', vi_library:'مواد طبیعی و شیمیایی معطر. جستجو کنید، بر اساس خانوادهٔ بویایی فیلتر کنید و مستقیم به فرمول اضافه کنید.',
+  vt_collections:'<em>مجموعه‌های</em> شما.', vi_collections:'فرمول‌های نهایی را ذخیره کنید، الگوهای کلاسیک را به‌عنوان نقطهٔ شروع بارگذاری کنید و کتابخانه‌ای از عطرهایتان بسازید.',
+  vt_account:'<em>حساب</em> شما.', vi_account:'هویت ورود شما و محل ذخیرهٔ کارهایتان.',
+  vt_profile:'پروفایل و <em>تنظیمات.</em>', vi_profile:'زبان، نحوهٔ اندازه‌گیری جابر، نمایش‌ها و محصول پیش‌فرض شما.',
+  st_product:'محصول و دسته', ss_product:'فرم، غلظت و اندازهٔ دسته را انتخاب کنید',
+  st_ai:'یک حس را توصیف کنید', ss_ai:'حال‌وهوا یا خاطره‌ای را به هوش مصنوعی بگویید تا فرمول اولیه بدهد',
+  st_inspiration:'الهام و حال‌وهوا', ss_inspiration:'یک حس را توصیف کنید — پیشنهاد نت‌های واقعی بگیرید',
+  st_type:'نوع رایحه', ss_type:'یک خانواده را برای پالت شروع انتخاب کنید',
+  st_accord:'سازندهٔ آکورد', ss_accord:'نت‌ها را در یک آکورد قابل‌استفاده ترکیب کنید',
+  st_formula:'فرمول و ماشین‌حساب', ss_formula:'درصد نهایی را تعیین و قفل کنید تا جابر وزن کند',
+  st_matrix:'نقشهٔ رایحه', ss_matrix:'ببینید ترکیب شما کجا قرار دارد: تازه · گرم · شیرین · دودی',
+  st_analysis:'تحلیل و نمودارها', ss_analysis:'ترکیب، سفر رایحه، عملکرد و هزینه',
+  st_library:'کتابخانهٔ مواد', ss_library:'مواد طبیعی و مصنوعی — جستجو و افزودن',
+  st_collection:'فرمول‌های ذخیره‌شده', ss_collection:'فرمول‌های نهایی را ذخیره و مرور کنید',
+  st_commercial:'الگوها و عطرهای شما', ss_commercial:'فرمول‌های شروع عمومی + ثبت عطرهایی که دارید',
+  st_account:'حساب', ss_account:'هویت ورود و کارهای ذخیره‌شده',
+  st_profile:'تنظیمات', ss_profile:'زبان، اندازه‌گیری، حقایق جالب و پیش‌فرض‌ها',
+  sum_making:'در حال ساخت', sum_strength:'غلظت', sum_batch:'دسته', sum_ingredients:'مواد', sum_accords:'آکوردهای ذخیره‌شده',
+  ob_tagline:'آتلیهٔ عطرسازی شما — طراحی فرمول بر پایهٔ شیمی واقعی رایحه، به‌سادگی.',
+  ob_welcome:'خوش آمدید', ob_welcome_sub:'برای نگه‌داری فرمول‌ها، آکوردها و مجموعه‌ها با ایمیل خود وارد شوید.',
+  ob_email:'نشانی ایمیل', ob_email_ph:'you@studio.com',
+  ob_proto:'در حالت نمونه، داده‌ها در همین مرورگر ذخیره می‌شوند. راهنمای انتشار نحوهٔ ساخت حساب امن واقعی را توضیح می‌دهد.',
+  ob_prod_q:'چه چیزی می‌سازید؟', ob_prod_sub:'این غلظت ماده معطر را تعیین می‌کند. بعداً می‌توانید تنظیمش کنید.',
+  ob_prefs:'دو تنظیم سریع', ob_measure:'اندازه‌گیری بر اساس',
+  ob_w_t:'درصد وزنی', ob_w_d:'گرم — استاندارد دقیق و حرفه‌ای',
+  ob_v_t:'درصد حجمی', ob_v_d:'میلی‌لیتر — با استفاده از چگالی تبدیل می‌شود',
+  ob_funfacts:'حقایق جالب', ob_fy_t:'بله لطفاً ✨', ob_fy_d:'کمی دانستنی‌های عطرسازی در هر بخش',
+  ob_fn_t:'ساده بماند', ob_fn_d:'فقط ابزارها، بدون اضافات',
+  ob_continue:'ادامه →', ob_enter:'ورود به آتلیه →', ob_back:'→ بازگشت',
+  btn_addformula:'+ افزودن به فرمول', btn_save:'ذخیره', btn_delete:'حذف', btn_remove:'برداشتن', btn_load:'بارگذاری فرمول ↗',
+  btn_clear:'پاک کردن', btn_autobal:'توازن خودکار', btn_savecoll:'💾 ذخیره در مجموعه', btn_suggest:'✨ پیشنهاد نت‌ها',
+  btn_compose:'✨ ساخت با هوش مصنوعی', btn_signout:'خروج',
+  lang_label:'زبان', basis_label:'اندازه‌گیری مواد بر اساس', defprod_label:'نوع محصول پیش‌فرض', funfacts_label:'حقایق جالب',
+  ai_ph:'مثلاً یک شب گرم زمستانی کنار شومینه — دنج، کمی دودی، شیرین اما پخته؛ مرا یاد گردنبند کهربای مادربزرگم می‌اندازد',
+  ai_nokey:'برای استفاده، کلید رایگان Gemini خود را در پروفایل ← هوش مصنوعی وارد کنید. دو دقیقه طول می‌کشد.',
+  ai_thinking:'در حال ساخت فرمول شما…', ai_error:'دسترسی به Gemini ممکن نشد. کلید و اتصال خود را بررسی کنید (و راهنمای میزبانی را ببینید).',
+  ai_accept:'استفاده از این فرمول →', ai_intro:'حس، حال‌وهوا یا خاطره‌ای را که می‌خواهید در بطری بریزید توصیف کنید. هوش مصنوعی یک فرمول شروع متوازن با مواد واقعی پیشنهاد می‌دهد — سپس همه‌چیز را تنظیم می‌کنید.',
+  ai_accept2:'استفاده از این فرمول',
+  m_fresh:'تازه', m_warm:'گرم', m_sweet:'شیرین', m_smoky:'دودی', m_empty:'برای دیدن نقشهٔ ترکیب، نت اضافه کنید.',
+  vibe_ph:'مثلاً یک شب گرم و دلنشین زمستانی کنار شومینه — دنج، کمی دودی، شیرین اما پخته',
+  nav_education:'آموزش', vt_education:'<em>آموزش</em> عطرسازی.', vi_education:'ویدیوها، راهنماها و مقالات ساخت عطر — ویژهٔ اعضا.',
+  st_education:'درس‌ها و مقالات', ss_education:'تماشا کنید، بخوانید و مهارتتان را بالا ببرید',
+  st_membership:'عضویت', ss_membership:'طرح شما و نحوهٔ ارتقا',
+  st_admin:'مدیریت', ss_admin:'کدها، اعضا و ابزارها',
+  lock_title:'ویژگی عضویت جابر', lock_desc:'با جابر پرو به آهنگساز هوش مصنوعی، نقشهٔ رایحه و درس‌ها دسترسی پیدا کنید — یا یک کد دسترسی وارد کنید.',
+  lock_cta:'مشاهدهٔ عضویت →', lock_code:'کد دارم',
+  mem_free:'طرح رایگان', mem_pro:'جابر پرو', mem_active:'فعال', mem_upgrade:'ارتقا به پرو',
+  mem_perks:'آهنگساز هوش مصنوعی · نقشهٔ رایحه و نمودارها · کتابخانهٔ آموزش · ویژگی‌های آیندهٔ پرو',
+  mem_subscribe:'اشتراک — ۵ دلار در ماه', mem_haveCode:'کد دسترسی دارید؟', mem_redeem:'اعمال کد',
+  mem_code_ok:'به جابر پرو خوش آمدید ✨', mem_code_bad:'این کد معتبر نیست یا قبلاً استفاده شده است.',
+  edu_locked:'برای باز کردن کامل درس، مشترک شوید.'
+ }
+};
+let LANG = (Store.get('olfact:lang')||'en');
+function t(k){ return (I18N[LANG]&&I18N[LANG][k]!=null)?I18N[LANG][k]:(I18N.en[k]!=null?I18N.en[k]:k); }
+function applyLang(lang){
+  LANG = (lang==='fa')?'fa':'en';
+  Store.set('olfact:lang',LANG);
+  const html=document.documentElement;
+  html.lang=LANG; html.dir = LANG==='fa'?'rtl':'ltr';
+  // static elements tagged for translation (onboarding)
+  document.querySelectorAll('[data-i18n]').forEach(el=>{ el.innerHTML=t(el.getAttribute('data-i18n')); });
+  document.querySelectorAll('[data-i18n-ph]').forEach(el=>{ el.placeholder=t(el.getAttribute('data-i18n-ph')); });
+  document.querySelectorAll('.langtoggle button').forEach(b=>b.classList.toggle('on', b.dataset.lang===LANG));
+  if(typeof S!=='undefined'){ S.prefs.lang=LANG; try{persist();}catch(e){} }
+  // re-render the app if it's built
+  if(document.getElementById('view-container') && document.getElementById('view-container').children.length && !document.getElementById('onboard').classList.contains('show')){
+    buildShell();
+  }
+  // update onboarding next/back button labels if visible
+  const nb=document.getElementById('nextBtn'); if(nb){ nb.textContent = (typeof step!=='undefined'&&step===2)?t('ob_enter'):t('ob_continue'); }
+  const bb=document.getElementById('backBtn'); if(bb) bb.textContent=t('ob_back');
+}
+window.applyLang=applyLang;
+
+/* ============================================================
+   PRODUCT TYPES  (concentrate = aromatic compounds % of product)
+   ============================================================ */
+const PRODUCTS = [
+  {id:'parfum', name:'Parfum / Extrait', d:'The richest, longest-lasting form', min:15,max:40,def:25, base:'Alcohol'},
+  {id:'edp', name:'Eau de Parfum', d:'Strong & long-wearing', min:10,max:20,def:18, base:'Alcohol'},
+  {id:'edt', name:'Eau de Toilette', d:'The everyday classic', min:5,max:15,def:10, base:'Alcohol'},
+  {id:'edc', name:'Eau de Cologne', d:'Light & splashable', min:2,max:8,def:4, base:'Alcohol'},
+  {id:'fraiche', name:'Eau Fraîche / Mist', d:'Whisper-light body splash', min:1,max:3,def:2, base:'Alcohol + water'},
+  {id:'oil', name:'Perfume Oil / Roll-on', d:'Alcohol-free, on a carrier oil', min:15,max:30,def:20, base:'Carrier oil'},
+  {id:'soap', name:'Soap', d:'Fragrance load for cold/melt soap', min:1,max:3,def:2, base:'Soap base'},
+  {id:'candle', name:'Candle', d:'Wax fragrance load', min:6,max:10,def:8, base:'Wax'},
+  {id:'diffuser', name:'Reed Diffuser', d:'On a low-odour solvent base', min:15,max:25,def:20, base:'DPG / solvent'},
+  {id:'custom', name:'Custom', d:'Set your own concentrate strength', min:0.1,max:100,def:15, base:'Alcohol'},
+];
+
+/* ============================================================
+   MATERIAL LIBRARY  (curated starter dataset, expandable)
+   fields: name,type(n/s),family,pos,den(g/mL),tags[],desc,max(%),fix(bool)
+   pos: top | heart | base | top-heart | heart-base
+   ============================================================ */
+function M(name,type,family,pos,den,tags,desc,max,fix){return{id:name.toLowerCase().replace(/[^a-z0-9]+/g,'-'),name,type,family,pos,den,tags,desc,max,fix:!!fix};}
+const MATERIALS=[
+ /* ---- Citrus / sparkling tops ---- */
+ M('Bergamot','n','citrus','top',0.876,['citrus','fresh','green'],'Bright, sparkling, slightly floral citrus',30),
+ M('Lemon','n','citrus','top',0.85,['citrus','fresh','sharp'],'Zesty, clean, sharp citrus',30),
+ M('Sweet Orange','n','citrus','top',0.844,['citrus','fruity','sweet'],'Juicy, cheerful, sweet orange',30),
+ M('Grapefruit','n','citrus','top',0.86,['citrus','fresh','bitter'],'Tangy, sparkling, faintly bitter',25),
+ M('Mandarin','n','citrus','top',0.85,['citrus','sweet','fruity'],'Soft, sweet, slightly floral citrus',30),
+ M('Lime','n','citrus','top',0.88,['citrus','fresh','green'],'Crisp, green, tart citrus',25),
+ M('Yuzu','n','citrus','top',0.86,['citrus','fresh','fruity'],'Exotic tart grapefruit–mandarin',20),
+ M('Petitgrain','n','green','top-heart',0.89,['green','citrus','woody'],'Bittersweet green twiggy citrus',20),
+ M('Litsea Cubeba','n','citrus','top',0.89,['citrus','fresh','lemony'],'Lemony, fresh, lightly floral',15),
+ M('Dihydromyrcenol','s','aromatic','top',0.85,['fresh','citrus','aromatic'],'Fresh lime–lavender airy modernity',20),
+ M('Aldehyde C-10','s','aldehyde','top',0.83,['aldehydic','waxy','citrus'],'Orange-peel waxy sparkle',2),
+ M('Aldehyde C-11','s','aldehyde','top',0.83,['aldehydic','waxy','fresh'],'Fatty fresh metallic sparkle',2),
+ M('Aldehyde C-12 MNA','s','aldehyde','top',0.83,['aldehydic','clean','soapy'],'Clean ironed-laundry aldehyde',2),
+
+ /* ---- Fruity ---- */
+ M('Green Apple','s','fruity','top-heart',0.95,['fruity','fresh','green'],'Crisp green apple',10),
+ M('Pear','s','fruity','top',0.96,['fruity','fresh','sweet'],'Watery, sweet pear',8),
+ M('Peach (Gamma-Undecalactone)','s','fruity','heart',0.94,['fruity','creamy','sweet'],'Soft creamy peach skin',5),
+ M('Raspberry Ketone','s','fruity','heart',1.05,['fruity','sweet','jammy'],'Jammy, ripe raspberry',3),
+ M('Cassis Base','s','fruity','top-heart',0.95,['fruity','green','tart'],'Tart juicy blackcurrant with a green edge',5),
+ M('Davana','n','fruity','heart',0.95,['fruity','boozy','herbal'],'Apricot–rum fruity facet',5),
+
+ /* ---- Florals / hearts ---- */
+ M('Rose Absolute','n','floral','heart',0.96,['floral','rosy','honey'],'Rich, honeyed, velvety rose',20),
+ M('Rose Otto','n','floral','heart',0.89,['floral','rosy','fresh','spicy'],'Fresh, dewy, lightly spicy rose',10),
+ M('Jasmine Absolute','n','floral','heart',0.98,['floral','indolic','white'],'Lush, narcotic white floral',15),
+ M('Jasmine Sambac','n','floral','heart',0.98,['floral','green','white','tea'],'Green, fresh, tea-like jasmine',12),
+ M('Ylang Ylang','n','floral','heart',0.93,['floral','banana','custard','exotic'],'Creamy banana-custard exotic floral',15),
+ M('Neroli','n','floral','top-heart',0.87,['floral','citrus','green'],'Fresh, bittersweet orange-blossom',15),
+ M('Orange Blossom Absolute','n','floral','heart',0.95,['floral','honey','indolic'],'Honeyed, indolic orange flower',10),
+ M('Tuberose Absolute','n','floral','heart',0.99,['floral','white','creamy','narcotic'],'Heady, creamy, narcotic white floral',8),
+ M('Geranium','n','floral','heart',0.89,['floral','rosy','green','minty'],'Rosy, green, slightly minty floral',15),
+ M('Orris / Iris Butter','n','floral','heart',0.95,['powdery','floral','rooty','violet'],'Luxurious powdery, rooty violet',10),
+ M('Phenylethyl Alcohol','s','floral','heart',1.02,['floral','rosy','honey'],'Soft, fresh rose–honey',30),
+ M('Hedione','s','floral','heart',1.0,['floral','jasmine','airy','transparent'],'Luminous, airy jasmine diffusion',40),
+ M('Methyl Ionone','s','floral','heart',0.93,['floral','violet','powdery','woody'],'Powdery violet with a woody edge',15),
+ M('Linalool','s','floral','top-heart',0.86,['floral','fresh','woody'],'Soft fresh floral wood (lavender/coriander)',20),
+ M('Linalyl Acetate','s','floral','top-heart',0.9,['floral','fresh','fruity','bergamot'],'Fruity-floral bergamot–lavender tone',20),
+ M('Cyclamen Aldehyde','s','floral','heart',0.93,['floral','green','watery','muguet'],'Green, watery cyclamen muguet',3),
+ M('Helional','s','floral','top-heart',1.06,['floral','green','marine','muguet'],'Fresh aquatic green muguet',5),
+ M('Florhydral','s','floral','top-heart',0.9,['floral','green','muguet','citrus'],'Fresh green floral with citrus lift',3),
+
+ /* ---- Green / herbal / aromatic ---- */
+ M('Lavender','n','aromatic','top-heart',0.885,['aromatic','herbal','floral'],'Clean herbal floral with soft camphor',30),
+ M('Lavandin','n','aromatic','top-heart',0.89,['aromatic','camphor','fresh'],'Sharp, camphoraceous lavender',30),
+ M('Clary Sage','n','herb','heart',0.9,['herbal','aromatic','ambery'],'Warm herbal-tea, ambery sage',10),
+ M('Rosemary','n','herb','top',0.9,['herbal','camphor','fresh'],'Camphoraceous pine-herb',10),
+ M('Basil','n','herb','top-heart',0.95,['herbal','green','anise'],'Fresh green anisic basil',8),
+ M('Peppermint','n','herb','top',0.9,['herbal','minty','cooling'],'Cool, fresh menthol mint',5),
+ M('Spearmint','n','herb','top',0.93,['herbal','minty','sweet'],'Sweet, soft mint',5),
+ M('Thyme','n','herb','top-heart',0.91,['herbal','spicy','medicinal'],'Warm, spicy, medicinal herb',5),
+ M('Eucalyptus','n','herb','top',0.92,['herbal','camphor','cooling'],'Sharp cooling camphor',8),
+ M('Coriander Seed','n','herb','top-heart',0.87,['herbal','spicy','citrus'],'Spicy, fresh, peppery-citrus',8),
+ M('Galbanum','n','green','top',0.91,['green','bitter','sharp'],'Intensely green, bitter sap',5),
+ M('Violet Leaf Absolute','n','green','top-heart',0.95,['green','leafy','cucumber'],'Green, watery cucumber-leaf',3),
+ M('Tomato Leaf','s','green','top-heart',0.95,['green','leafy','sharp'],'Sharp green tomato vine',2),
+ M('Black Tea','s','green','heart',0.95,['green','tea','dry'],'Dry, aromatic tea leaf',5),
+
+ /* ---- Spices ---- */
+ M('Black Pepper','n','spice','top-heart',0.87,['spicy','warm','dry'],'Dry, sparkling peppery heat',8),
+ M('Pink Pepper','n','spice','top',0.86,['spicy','fresh','rosy'],'Sparkling rosy-fresh pepper',8),
+ M('Cardamom','n','spice','top-heart',0.92,['spicy','fresh','aromatic'],'Fresh camphoraceous spice',8),
+ M('Ginger','n','spice','top-heart',0.88,['spicy','fresh','zesty'],'Fresh, zesty, warm spice',8),
+ M('Nutmeg','n','spice','heart',0.89,['spicy','warm','aromatic'],'Warm aromatic woody spice',5),
+ M('Cinnamon','n','spice','heart',1.05,['spicy','warm','sweet'],'Warm, sweet, woody spice',2),
+ M('Clove (Eugenol)','n','spice','heart',1.05,['spicy','warm','medicinal'],'Warm, dry, medicinal clove',2),
+ M('Saffron (Safranal)','s','spice','heart',0.97,['spicy','leathery','dry'],'Dry, leathery, metallic spice',2),
+ M('Star Anise','n','spice','top-heart',0.98,['spicy','anise','sweet'],'Sweet liquorice anise',3),
+ M('Cumin','n','spice','heart',0.9,['spicy','warm','animalic'],'Warm, humanly spicy',1),
+
+ /* ---- Woods ---- */
+ M('Sandalwood','n','woody','base',0.97,['woody','creamy','milky'],'Soft, creamy, milky wood',20,true),
+ M('Sandalwood (Javanol-type)','s','woody','base',0.96,['woody','creamy','sandal'],'Smooth, creamy synthetic sandalwood',15,true),
+ M('Cedarwood Virginia','n','woody','base',0.94,['woody','dry','pencil'],'Dry pencil-shaving cedar',20,true),
+ M('Cedarwood Atlas','n','woody','base',0.93,['woody','dry','balsamic'],'Warm, balsamic, dry cedar',20,true),
+ M('Vetiver','n','woody','base',1.01,['woody','earthy','smoky'],'Earthy, smoky, rooty wood',15,true),
+ M('Patchouli','n','woody','base',0.96,['woody','earthy','camphor'],'Dark, earthy, camphoraceous wood',15,true),
+ M('Guaiacwood','n','woody','base',0.97,['woody','smoky','rosy'],'Smoky-sweet, soft wood',15,true),
+ M('Cypriol (Nagarmotha)','n','woody','base',1.0,['woody','smoky','leathery'],'Smoky, leathery, dry wood',5,true),
+ M('Oud / Agarwood','n','woody','base',0.97,['woody','animalic','smoky','balsamic'],'Complex barnyard-smoky precious wood',10,true),
+ M('Oud Accord','s','woody','base',0.97,['woody','smoky','leathery'],'Dry, smoky synthetic oud',8,true),
+ M('Iso E Super','s','woody','base',0.96,['woody','ambery','velvety','transparent'],'Velvety, transparent cedar-amber halo',40,true),
+ M('Cashmeran','s','woody','base',0.97,['woody','musky','spicy','pine'],'Warm musky-woody pine velvet',15,true),
+ M('Norlimbanol (dry amber wood)','s','woody','base',0.92,['woody','dry','ambery'],'Extremely dry woody-amber',5,true),
+ M('Cedryl Acetate','s','woody','base',0.99,['woody','dry','ambery'],'Dry, woody, ambery cedar',20,true),
+ M('Vetiveryl Acetate','s','woody','base',0.99,['woody','fresh','earthy'],'Fresh, clean-dry vetiver',15,true),
+
+ /* ---- Resins / balsamic / amber ---- */
+ M('Frankincense (Olibanum)','n','resin','base',0.87,['resinous','incense','citrus'],'Fresh, peppery incense resin',10,true),
+ M('Myrrh','n','resin','base',1.0,['resinous','balsamic','medicinal'],'Warm, bitter, balsamic resin',8,true),
+ M('Benzoin','n','resin','base',1.05,['balsamic','sweet','vanilla'],'Sweet, warm, vanillic balsam',15,true),
+ M('Labdanum','n','resin','base',1.0,['resinous','ambery','leathery'],'Rich, ambery, leathery resin',10,true),
+ M('Opoponax','n','resin','base',1.0,['resinous','balsamic','sweet'],'Soft, sweet balsamic myrrh',8,true),
+ M('Tolu Balsam','n','resin','base',1.1,['balsamic','sweet','cinnamon'],'Sweet, cinnamic balsam',10,true),
+ M('Peru Balsam','n','resin','base',1.14,['balsamic','vanilla','sweet'],'Warm vanillic-cinnamon balsam',8,true),
+ M('Styrax','n','resin','base',1.1,['balsamic','leathery','sweet'],'Sweet, leathery balsam',8,true),
+ M('Elemi','n','resin','top-heart',0.87,['resinous','citrus','peppery'],'Fresh lemony-peppery resin',8),
+ M('Ambroxan','s','amber','base',0.94,['ambery','woody','salty','musky'],'Warm, salty, woody-amber radiance',10,true),
+
+ /* ---- Mossy / chypre ---- */
+ M('Oakmoss','n','mossy','base',1.0,['mossy','earthy','green'],'Dark, damp forest-floor moss',2,true),
+ M('Evernyl (Veramoss)','s','mossy','base',1.1,['mossy','dry','inky'],'Dry, inky oakmoss replacer',3,true),
+
+ /* ---- Leather / smoky ---- */
+ M('Birch Tar','n','leather','base',1.04,['smoky','leathery','tarry'],'Smoky tar, campfire leather',2,true),
+ M('Cade (Juniper Tar)','n','leather','base',1.0,['smoky','leathery','phenolic'],'Phenolic smoky leather',2,true),
+ M('Suede Accord','s','leather','base',1.0,['leathery','dry','suede'],'Dry, soft suede leather',5,true),
+
+ /* ---- Animalic ---- */
+ M('Castoreum Accord','s','animalic','base',1.0,['animalic','leathery','warm'],'Warm, leathery animalic',3,true),
+ M('Civet Accord','s','animalic','base',0.99,['animalic','warm','radiant'],'Warm, radiant animalic',1,true),
+ M('Ambrette Seed','n','musk','base',0.9,['musky','nutty','floral'],'Soft, nutty, pear-like natural musk',10,true),
+ M('Hyraceum Tincture','n','animalic','base',0.9,['animalic','leathery','sweet'],'Sweet, leathery animalic',3,true),
+ M('Beeswax Absolute','n','animalic','base',0.93,['waxy','honey','sweet'],'Honeyed, waxy sweetness',5,true),
+
+ /* ---- Musks (synthetic) ---- */
+ M('Galaxolide','s','musk','base',1.0,['musky','clean','powdery','sweet'],'Clean, sweet, powdery musk',20,true),
+ M('Habanolide','s','musk','base',0.93,['musky','clean','metallic'],'Clean, airy, metallic musk',15,true),
+ M('Ethylene Brassylate','s','musk','base',1.0,['musky','sweet','powdery'],'Soft, sweet, powdery musk',20,true),
+ M('Helvetolide','s','musk','base',0.92,['musky','fruity','skin'],'Fruity, skin-like musk',15,true),
+ M('Muscone-type','s','musk','base',0.92,['musky','warm','skin'],'Warm, skin-like musk',10,true),
+
+ /* ---- Gourmand ---- */
+ M('Vanillin','s','gourmand','base',1.06,['sweet','vanilla','balsamic'],'Sweet, warm vanilla',5,true),
+ M('Ethyl Vanillin','s','gourmand','base',1.06,['sweet','vanilla','intense'],'Intense, creamy vanilla',3,true),
+ M('Vanilla Absolute','n','gourmand','base',1.0,['sweet','vanilla','boozy'],'Rich, boozy, balsamic vanilla',10,true),
+ M('Tonka / Coumarin','s','gourmand','base',0.94,['sweet','almond','hay','vanilla'],'Warm hay-almond sweetness',5,true),
+ M('Ethyl Maltol','s','gourmand','base',1.1,['sweet','candy','caramel'],'Cotton-candy caramel sweetness',3),
+ M('Maltol','s','gourmand','base',1.1,['sweet','caramel','bready'],'Warm caramel-bread sweetness',2),
+ M('Cocoa Absolute','n','gourmand','base',1.0,['gourmand','chocolate','bitter'],'Bittersweet dark cocoa',5),
+ M('Coffee','n','gourmand','heart-base',1.0,['gourmand','roasted','bitter'],'Roasted, bitter coffee',3),
+ M('Praline Accord','s','gourmand','base',1.0,['gourmand','nutty','sweet'],'Sweet, roasted praline',3),
+ M('Immortelle (Helichrysum)','n','gourmand','heart-base',0.9,['sweet','curry','maple','hay'],'Maple-curry honeyed hay',3),
+ M('Heliotropin','s','gourmand','heart-base',1.05,['powdery','almond','cherry','vanilla'],'Soft powdery almond-cherry',5),
+ M('Honey Absolute','n','gourmand','heart-base',1.0,['sweet','honey','animalic'],'Rich, animalic honey',3),
+
+ /* ---- Aquatic / ozonic ---- */
+ M('Calone','s','aquatic','top-heart',1.0,['aquatic','marine','melon'],'Oceanic melon sea-breeze',2),
+ M('Floralozone','s','aquatic','top',0.95,['aquatic','ozonic','green'],'Fresh, ozonic air-after-rain',3),
+
+ /* ---- Solvents / carriers ---- */
+ M('Perfumer\u2019s Alcohol (Ethanol)','s','solvent','base',0.789,['solvent','neutral'],'Neutral, fast-evaporating carrier',100),
+ M('Dipropylene Glycol (DPG)','s','solvent','base',1.02,['solvent','low-odour'],'Low-odour carrier — great for soap & candle',100),
+ M('Isopropyl Myristate (IPM)','s','solvent','base',0.853,['solvent','oily'],'Light oily carrier for oil perfumes',100),
+ M('Fractionated Coconut Oil','n','solvent','base',0.92,['solvent','oily'],'Odourless skin-friendly oil base',100),
+ M('Jojoba Oil','n','solvent','base',0.87,['solvent','oily'],'Stable oil base for roll-ons',100),
+ M('Distilled Water','s','solvent','base',1.0,['solvent','neutral'],'Used in splashes & mists (needs solubiliser)',100),
+
+ /* ---- Colour ---- */
+ M('Cosmetic Colourant — Amber','s','colour','base',1.0,['colour','odourless'],'Tints the liquid warm amber; odourless',1),
+ M('Cosmetic Colourant — Green','s','colour','base',1.0,['colour','odourless'],'Tints the liquid green; odourless',1),
+ M('Cosmetic Colourant — Blue','s','colour','base',1.0,['colour','odourless'],'Tints the liquid blue; odourless',1),
+];
+const MAT_BY_ID = Object.fromEntries(MATERIALS.map(m=>[m.id,m]));
+
+/* family colour + label map */
+const FAMILIES = {
+  citrus:{c:'#e8b13a',l:'Citrus'}, fruity:{c:'#ef8a6a',l:'Fruity'}, floral:{c:'#e0789a',l:'Floral'},
+  green:{c:'#86b06a',l:'Green'}, herb:{c:'#7fa05a',l:'Herbal'}, aromatic:{c:'#9fb86e',l:'Aromatic'},
+  spice:{c:'#c95f3f',l:'Spice'}, woody:{c:'#9c6b3f',l:'Woody'}, resin:{c:'#cf8a3a',l:'Resin'},
+  amber:{c:'#d39a44',l:'Amber'}, mossy:{c:'#6f8a55',l:'Mossy'}, leather:{c:'#8a5a44',l:'Leather'},
+  animalic:{c:'#a87bb0',l:'Animalic'}, musk:{c:'#9aa0c4',l:'Musk'}, gourmand:{c:'#c79a5e',l:'Gourmand'},
+  aquatic:{c:'#4fb0b8',l:'Aquatic'}, aldehyde:{c:'#9fa6b3',l:'Aldehydic'},
+  solvent:{c:'#b9b2a6',l:'Solvent'}, colour:{c:'#caa1d6',l:'Colour'}
+};
+const famColor = f => (FAMILIES[f]||{c:'#bbb'}).c;
+
+/* ============================================================
+   ARCHETYPE / PUBLIC STARTER FORMULAS  (% of CONCENTRATE)
+   ============================================================ */
+const ARCHETYPES=[
+ {name:'Fresh Citrus Cologne', type:'edc', vibe:'Classic, sparkling, unisex 4711-style splash',
+  comp:[['bergamot',25],['lemon',15],['sweet-orange',10],['petitgrain',8],['neroli',10],['lavender',8],['rosemary',5],['geranium',5],['cedarwood-virginia',6],['ethylene-brassylate',8]]},
+ {name:'Classic Fougère', type:'edt', vibe:'Barbershop: lavender, hay & moss — the masculine backbone',
+  comp:[['lavender',25],['bergamot',12],['geranium',8],['tonka-coumarin',15],['evernyl-veramoss',8],['coriander-seed',4],['clary-sage',6],['vetiver',6],['cedarwood-virginia',6],['galaxolide',10]]},
+ {name:'Chypre', type:'edp', vibe:'Bergamot–rose–moss–patchouli; elegant & timeless',
+  comp:[['bergamot',18],['rose-absolute',10],['jasmine-absolute',8],['patchouli',14],['evernyl-veramoss',8],['labdanum',10],['vetiver',6],['geranium',6],['galaxolide',8],['vanillin',4],['iso-e-super',8]]},
+ {name:'Amber / Oriental', type:'edp', vibe:'Warm, resinous, sweet & enveloping',
+  comp:[['labdanum',15],['vanilla-absolute',12],['benzoin',12],['tonka-coumarin',8],['sandalwood',10],['patchouli',8],['cinnamon',2],['bergamot',8],['rose-absolute',5],['ambroxan',8],['galaxolide',12]]},
+ {name:'Modern Woody Amber', type:'edp', vibe:'Iso E + Ambroxan radiance; clean unisex signature',
+  comp:[['iso-e-super',25],['ambroxan',12],['cedarwood-virginia',12],['cashmeran',8],['pink-pepper',6],['bergamot',10],['hedione',12],['vetiver',6],['galaxolide',9]]},
+ {name:'White Floral Bouquet', type:'edp', vibe:'Lush jasmine–tuberose–orange-blossom',
+  comp:[['jasmine-absolute',18],['tuberose-absolute',8],['ylang-ylang',10],['orange-blossom-absolute',10],['hedione',20],['rose-absolute',8],['sandalwood',8],['galaxolide',10],['benzoin',4],['bergamot',4]]},
+ {name:'Gourmand', type:'edp', vibe:'Sweet, edible, caramel–vanilla–patchouli',
+  comp:[['ethyl-maltol',8],['vanillin',10],['tonka-coumarin',10],['vanilla-absolute',8],['praline-accord',6],['patchouli',10],['sandalwood',8],['benzoin',8],['bergamot',8],['rose-absolute',6],['galaxolide',12],['cocoa-absolute',6]]},
+ {name:'Aquatic Fresh', type:'edt', vibe:'Calone & melon over a clean musky wood',
+  comp:[['dihydromyrcenol',18],['calone',3],['helional',6],['bergamot',12],['lemon',8],['hedione',14],['lavender',6],['cedarwood-virginia',8],['ambroxan',8],['galaxolide',12],['floralozone',5]]},
+];
+
+/* ============================================================
+   VIBE → tag weighting,  TYPE chips → palette
+   ============================================================ */
+const VIBE_MAP=[
+ [/(summer|beach|ocean|sea|fresh|aquatic|marine|rain|wet|cool)/i,['aquatic','citrus','marine','green','fresh','ozonic']],
+ [/(cozy|warm|winter|comfort|hug|blanket|fireplace)/i,['amber','resinous','vanilla','spicy','woody','balsamic']],
+ [/(romantic|feminine|delicate|pretty|tender|love)/i,['floral','rosy','powdery','musky','sweet']],
+ [/(masculine|sharp|strong|rugged|bold|barber)/i,['aromatic','woody','herbal','citrus','leathery']],
+ [/(sexy|seductive|sensual|intimate|skin|night)/i,['animalic','musky','amber','woody','spicy']],
+ [/(clean|laundry|soap|crisp|airy|cotton|linen)/i,['musky','clean','aldehydic','green','aquatic']],
+ [/(sweet|dessert|candy|edible|gourmand|bakery|cake)/i,['gourmand','vanilla','caramel','nutty','sweet']],
+ [/(elegant|classic|sophisticated|timeless|refined)/i,['mossy','floral','powdery','woody','green']],
+ [/(energetic|sport|active|vibrant|zesty|morning)/i,['citrus','aromatic','fresh','green','aquatic']],
+ [/(mysterious|dark|smoky|gothic|incense|temple)/i,['smoky','leathery','incense','resinous','woody']],
+ [/(spring|garden|meadow|flower|bloom|green|nature)/i,['floral','green','fruity','herbal']],
+ [/(spicy|exotic|oriental|eastern|bazaar)/i,['spicy','resinous','amber','woody']],
+ [/(fruity|juicy|tropical|playful)/i,['fruity','sweet','citrus','floral']],
+ [/(woody|forest|wood|cedar|earthy)/i,['woody','earthy','green','resinous']],
+];
+const TYPE_CHIPS={
+ 'Fresh':['aquatic','citrus','green'], 'Citrus':['citrus','fresh'], 'Floral':['floral','rosy'],
+ 'Woody':['woody','earthy'], 'Warm / Amber':['amber','resinous','vanilla'], 'Smoky':['smoky','leathery','incense'],
+ 'Sweet / Gourmand':['gourmand','vanilla','sweet'], 'Green':['green','herbal'], 'Aquatic':['aquatic','marine'],
+ 'Spicy':['spice','warm'], 'Leather':['leathery','animalic'], 'Powdery':['powdery','musky'],
+ 'Feminine':['floral','sweet','powdery'], 'Masculine':['aromatic','woody','leathery'], 'Unisex':['woody','musky','citrus']
+};
+
+/* ============================================================
+   FUN FACTS
+   ============================================================ */
+const FACTS={
+ product:['An Eau de Toilette typically carries 5–15% aromatic compounds; a Parfum can exceed 30%. The rest is mostly alcohol.',
+          'Perfumers almost always formulate by weight, not volume — densities vary too much for drops to be reliable.',
+          'Candles need a far higher fragrance load (~8%) than skin perfume, because wax holds scent tightly and heat drives release.'],
+ inspiration:['The "fragrance wheel" was popularised by Michael Edwards in 1983 to map scent families and their relationships.',
+              'A perfume\u2019s story unfolds over time: top notes greet you, the heart blooms after minutes, the base lingers for hours.'],
+ type:['"Fougère" means "fern" in French — though ferns are odourless; it\u2019s an imaginary accord of lavender, coumarin and oakmoss.',
+       '"Chypre" is named after Cyprus, after Coty\u2019s 1917 perfume built on bergamot, labdanum and oakmoss.'],
+ library:['Iso E Super is so soft and "transparent" that many people can\u2019t consciously smell it — yet it makes everything around it glow.',
+          'Hedione, a synthetic jasmine molecule, was found in studies to subtly activate a human pheromone-related receptor.',
+          'Ambergris — the classic "amber" base — originates as a waxy secretion from sperm whales; today Ambroxan recreates it cruelty-free.'],
+ accord:['An "accord" is to perfume what a chord is to music: several materials blended until you no longer smell them separately.',
+         'The famous "peach" of many vintage perfumes is a single molecule — a lactone — not real peach at all.'],
+ formula:['Professional formulas are usually written in parts or percentages of the concentrate, then diluted into the chosen strength.',
+          'Locking ("fixing") an ingredient is exactly how perfumers iterate: hold the structure, adjust one variable at a time.'],
+ collection:['Grasse in southern France has been the perfume capital since the 1500s, originally to scent leather gloves.'],
+};
+
+/* ============================================================
+   PERSIAN CONTENT  (materials, families, positions, products, facts)
+   ============================================================ */
+const FAM_FA={citrus:'مرکباتی',fruity:'میوه‌ای',floral:'گلی',green:'سبز',herb:'علفی',aromatic:'معطر',spice:'ادویه‌ای',woody:'چوبی',resin:'رزینی',amber:'کهربایی',mossy:'خزه‌ای',leather:'چرمی',animalic:'حیوانی',musk:'مشکی',gourmand:'خوراکی',aquatic:'آبی',aldehyde:'آلدهیدی',solvent:'حلال',colour:'رنگ'};
+const POS_FA={top:'سر',heart:'قلب',base:'پایه','top-heart':'سر–قلب','heart-base':'قلب–پایه'};
+const PROD_FA={parfum:'پارفیوم / اکستره',edp:'ادو پارفیوم',edt:'ادو تویلت',edc:'ادو کلن','eau-fraiche':'او فرش / میست',oil:'روغن عطر / رول‌آن',soap:'صابون',candle:'شمع',diffuser:'دیفیوزر',custom:'دلخواه'};
+const FACTS_FA={
+ product:['ادو تویلت معمولاً ۵ تا ۱۵٪ ترکیبات معطر دارد؛ پارفیوم می‌تواند از ۳۰٪ هم بگذرد و بقیه عمدتاً الکل است.',
+          'عطرسازان تقریباً همیشه بر اساس وزن فرمول می‌نویسند، نه حجم؛ چون چگالی مواد بسیار متفاوت است.',
+          'شمع به بار رایحهٔ بسیار بالاتری (حدود ۸٪) نسبت به عطر پوست نیاز دارد، چون موم بو را محکم نگه می‌دارد.'],
+ inspiration:['«چرخ رایحه» را مایکل ادواردز در سال ۱۹۸۳ برای نقشه‌برداری خانواده‌های بویایی رایج کرد.',
+              'داستان یک عطر در طول زمان باز می‌شود: نت‌های سر ابتدا، قلب پس از چند دقیقه و پایه ساعت‌ها می‌ماند.'],
+ type:['«فوژر» در فرانسوی یعنی «سرخس»؛ هرچند سرخس بی‌بوست و این یک آکورد خیالی از اسطوخودوس، کومارین و خزهٔ بلوط است.',
+       '«شیپر» از نام قبرس گرفته شده، به‌خاطر عطر ۱۹۱۷ کوتی بر پایهٔ برگاموت، لادن و خزهٔ بلوط.'],
+ library:['ایزو ای سوپر چنان نرم و «شفاف» است که بسیاری آن را آگاهانه حس نمی‌کنند، اما همه‌چیز اطرافش را می‌درخشاند.',
+          'هدیون، مولکول مصنوعی یاس، در مطالعات نشان داد گیرنده‌ای مرتبط با فرومون انسانی را فعال می‌کند.',
+          'آمبرگریس، پایهٔ کلاسیک «امبر»، ترشحی مومی از نهنگ عنبر است؛ امروزه امبروکسان آن را بدون آزار بازآفرینی می‌کند.'],
+ accord:['«آکورد» برای عطر همان است که آکورد برای موسیقی: چند ماده چنان ترکیب می‌شوند که دیگر جدا حس نمی‌شوند.',
+         '«هلو»ی معروف بسیاری از عطرهای قدیمی یک مولکول واحد است، یک لاکتون، نه هلوی واقعی.'],
+ formula:['فرمول‌های حرفه‌ای معمولاً به‌صورت درصد یا اجزای ماده معطر نوشته و سپس به غلظت دلخواه رقیق می‌شوند.',
+          'قفل‌کردن یک ماده دقیقاً روش کار عطرسازان است: ساختار را نگه دار و هر بار یک متغیر را تغییر بده.'],
+ collection:['شهر گراس در جنوب فرانسه از دههٔ ۱۵۰۰ پایتخت عطر بوده، در ابتدا برای خوشبوکردن دستکش‌های چرمی.']
+};
+const MAT_FA={
+ 'bergamot':['برگاموت','مرکباتی روشن، درخشان و کمی گل‌مانند'],'lemon':['لیمو ترش','مرکباتی تند، تمیز و تیز'],'sweet-orange':['پرتقال شیرین','پرتقالی آبدار، شاد و شیرین'],'grapefruit':['گریپ‌فروت','مرکباتی تلخ‌وشیرین و شاداب'],'mandarin':['نارنگی','مرکباتی نرم، شیرین و دلنشین'],'lime':['لایم','مرکباتی سبز، تیز و گزنده'],'yuzu':['یوزو','مرکباتی ژاپنی، روشن و پیچیده'],'petitgrain':['پتی‌گرین','سبز و کمی چوبی از برگ نارنج'],'litsea-cubeba':['لیتسه کوببا','لیمویی شیرین و تازه'],'dihydromyrcenol':['دی‌هیدرومیرسنول','تازهٔ فلزی-مرکباتی و صابونی'],
+ 'aldehyde-c-10':['آلدهید C-10','مومی-نارنجی و درخشان'],'aldehyde-c-11':['آلدهید C-11','سبز-مومی و تمیز'],'aldehyde-c-12-mna':['آلدهید C-12 MNA','فلزی، تمیز و اتوکشیده'],'green-apple':['سیب سبز','میوه‌ای ترش و شاداب'],'pear':['گلابی','میوه‌ای آبدار و نرم'],'peach-gamma-undecalactone-':['هلو (گاما-اوندکالاکتون)','کرمی، مخملی و میوه‌ای'],'raspberry-ketone':['کتون تمشک','میوه‌ای شیرین و مربایی'],'cassis-base':['بیس انگورفرنگی سیاه','میوه‌ای تند با ته‌مایهٔ گوگردی'],'davana':['داوانا','میوه‌ای-مشروبی و گرم'],
+ 'rose-absolute':['رز اَبسولوت','گل سرخ غنی، عسلی و عمیق'],'rose-otto':['رز اوتو','گل سرخ تازه، روشن و کمی فلفلی'],'jasmine-absolute':['یاس اَبسولوت','گلی غنی، نعوظی و عسلی'],'jasmine-sambac':['یاس سامباک','یاس تازه، سبز و درخشان'],'ylang-ylang':['یلانگ یلانگ','گلی خامه‌ای، موزی و گرمسیری'],'neroli':['نرولی','شکوفهٔ نارنج تازه و روشن'],'orange-blossom-absolute':['اَبسولوت شکوفهٔ نارنج','گلی عسلی و عمیق'],'tuberose-absolute':['گل مریم اَبسولوت','گلی سنگین، خامه‌ای و نعوظی'],'geranium':['شمعدانی','گل-رزی سبز و کمی نعناعی'],'orris-iris-butter':['اوریس (کرهٔ زنبق)','پودری، مخملی و بنفشه‌ای گران‌بها'],
+ 'phenylethyl-alcohol':['فنیل‌اتیل الکل','رایحهٔ ملایم گل سرخ'],'hedione':['هدیون','شفاف، آبکی و یاس‌مانند درخشان'],'methyl-ionone':['متیل آیونون','بنفشه‌ای پودری و چوبی نرم'],'linalool':['لینالول','گلی-تازه و کمی چوبی'],'linalyl-acetate':['لینالیل استات','گلی شیرین و اسطوخودوسی'],'cyclamen-aldehyde':['سیکلامن آلدهید','گلی تازه، آبکی و سبز'],'helional':['هلیونال','آبکی-سبز و گلی لطیف'],'florhydral':['فلورهیدرال','گلی تازه با ته‌مایهٔ مرکباتی'],'lavender':['اسطوخودوس','معطر، تازه و کمی کافوری'],'lavandin':['لاواندین','اسطوخودوسی تندتر و کافوری'],
+ 'clary-sage':['مریم‌گلی','معطر، علفی و کمی مشروبی'],'rosemary':['رزماری','معطر، کافوری و تازه'],'basil':['ریحان','سبز، معطر و کمی شیرین‌بیانی'],'peppermint':['نعناع فلفلی','خنک، تیز و تازه'],'spearmint':['نعناع سبز','خنک، شیرین و ملایم'],'thyme':['آویشن','علفی، گرم و کمی دارویی'],'eucalyptus':['اکالیپتوس','کافوری، خنک و نافذ'],'coriander-seed':['تخم گشنیز','ادویه‌ای گرم و کمی مرکباتی'],'galbanum':['گالبانوم','سبز تند، تلخ و گیاهی'],'violet-leaf-absolute':['اَبسولوت برگ بنفشه','سبز، خیار-مانند و کمی فلزی'],
+ 'tomato-leaf':['برگ گوجه','سبز تند و تازهٔ گیاهی'],'black-tea':['چای سیاه','خشک، دودی و کمی تلخ'],'black-pepper':['فلفل سیاه','ادویه‌ای گرم، خشک و تیز'],'pink-pepper':['فلفل صورتی','ادویه‌ای روشن، گل-مانند و شاداب'],'cardamom':['هل','ادویه‌ای معطر، تازه و کمی مرکباتی'],'ginger':['زنجبیل','ادویه‌ای گرم، تند و شاداب'],'nutmeg':['جوز هندی','ادویه‌ای گرم و کمی چوبی'],'cinnamon':['دارچین','ادویه‌ای گرم، شیرین و سوزان'],'clove-eugenol-':['میخک (اوژنول)','ادویه‌ای گرم، نافذ و کمی دارویی'],'saffron-safranal-':['زعفران (سافرانال)','گرم، چرمی-فلزی و گران‌بها'],
+ 'star-anise':['بادیان','شیرین، شیرین‌بیانی و گرم'],'cumin':['زیره','ادویه‌ای گرم، خاکی و کمی عرق‌مانند'],'sandalwood':['صندل','چوبی کرمی، نرم و شیری'],'sandalwood-javanol-type-':['صندل (نوع جاوانول)','چوبی کرمی شفاف و ماندگار'],'cedarwood-virginia':['سدر ویرجینیا','چوبی خشک، مدادی و گرم'],'cedarwood-atlas':['سدر اطلس','چوبی خشک و کمی رزینی'],'vetiver':['وتیور','چوبی خاکی، دودی و سبز'],'patchouli':['پاچولی','خاکی، تیره و کمی شکلاتی'],'guaiacwood':['چوب گایاک','چوبی شیرین، دودی و گل‌مانند'],'cypriol-nagarmotha-':['سیپریول (ناگارموتا)','چوبی دودی و خاکی تیره'],
+ 'oud-agarwood':['عود (اَگاروود)','چوبی غنی، حیوانی و دودی'],'oud-accord':['آکورد عود','چوبی گرم و بالزامیک'],'iso-e-super':['ایزو ای سوپر','چوبی مخملی، شفاف و کشنده'],'cashmeran':['کشمران','چوبی-مشکی گرم با ته‌مایهٔ ادویه‌ای'],'norlimbanol-dry-amber-wood-':['نورلیمبانول','چوب کهربایی خشک و بسیار قوی'],'cedryl-acetate':['سدریل استات','چوبی نرم و کمی پودری'],'vetiveryl-acetate':['وتیوریل استات','وتیور تمیزتر، چوبی و خشک'],'frankincense-olibanum-':['کندر (اولیبانوم)','رزینی، مقدس و کمی مرکباتی'],'myrrh':['مُر','رزینی گرم، دارویی و کمی تلخ'],'benzoin':['بنزوئین','رزینی شیرین، وانیلی و بالزامیک'],
+ 'labdanum':['لادن','کهربایی گرم، چرمی و عسلی'],'opoponax':['اوپوپوناکس','رزینی شیرین و بالزامیک'],'tolu-balsam':['بالزام تولو','شیرین، رزینی و کمی دارچینی'],'peru-balsam':['بالزام پرو','وانیلی-رزینی گرم'],'styrax':['استیراکس','بالزامیک، کمی چرمی و دودی'],'elemi':['اِلِمی','رزینی روشن، فلفلی و لیمویی'],'ambroxan':['امبروکسان','کهربایی شفاف، نمکی و کشنده'],'oakmoss':['خزهٔ بلوط','خاکی، جنگلی و کمی چرمی'],'evernyl-veramoss-':['اِوِرنیل (ورا‌ماس)','خزه‌ای خشک و رزینی'],'birch-tar':['قطران توس','دودی، چرمی و آتشین'],
+ 'cade-juniper-tar-':['کاد (قطران سرو)','دودی، قیری و چرمی'],'suede-accord':['آکورد جیر','چرمی نرم و پودری'],'castoreum-accord':['آکورد کاستوریوم','چرمی گرم و حیوانی'],'civet-accord':['آکورد سیوت','حیوانی گرم و نافذ'],'ambrette-seed':['تخم اَمبرت','مشکی گیاهی، گلابی و پودری'],'hyraceum-tincture':['تنتور هیراسئوم','حیوانی عمیق و چرمی'],'beeswax-absolute':['اَبسولوت موم عسل','عسلی، گرم و کمی تنباکویی'],'galaxolide':['گالاکسولاید','مشک تمیز، پودری و لباس‌شسته'],'habanolide':['هابانولاید','مشک فلزی و کمی آبی'],'ethylene-brassylate':['اتیلن براسیلات','مشک نرم، شیرین و پودری'],
+ 'helvetolide':['هلوتولاید','مشک میوه‌ای-گلابی و پاک'],'muscone-type':['نوع موسکون','مشک گرم، پوستی و نرم'],'vanillin':['وانیلین','وانیلی شیرین و گرم'],'ethyl-vanillin':['اتیل وانیلین','وانیلی قوی‌تر و شکلاتی'],'vanilla-absolute':['اَبسولوت وانیل','وانیل غنی، رزینی و واقعی'],'tonka-coumarin':['تونکا (کومارین)','یونجه‌ای، بادامی و شیرین'],'ethyl-maltol':['اتیل مالتول','پشمک و قند سوخته'],'maltol':['مالتول','کاراملی و نان‌مانند شیرین'],'cocoa-absolute':['اَبسولوت کاکائو','شکلات تلخ و گرم'],'coffee':['قهوه','برشته، تلخ و گرم'],
+ 'praline-accord':['آکورد پرالین','فندقی، کاراملی و شیرین'],'immortelle-helichrysum-':['ایمورتل (هلیکریزوم)','عسلی، افرایی و کمی ادویه‌ای'],'heliotropin':['هلیوتروپین','بادامی، پودری و گل‌مانند'],'honey-absolute':['اَبسولوت عسل','عسلی غنی، گرم و کمی حیوانی'],'calone':['کالون','آبکی، خربزه‌ای و نسیم دریا'],'floralozone':['فلورالوزون','ازنی، تازه و هوای پاک'],'perfumer-u2019s-alcohol-ethanol-':['الکل عطرسازی (اتانول)','حلال پایهٔ بی‌بو'],'dipropylene-glycol-dpg-':['دی‌پروپیلن گلیکول (DPG)','حلال بی‌بو و کم‌بو'],'isopropyl-myristate-ipm-':['ایزوپروپیل میریستات (IPM)','حلال روغنی سبک'],'fractionated-coconut-oil':['روغن نارگیل تفکیک‌شده','روغن پایهٔ سبک و بی‌بو'],
+ 'jojoba-oil':['روغن جوجوبا','روغن پایهٔ پایدار'],'distilled-water':['آب مقطر','حلال برای محصولات آبی'],'cosmetic-colourant-amber':['رنگ آرایشی — کهربایی','رنگ بی‌بو'],'cosmetic-colourant-green':['رنگ آرایشی — سبز','رنگ بی‌بو'],'cosmetic-colourant-blue':['رنگ آرایشی — آبی','رنگ بی‌بو']
+};
+const ARCH_FA={
+ 'Fresh Citrus Cologne':['کلن مرکباتی تازه','کلاسیک، درخشان و یونیسکس به سبک ۴۷۱۱'],
+ 'Classic Fougère':['فوژر کلاسیک','آرایشگاهی: اسطوخودوس، یونجه و خزه — ستون فقرات مردانه'],
+ 'Chypre':['شیپر','برگاموت–رز–خزه–پاچولی؛ شیک و بی‌زمان'],
+ 'Amber / Oriental':['کهربایی / شرقی','گرم، رزینی، شیرین و دربرگیرنده'],
+ 'Modern Woody Amber':['کهربایی چوبی مدرن','درخشش ایزو ای و امبروکسان؛ امضای یونیسکس و تمیز'],
+ 'White Floral Bouquet':['دسته‌گل سفید','یاس–مریم–شکوفهٔ نارنج پُرمایه'],
+ 'Gourmand':['خوراکی (گورمند)','شیرین و خوردنی: کارامل–وانیل–پاچولی'],
+ 'Aquatic Fresh':['آبی و تازه','کالون و خربزه روی چوب مشکی تمیز']
+};
+function matName(m){ return (LANG==='fa'&&MAT_FA[m.id])?MAT_FA[m.id][0]:m.name; }
+function matDesc(m){ return (LANG==='fa'&&MAT_FA[m.id])?MAT_FA[m.id][1]:m.desc; }
+function famLabel(f){ return LANG==='fa'?(FAM_FA[f]||f):((FAMILIES[f]||{l:f}).l); }
+function posLabel(p){ return LANG==='fa'?(POS_FA[p]||p):p; }
+function productName(p){ return (LANG==='fa'&&PROD_FA[p.id])?PROD_FA[p.id]:p.name; }
+function archName(a){ return (LANG==='fa'&&ARCH_FA[a.name])?ARCH_FA[a.name][0]:a.name; }
+function archVibe(a){ return (LANG==='fa'&&ARCH_FA[a.name])?ARCH_FA[a.name][1]:a.vibe; }
+function factsFor(k){ return (LANG==='fa'?FACTS_FA:FACTS)[k]||[]; }
+function den(m){ return (S.densities&&S.densities[m.id]!=null)?+S.densities[m.id]:m.den; }
+window.setDensity=(id,v)=>{ v=parseFloat(v); if(!isFinite(v)||v<=0)return; if(!S.densities)S.densities={}; S.densities[id]=v; persist(); renderSection('formula'); toast(LANG==='fa'?'چگالی به‌روزرسانی شد':'Density updated'); };
+window.resetDensity=(id)=>{ if(S.densities){ delete S.densities[id]; persist(); } renderSection('library'); renderSection('formula'); };
+
+/* ---- COST MODEL (per gram, editable) ---- */
+const COST_FAM={citrus:0.5,fruity:0.8,floral:3,green:0.6,herb:0.5,aromatic:0.6,spice:1.2,woody:2,resin:1.5,amber:1.2,mossy:1.8,leather:1.2,animalic:6,musk:0.8,gourmand:1.2,aquatic:0.7,aldehyde:0.6,solvent:0.05,colour:0.2};
+const COST_OVERRIDE={'oud-agarwood':40,'oud-accord':3,'rose-absolute':12,'rose-otto':30,'jasmine-absolute':14,'jasmine-sambac':12,'tuberose-absolute':10,'orris-iris-butter':35,'saffron-safranal-':8,'ambrette-seed':9,'orange-blossom-absolute':9,'vanilla-absolute':6,'oakmoss':4,'sandalwood':6,'neroli':9,'frankincense-olibanum-':3,'beeswax-absolute':4,'cocoa-absolute':3,'immortelle-helichrysum-':7,'davana':6,'honey-absolute':5,'violet-leaf-absolute':12,'hyraceum-tincture':5,'myrrh':2.5,'guaiacwood':2};
+function baseCost(m){ if(COST_OVERRIDE[m.id]!=null) return COST_OVERRIDE[m.id]; const f=COST_FAM[m.family]!=null?COST_FAM[m.family]:1; const mult=(m.family==='solvent'||m.family==='colour')?1:(m.type==='n'?1.6:0.8); return Math.round(f*mult*100)/100; }
+function costOf(m){ return (S.costs&&S.costs[m.id]!=null)?+S.costs[m.id]:baseCost(m); }
+function cur(){ return (S.prefs&&S.prefs.currency)||'$'; }
+window.setCost=(id,v)=>{ v=parseFloat(v); if(!isFinite(v)||v<0)return; if(!S.costs)S.costs={}; S.costs[id]=v; persist(); renderSection('formula'); const ap=$('#pad-analysis'); if(ap) renderSection('analysis'); toast(LANG==='fa'?'هزینه به‌روزرسانی شد':'Cost updated'); };
+window.resetCost=(id)=>{ if(S.costs){ delete S.costs[id]; persist(); } renderSection('library'); renderSection('formula'); };
+/* total batch cost from calc() detail (mass in grams × cost/g) */
+function batchCost(c){ let tot=0; (c.detail||[]).forEach(d=>d.sub.forEach(x=>{ if(x.mat) tot+=x.amt.mass*costOf(x.mat); })); return tot; }
+function costBreakdown(c){ const map={}; (c.detail||[]).forEach(d=>d.sub.forEach(x=>{ if(!x.mat)return; const cst=x.amt.mass*costOf(x.mat); map[x.mat.id]=(map[x.mat.id]||{mat:x.mat,cost:0}); map[x.mat.id].cost+=cst; })); return Object.values(map).sort((a,b)=>b.cost-a.cost); }
+
+let S = {
+  email:'guest',
+  prefs:{basis:'weight', fun:true, lang:LANG, geminiKey:'', geminiModel:'gemini-2.5-flash', currency:'$'},
+  densities:{},        // {matId: density override}
+  costs:{},            // {matId: cost/g override}
+  account:{paid:false, plan:'free', since:null},
+  product:{id:'edt', conc:10, batch:30, unit:'ml'},
+  formula:[],          // {uid, matId, kind:'material'|'accord', refId, finalPct, fixed}
+  accords:[],          // {id,name,components:[{matId,pct}]}
+  collections:[],      // {id,name,date,snapshot:{product,formula}}
+  library:[],          // {id,name,brand,type,notes}
+};
+let uidc=1; const uid=()=>'r'+(uidc++)+'-'+Date.now().toString(36);
+
+function persist(){ Store.set('olfact:'+S.email, JSON.stringify({prefs:S.prefs,product:S.product,formula:S.formula,accords:S.accords,collections:S.collections,library:S.library,densities:S.densities,costs:S.costs,account:S.account})); }
+function load(email){
+  const raw = Store.get('olfact:'+email);
+  if(raw){ try{ const d=JSON.parse(raw); Object.assign(S,{email},d); if(!S.densities)S.densities={}; if(!S.costs)S.costs={}; if(!S.account)S.account={paid:false,plan:'free',since:null}; if(!S.prefs.currency)S.prefs.currency='$'; }catch(e){ S.email=email; } }
+  else { S.email=email; }
+}
+const ADMIN_EMAIL='rezaghamighami@gmail.com';
+function isAdmin(){ return (S.email||'').toLowerCase()===ADMIN_EMAIL; }
+function isPaid(){ return isAdmin() || !!(S.account&&S.account.paid); }
+
+/* ============================================================
+   CALCULATION ENGINE
+   ------------------------------------------------------------
+   Each formula row has a target finalPct (% of finished product).
+   "Aromatic" rows (everything except solvent/colour) should sum
+   to the product's concentrate %. Solvent auto-fills the remainder.
+   Volume basis -> mass via density (mass = volume * density).
+   ============================================================ */
+function expandRow(r){
+  // returns array of {mat, finalPct} contributions
+  if(r.kind==='accord'){
+    const acc = S.accords.find(a=>a.id===r.refId); if(!acc) return [];
+    const tot = acc.components.reduce((s,c)=>s+(+c.pct||0),0)||1;
+    return acc.components.map(c=>({mat:MAT_BY_ID[c.matId], finalPct: r.finalPct*(c.pct/tot)})).filter(x=>x.mat);
+  }
+  const m = MAT_BY_ID[r.matId]; return m? [{mat:m, finalPct:r.finalPct}] : [];
+}
+function isSolvent(m){ return m && (m.family==='solvent'); }
+function isColour(m){ return m && (m.family==='colour'); }
+function isAromatic(m){ return m && !isSolvent(m) && !isColour(m); }
+
+function calc(){
+  const basis=S.prefs.basis; const targetConc=+S.product.conc;
+  const batch=+S.product.batch||0;
+  // total batch mass (g). If volume basis, convert later per-row; we treat batch number+unit.
+  // We compute everything as % of product, then scale to batch.
+  const rows = S.formula.map(r=>({r, parts:expandRow(r)}));
+  // aromatic sum (explicit, non-solvent, non-colour)
+  let aromaticPct=0, colourPct=0, explicitSolventPct=0;
+  rows.forEach(o=>o.parts.forEach(p=>{
+    if(isSolvent(p.mat)) explicitSolventPct+=p.finalPct;
+    else if(isColour(p.mat)) colourPct+=p.finalPct;
+    else aromaticPct+=p.finalPct;
+  }));
+  const solventFill = Math.max(0, 100 - aromaticPct - colourPct - explicitSolventPct);
+
+  // scale to batch units
+  // weight basis: batch is in grams (or ml? we honour unit but compute mass via solvent density for ml)
+  // We compute per-row mass(g) and volume(ml).
+  // Determine total mass of batch:
+  let totalMass;
+  if(S.product.unit==='g'){ totalMass = batch; }
+  else { // ml batch -> approximate total mass using a blended density ~ alcohol-dominant
+    totalMass = batch * 0.90; // rough; per-row we still show ml from its own density
+  }
+  function rowAmounts(finalPct, mat){
+    if(basis==='weight'){
+      const mass = totalMass*(finalPct/100);
+      const vol = mat? mass/(den(mat)||0.95): mass/0.9;
+      return {mass, vol};
+    } else { // volume basis: finalPct is % of volume
+      const totalVol = (S.product.unit==='ml')? batch : (totalMass/0.9);
+      const vol = totalVol*(finalPct/100);
+      const mass = vol*((mat&&den(mat))||0.9);
+      return {mass, vol};
+    }
+  }
+  const detail = rows.map(o=>{
+    const merged={};
+    o.parts.forEach(p=>{
+      const k=p.mat.id; if(!merged[k]) merged[k]={mat:p.mat,finalPct:0}; merged[k].finalPct+=p.finalPct;
+    });
+    const sub=Object.values(merged).map(x=>({...x, amt:rowAmounts(x.finalPct,x.mat)}));
+    return {row:o.r, sub};
+  });
+  return {aromaticPct,colourPct,explicitSolventPct,solventFill,targetConc,detail,rows,totalMass,batch};
+}
+
+/* note pyramid: distribute finalPct of each aromatic into top/heart/base.
+   bridge positions split 50/50. */
+function pyramid(){
+  const acc={top:0,heart:0,base:0}; let total=0;
+  S.formula.forEach(r=>expandRow(r).forEach(p=>{
+    if(!isAromatic(p.mat))return; total+=p.finalPct;
+    const pos=p.mat.pos;
+    if(pos==='top')acc.top+=p.finalPct;
+    else if(pos==='heart')acc.heart+=p.finalPct;
+    else if(pos==='base')acc.base+=p.finalPct;
+    else if(pos==='top-heart'){acc.top+=p.finalPct/2;acc.heart+=p.finalPct/2;}
+    else if(pos==='heart-base'){acc.heart+=p.finalPct/2;acc.base+=p.finalPct/2;}
+  }));
+  return {acc,total};
+}
+
+/* classify final fragrance family by weighted tags */
+function classify(){
+  const tagW={}; let total=0;
+  S.formula.forEach(r=>expandRow(r).forEach(p=>{
+    if(!isAromatic(p.mat))return; total+=p.finalPct;
+    // weight by family + descriptive tags
+    const fam=p.mat.family; tagW[fam]=(tagW[fam]||0)+p.finalPct*1.4;
+    p.mat.tags.forEach(t=>{ tagW[t]=(tagW[t]||0)+p.finalPct; });
+  }));
+  if(total===0) return null;
+  const sorted=Object.entries(tagW).sort((a,b)=>b[1]-a[1]);
+  return {sorted,total};
+}
+/* readable family name from sorted tags */
+function familyName(sorted){
+  const top=sorted.slice(0,4).map(s=>s[0]);
+  const has=t=>top.includes(t);
+  const cap=s=>s.charAt(0).toUpperCase()+s.slice(1);
+  // map raw tags to family words
+  const map={citrus:'Citrus',floral:'Floral',woody:'Woody',amber:'Amber',ambery:'Amber',resinous:'Resinous',
+    spicy:'Spicy',spice:'Spicy',gourmand:'Gourmand',sweet:'Sweet',vanilla:'Vanilla',aquatic:'Aquatic',marine:'Aquatic',
+    musky:'Musky',musk:'Musk',green:'Green',herbal:'Aromatic',aromatic:'Aromatic',mossy:'Chypre',leathery:'Leather',
+    smoky:'Smoky',animalic:'Animalic',fruity:'Fruity',powdery:'Powdery',rosy:'Rose'};
+  const words=[]; for(const t of top){ const w=map[t]; if(w&&!words.includes(w))words.push(w); if(words.length>=2)break; }
+  if(words.length===0)return 'Balanced blend';
+  if(words.length===1)return words[0];
+  return words[0]+' '+words[1];
+}
+
+/* ============================================================
+   RENDERING
+   ============================================================ */
+const $=s=>document.querySelector(s); const $$=s=>[...document.querySelectorAll(s)];
+const viewWrap=$('#view-container');
+function toast(msg){ const t=$('#toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(t._t); t._t=setTimeout(()=>t.classList.remove('show'),2200); }
+function fmt(n,d=2){ if(!isFinite(n))return '0'; return (+n).toFixed(d).replace(/\.?0+$/,'')||'0'; }
+
+/* each section is a card panel; clp=collapsible, coll=start collapsed */
+const SECTIONS=[
+ {id:'product', icon:'⚗️', g1:'#e8b13a',g2:'#ef8a6a', clp:true, coll:false},
+ {id:'ai', icon:'🪄', g1:'#a87bb0',g2:'#e0789a', clp:true, coll:false},
+ {id:'inspiration', icon:'✨', g1:'#e0789a',g2:'#a87bb0', clp:true, coll:true},
+ {id:'type', icon:'🎨', g1:'#4fb0b8',g2:'#86b06a', clp:true, coll:true},
+ {id:'accord', icon:'🎼', g1:'#c79a5e',g2:'#cf8a3a', clp:true, coll:true},
+ {id:'formula', icon:'📐', g1:'#bd9a4e',g2:'#9c6b3f', clp:true, coll:false},
+ {id:'matrix', icon:'🧭', g1:'#4fb0b8',g2:'#c95f3f', clp:true, coll:false},
+ {id:'analysis', icon:'🔬', g1:'#9c6b3f',g2:'#4fb0b8', clp:true, coll:true},
+ {id:'library', icon:'🌿', g1:'#86b06a',g2:'#7fa05a'},
+ {id:'collection', icon:'📚', g1:'#a87bb0',g2:'#9aa0c4'},
+ {id:'commercial', icon:'🏛️', g1:'#8a5a44',g2:'#c95f3f'},
+ {id:'education', icon:'🎓', g1:'#4fb0b8',g2:'#bd9a4e'},
+ {id:'membership', icon:'⭐', g1:'#bd9a4e',g2:'#ef8a6a'},
+ {id:'admin', icon:'🛠️', g1:'#211a17',g2:'#8a5a44'},
+ {id:'account', icon:'👤', g1:'#bd9a4e',g2:'#e0789a'},
+ {id:'profile', icon:'⚙️', g1:'#4fb0b8',g2:'#a87bb0'},
+];
+const SEC=id=>SECTIONS.find(s=>s.id===id);
+
+/* tabs = the navigation views */
+const TABS=[
+ {id:'perfumery', icon:'🧪', summary:true, sections:['product','ai','inspiration','type','accord','formula','matrix','analysis']},
+ {id:'library', icon:'🌿', sections:['library']},
+ {id:'collections', icon:'📚', sections:['collection','commercial']},
+ {id:'education', icon:'🎓', sections:['education']},
+ {id:'account', icon:'👤', sections:['account','membership','admin','profile']},
+];
+let activeTab='perfumery';
+
+function panelHTML(id){
+  const s=SEC(id); if(!s) return '';
+  const clk = s.clp ? ' clickable' : '';
+  const arrow = s.clp ? '<div class="arrow">▼</div>' : '';
+  const onclick = s.clp ? ` onclick="togglePanel('${id}')"` : '';
+  return `<section class="panel ${s.coll?'collapsed':''}" data-sec="${id}">
+    <div class="cbar" style="--g1:${s.g1};--g2:${s.g2}"></div>
+    <div class="panel-head${clk}"${onclick}>
+      <div class="ix" style="background:linear-gradient(135deg,${s.g1},${s.g2})">${s.icon}</div>
+      <div style="flex:1"><h3>${t('st_'+id)}</h3><div class="sub">${t('ss_'+id)}</div></div>
+      ${arrow}
+    </div>
+    <div class="panel-body"><div id="pad-${id}"></div></div>
+  </section>`;
+}
+
+function buildShell(){
+  // desktop top nav
+  $('#topNav').innerHTML = TABS.map(tab=>`
+    <button class="navbtn ${tab.id===activeTab?'on':''}" data-tab="${tab.id}" onclick="setTab('${tab.id}')">
+      <span class="nic">${tab.icon}</span>${t('nav_'+tab.id)}</button>`).join('');
+  // mobile bottom nav
+  $('#bottomNav').innerHTML = TABS.map(tab=>`
+    <button class="tabbtn ${tab.id===activeTab?'on':''}" data-tab="${tab.id}" onclick="setTab('${tab.id}')">
+      <span class="tic">${tab.icon}</span><span class="tl">${t('nav_'+tab.id)}</span></button>`).join('');
+  // view shells
+  const visible = tab => tab.sections.filter(s=> s!=='admin' || isAdmin());
+  viewWrap.innerHTML = TABS.map(tab=>`
+    <div class="view ${tab.id===activeTab?'on':''}" data-view="${tab.id}">
+      <div class="view-head"><h2>${t('vt_'+tab.id)}</h2><p>${t('vi_'+tab.id)}</p>
+        ${tab.summary?'<div class="summary-bar" id="summaryBar"></div>':''}</div>
+      ${visible(tab).map(panelHTML).join('')}
+    </div>`).join('');
+  TABS.forEach(tab=>visible(tab).forEach(renderSection));
+  refreshSummary();
+}
+
+function setTab(id){
+  if(!TABS.find(t=>t.id===id)) return;
+  activeTab=id;
+  $$('.view').forEach(v=>v.classList.toggle('on', v.dataset.view===id));
+  $$('.navbtn').forEach(b=>b.classList.toggle('on', b.dataset.tab===id));
+  $$('.tabbtn').forEach(b=>b.classList.toggle('on', b.dataset.tab===id));
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+window.setTab=setTab;
+
+function togglePanel(id){
+  const p=$(`.panel[data-sec="${id}"]`); if(p) p.classList.toggle('collapsed');
+}
+window.togglePanel=togglePanel;
+
+function funBlock(key){
+  const arr=factsFor(key);
+  if(!S.prefs.fun || !arr.length) return '';
+  const f=arr[Math.floor(Math.random()*arr.length)];
+  return `<div class="funfact"><div class="fi">💡</div><div class="ft"><b>${LANG==='fa'?'آیا می‌دانستید؟':'Did you know?'}</b><br>${f}</div></div>`;
+}
+
+function renderSection(id){
+  const pad=$('#pad-'+id); if(!pad)return;
+  if(id==='product') pad.innerHTML=renderProduct();
+  if(id==='ai') pad.innerHTML=renderAI();
+  if(id==='inspiration') pad.innerHTML=renderInspiration();
+  if(id==='type') pad.innerHTML=renderType();
+  if(id==='library') renderLibrary(pad);
+  if(id==='accord') pad.innerHTML=renderAccord();
+  if(id==='formula') pad.innerHTML=renderFormula();
+  if(id==='matrix') pad.innerHTML=renderMatrix();
+  if(id==='analysis') pad.innerHTML=renderAnalysis();
+  if(id==='collection') pad.innerHTML=renderCollection();
+  if(id==='commercial') pad.innerHTML=renderCommercial();
+  if(id==='account') pad.innerHTML=renderAccount();
+  if(id==='profile') pad.innerHTML=renderProfile();
+  if(id==='education') pad.innerHTML=renderEducation();
+  if(id==='membership') pad.innerHTML=renderMembership();
+  if(id==='admin') pad.innerHTML=renderAdmin();
+  bindSection(id);
+  if(id==='formula'||id==='product'||id==='accord') refreshSummary();
+  if(id==='formula'){ const mp=$('#pad-matrix'); if(mp) mp.innerHTML=renderMatrix(); const ap=$('#pad-analysis'); if(ap) ap.innerHTML=renderAnalysis(); }
+}
+
+/* ---- PRODUCT ---- */
+function renderProduct(){
+  const p=PRODUCTS.find(x=>x.id===S.product.id)||PRODUCTS[2];
+  return `
+  <div class="row">
+    <div class="field"><label class="lab">${LANG==='fa'?'نوع محصول':'Product form'}</label>
+      <select class="inp" id="prodSel">${PRODUCTS.map(x=>`<option value="${x.id}" ${x.id===S.product.id?'selected':''}>${productName(x)}</option>`).join('')}</select>
+    </div>
+    <div class="field"><label class="lab">${LANG==='fa'?'غلظت ماده معطر (٪)':'Concentrate strength'} — ${p.base}</label>
+      <input class="inp" id="concIn" type="number" min="0.1" max="100" step="0.5" value="${S.product.conc}">
+      <div class="muted" style="font-size:11.5px;margin-top:4px">${LANG==='fa'?'بازهٔ معمول برای':'Typical range for'} ${productName(p)}: ${p.min}–${p.max}%</div>
+    </div>
+  </div>
+  <div class="row" style="margin-top:12px">
+    <div class="field"><label class="lab">${LANG==='fa'?'اندازهٔ دسته':'Batch size'}</label><input class="inp" id="batchIn" type="number" min="1" step="1" value="${S.product.batch}"></div>
+    <div class="field"><label class="lab">${LANG==='fa'?'واحد دسته':'Batch unit'}</label>
+      <select class="inp" id="unitSel"><option value="ml" ${S.product.unit==='ml'?'selected':''}>${LANG==='fa'?'میلی‌لیتر (mL)':'millilitres (mL)'}</option><option value="g" ${S.product.unit==='g'?'selected':''}>${LANG==='fa'?'گرم (g)':'grams (g)'}</option></select></div>
+    <div class="field"><label class="lab">${t('basis_label')}</label>
+      <select class="inp" id="basisSel"><option value="weight" ${S.prefs.basis==='weight'?'selected':''}>${t('ob_w_t')}</option><option value="volume" ${S.prefs.basis==='volume'?'selected':''}>${t('ob_v_t')}</option></select></div>
+  </div>
+  ${funBlock('product')}`;
+}
+
+/* ---- INSPIRATION ---- */
+function renderInspiration(){
+  return `
+  <label class="lab">${LANG==='fa'?'حال‌وهوا، حس یا خاطره‌ای که می‌خواهید در بطری بریزید':'Describe the vibe, mood or memory you want to bottle'}</label>
+  <textarea class="inp" id="vibeIn" data-i18n-ph="vibe_ph" placeholder="${t('vibe_ph')}"></textarea>
+  <div style="margin-top:10px"><button class="btn primary tiny" id="vibeGo">${t('btn_suggest')}</button>
+  <span class="muted" style="margin:0 8px">${LANG==='fa'?'بر اساس خانواده‌های واقعی بویایی و متوازن بین سر · قلب · پایه.':'Matched to real scent families, then balanced across top · heart · base.'}</span></div>
+  <div id="vibeOut"></div>
+  ${funBlock('inspiration')}`;
+}
+function suggestFromTags(tags, n=8){
+  // score materials by tag overlap, then pick a balanced top/heart/base set
+  const scored=MATERIALS.filter(isAromatic).map(m=>{
+    let s=0; m.tags.forEach(t=>{ if(tags.includes(t))s+=2; }); if(tags.includes(m.family))s+=2; return {m,s};
+  }).filter(x=>x.s>0).sort((a,b)=>b.s-a.s);
+  const pick={top:[],heart:[],base:[]};
+  scored.forEach(({m})=>{
+    const slot = m.pos.includes('top')?'top':(m.pos.includes('base')?'base':'heart');
+    if(pick[slot].length< (slot==='heart'?4:3)) pick[slot].push(m);
+  });
+  return [...pick.top,...pick.heart,...pick.base].slice(0,n);
+}
+function renderSuggestions(mats, title){
+  if(!mats.length) return `<div class="sugg"><div class="muted">${LANG==='fa'?'تطابق قوی نیست — کلماتی مثل «تازه»، «چوبی»، «شیرین»، «رمانتیک» یا «دودی» را امتحان کنید.':'No strong match — try words like “fresh”, “woody”, “sweet”, “romantic”, “smoky”.'}</div></div>`;
+  return `<div class="sugg"><div style="font-family:Fraunces;font-size:17px;margin-bottom:6px">${title}</div>
+  ${mats.map(m=>`<div class="srow">
+     <span class="tag" style="background:${famColor(m.family)}">${famLabel(m.family)}</span>
+     <span class="n">${matName(m)} <span class="muted" style="font-weight:400">— ${matDesc(m)}</span></span>
+     ${notePill(m.pos)}
+     <button class="btn ghost tiny" onclick="addMaterial('${m.id}')">${LANG==='fa'?'+ افزودن':'Accept +'}</button>
+   </div>`).join('')}
+   <div style="margin-top:8px"><button class="btn primary tiny" onclick="acceptAll(${JSON.stringify(mats.map(m=>m.id)).replace(/"/g,'&quot;')})">${LANG==='fa'?'افزودن همه →':'Accept all →'}</button></div>
+  </div>`;
+}
+window.acceptAll=ids=>{ ids.forEach(id=>addMaterial(id,true)); toast(ids.length+' notes added to formula'); openFormula(); };
+
+/* ---- TYPE ---- */
+function renderType(){
+  return `<label class="lab">Pick a direction</label>
+  <div class="typechips">${Object.keys(TYPE_CHIPS).map(k=>`<button class="tchip" onclick="suggestType('${k.replace(/'/g,"\\'")}')">${k}</button>`).join('')}</div>
+  <div id="typeOut"></div>${funBlock('type')}`;
+}
+window.suggestType=k=>{ const mats=suggestFromTags(TYPE_CHIPS[k],8); $('#typeOut').innerHTML=renderSuggestions(mats, k+' — suggested starting palette'); };
+
+/* ---- LIBRARY ---- */
+let libFilter='all', libSearch='';
+function renderLibrary(pad){
+  const fams=['all',...Object.keys(FAMILIES)];
+  pad.innerHTML=`
+   <div class="lib-controls">
+     <input class="inp" id="libSearch" placeholder="${LANG==='fa'?'🔍 جستجوی نت‌ها — نام، رایحه یا خانواده…':'🔍 Search 100+ notes — name, smell, or family…'}" style="flex:1;min-width:220px" value="${libSearch}">
+   </div>
+   <div class="famfilter" id="famFilter">${fams.map(f=>`<button class="fam-pill ${f===libFilter?'on':''}" data-fam="${f}" ${f!=='all'?`style="${f===libFilter?`background:${famColor(f)}`:''}"`:''}>${f!=='all'?`<span class="swatch" style="background:${famColor(f)}"></span>`:''}${f==='all'?(LANG==='fa'?'همه':'All'):famLabel(f)}</button>`).join('')}</div>
+   <div class="matgrid" id="matgrid"></div>
+   ${funBlock('library')}`;
+  paintGrid();
+}
+function paintGrid(){
+  const grid=$('#matgrid'); if(!grid)return;
+  const q=libSearch.toLowerCase();
+  const list=MATERIALS.filter(m=>{
+    if(libFilter!=='all'&&m.family!==libFilter)return false;
+    if(q){ return (m.name+' '+(MAT_FA[m.id]?MAT_FA[m.id].join(' '):'')+' '+m.desc+' '+m.tags.join(' ')+' '+m.family).toLowerCase().includes(q); }
+    return true;
+  });
+  grid.innerHTML = list.length? list.map(m=>`
+    <div class="matcard">
+      <div class="fbar" style="background:${famColor(m.family)}"></div>
+      <h4>${matName(m)}</h4>
+      <div class="meta" style="margin-top:5px"><span class="syn ${m.type==='n'?'nat':'syngen'}">${m.type==='n'?(LANG==='fa'?'طبیعی':'Natural'):(LANG==='fa'?'مصنوعی':'Synthetic')}</span>
+        <span class="tag" style="background:${famColor(m.family)}">${famLabel(m.family)}</span></div>
+      <div class="desc">“${matDesc(m)}”</div>
+      <div class="meta">${notePill(m.pos)} ${m.fix?`<span class="note-badge nb-base">⚓ ${LANG==='fa'?'تثبیت‌کننده':'fixative'}</span>`:''}</div>
+      <div class="denrow"><span>${LANG==='fa'?'چگالی':'Density'}</span>
+        <input class="deninp" type="number" step="0.001" min="0.5" max="1.5" value="${den(m)}" onchange="setDensity('${m.id}',this.value)">
+        <span class="denunit">g/mL</span>${S.densities&&S.densities[m.id]!=null?`<button class="denreset" title="reset" onclick="resetDensity('${m.id}')">↺</button>`:''}</div>
+      <div class="denrow"><span>${LANG==='fa'?'هزینه':'Cost'}</span>
+        <input class="deninp" type="number" step="0.01" min="0" value="${costOf(m)}" onchange="setCost('${m.id}',this.value)">
+        <span class="denunit">${cur()}/g</span>${S.costs&&S.costs[m.id]!=null?`<button class="denreset" title="reset" onclick="resetCost('${m.id}')">↺</button>`:''}</div>
+      <button class="addbtn" title="${LANG==='fa'?'افزودن به فرمول':'Add to formula'}" onclick="addMaterial('${m.id}')">＋</button>
+    </div>`).join('') : `<div class="empty">${LANG==='fa'?'ماده‌ای با این جستجو پیدا نشد.':'No materials match.'}</div>`;
+}
+function notePill(pos){
+  const en={top:['nb-top','Top note'],heart:['nb-heart','Heart note'],base:['nb-base','Base note'],
+    'top-heart':['nb-top','Top → Heart'],'heart-base':['nb-base','Heart → Base']};
+  const fa={top:['nb-top','نت سر'],heart:['nb-heart','نت قلب'],base:['nb-base','نت پایه'],
+    'top-heart':['nb-top','سر ← قلب'],'heart-base':['nb-base','قلب ← پایه']};
+  const [c,l]=(LANG==='fa'?fa:en)[pos]||['nb-heart',LANG==='fa'?'قلب':'Heart'];
+  return `<span class="note-badge ${c}">● ${l}</span>`;
+}
+
+/* ---- ACCORD BUILDER ---- */
+let accDraft={name:'', comp:[]};
+function renderAccord(){
+  const drng=accDraft.comp.reduce((s,c)=>s+(+c.pct||0),0);
+  return `
+   <div class="row">
+     <div class="field" style="flex:2"><label class="lab">Accord name</label><input class="inp" id="accName" placeholder="e.g. My Amber Heart" value="${accDraft.name}"></div>
+     <div class="field"><label class="lab">Add a material</label>
+       <select class="inp" id="accAddSel"><option value="">${LANG==='fa'?'انتخاب…':'Choose…'}</option>${MATERIALS.filter(isAromatic).map(m=>`<option value="${m.id}">${matName(m)}</option>`).join('')}</select></div>
+   </div>
+   <div style="margin-top:10px">${accDraft.comp.length?`
+     <div class="ftable-scroll"><table class="ftable"><thead><tr><th>Material</th><th>Note</th><th style="text-align:right">Parts (%)</th><th></th></tr></thead><tbody>
+     ${accDraft.comp.map((c,i)=>{const m=MAT_BY_ID[c.matId];return `<tr>
+       <td class="fname">${matName(m)}<span class="em">${matDesc(m)}</span></td>
+       <td>${notePill(m.pos)}</td>
+       <td style="text-align:right"><input class="pctin" type="number" min="0" step="0.5" value="${c.pct}" oninput="accSetPct(${i},this.value)"></td>
+       <td><button class="delx" onclick="accDel(${i})">×</button></td></tr>`;}).join('')}
+     </tbody></table></div>
+     <div class="muted" style="margin-top:6px">Internal total: <b>${fmt(drng)}%</b> — parts are normalised automatically when used in a formula.</div>
+     <div style="margin-top:10px"><button class="btn primary tiny" id="accSave">💾 Save accord</button></div>
+   `:`<div class="empty">Pick materials above to start blending an accord.</div>`}</div>
+   ${S.accords.length?`<div class="divider"></div><label class="lab">Your saved accords</label>
+     <div class="collgrid">${S.accords.map(a=>`<div class="collcard"><h4>🎼 ${a.name}</h4>
+       <div class="meta2">${a.components.length} materials</div>
+       <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px">${a.components.slice(0,6).map(c=>`<span class="tag" style="background:${famColor((MAT_BY_ID[c.matId]||{}).family)}">${MAT_BY_ID[c.matId]?matName(MAT_BY_ID[c.matId]):'?'}</span>`).join('')}</div>
+       <button class="btn ghost tiny" onclick="addAccord('${a.id}')">Add to formula +</button>
+       <button class="btn ghost tiny" onclick="delAccord('${a.id}')">Delete</button></div>`).join('')}</div>`:''}
+   ${funBlock('accord')}`;
+}
+window.accSetPct=(i,v)=>{ accDraft.comp[i].pct=+v||0; };
+window.accDel=i=>{ accDraft.comp.splice(i,1); renderSection('accord'); };
+
+/* ---- FORMULA ---- */
+function renderFormula(){
+  const c=calc(); const py=pyramid(); const cl=classify();
+  const diff = c.aromaticPct - c.targetConc;
+  let status, scolor;
+  if(Math.abs(diff)<0.05){status='On target ✓';scolor='#5d8a3a';}
+  else if(diff>0){status=`Over by ${fmt(diff)}% — reduce notes or raise strength`;scolor='#c0392b';}
+  else {status=`${fmt(-diff)}% headroom left in the concentrate`;scolor='#b8860b';}
+
+  let rowsHtml='';
+  if(!S.formula.length){ rowsHtml=`<div class="empty">Your formula is empty. Add notes from the Library, an Accord, or accept a suggestion.</div>`; }
+  else {
+    rowsHtml=`<div class="ftable-scroll"><table class="ftable"><thead><tr>
+      <th>${LANG==='fa'?'ماده':'Ingredient'}</th><th>${LANG==='fa'?'نت':'Note'}</th><th>${LANG==='fa'?'درصد نهایی':'Final %'}</th><th>${LANG==='fa'?'قفل':'Lock'}</th>
+      <th style="text-align:right">${S.prefs.basis==='weight'?(LANG==='fa'?'وزن':'Weigh'):(LANG==='fa'?'حجم':'Measure')}</th><th></th></tr></thead><tbody>`;
+    c.detail.forEach(d=>{
+      const r=d.row; const isAcc=r.kind==='accord';
+      const head = isAcc? (S.accords.find(a=>a.id===r.refId)||{}).name : (MAT_BY_ID[r.matId]?matName(MAT_BY_ID[r.matId]):'');
+      const m = isAcc? null : MAT_BY_ID[r.matId];
+      const totMass=d.sub.reduce((s,x)=>s+x.amt.mass,0), totVol=d.sub.reduce((s,x)=>s+x.amt.vol,0);
+      rowsHtml+=`<tr>
+        <td class="fname">${isAcc?'🎼 ':''}${head}${m?`<span class="em">${matDesc(m)}</span>`:`<span class="em">${LANG==='fa'?'آکورد · '+d.sub.length+' ماده':'accord · '+d.sub.length+' materials'}</span>`}</td>
+        <td>${isAcc?accordNotePills(r.refId):notePill(m.pos)}</td>
+        <td><input class="pctin" type="number" min="0" step="0.1" value="${fmt(r.finalPct,3)}" oninput="setPct('${r.uid}',this.value)"></td>
+        <td><button class="lockbtn ${r.fixed?'on':''}" title="Lock this %" onclick="toggleLock('${r.uid}')">${r.fixed?'🔒':'🔓'}</button></td>
+        <td style="text-align:right" class="amt">${fmt(totMass,3)}<small> g</small><br><small>${fmt(totVol,3)} mL</small></td>
+        <td><button class="delx" onclick="delRow('${r.uid}')">×</button></td></tr>`;
+    });
+    // solvent + colour summary
+    rowsHtml+=`<tr style="background:#faf4e9"><td class="fname">Solvent / base (auto-fill)<span class="em">${(PRODUCTS.find(p=>p.id===S.product.id)||{}).base}</span></td>
+      <td>${notePill('base')}</td><td><b>${fmt(c.solventFill)}%</b></td><td>—</td>
+      <td style="text-align:right" class="amt">${fmt(c.totalMass*c.solventFill/100,3)}<small> g</small></td><td></td></tr>`;
+    rowsHtml+=`</tbody></table></div>`;
+  }
+
+  // pyramid percentages of aromatic total
+  const pt=py.total||1;
+  const pyHtml=`<div class="pyramid">
+   ${[['top','Top','#e8b13a'],['heart','Heart','#e0789a'],['base','Base','#9c6b3f']].map(([k,l,col])=>`
+     <div class="pyrow"><div class="ttl">${l}</div>
+       <div class="pytrack"><div class="pyfill" style="width:${(py.acc[k]/pt*100)||0}%;background:linear-gradient(90deg,${col},${col}cc)"></div></div>
+       <div class="v">${fmt(py.acc[k]/pt*100,0)}%</div></div>`).join('')}
+   </div>
+   <div class="muted" style="margin-top:8px;font-size:12px">Healthy sketch ≈ Top 15–30 · Heart 30–50 · Base 25–45. Bridge notes count half toward each layer.</div>`;
+
+  const classHtml = cl? `<div class="class-card">
+     <div class="k">This blend reads as</div>
+     <div class="big">${familyName(cl.sorted)}</div>
+     <div class="imp">${blendImpression(cl,py)}</div>
+     <div class="famtags">${cl.sorted.slice(0,6).map(([t,w])=>`<span class="tag" style="background:${famColor(t)||'#9a8'}">${t} ${fmt(w/cl.total*100,0)}</span>`).join('')}</div>
+   </div>`:'';
+
+  return `
+   <div class="row" style="align-items:center;margin-bottom:6px">
+     <div class="chip-stat"><span>Concentrate target</span><b>${fmt(c.targetConc)}%</b></div>
+     <div class="chip-stat"><span>Notes total</span><b>${fmt(c.aromaticPct)}%</b></div>
+     <div class="chip-stat" style="border-color:${scolor}"><span>Status</span><b style="color:${scolor};font-size:13px">${status}</b></div>
+     <div style="flex:1"></div>
+     <button class="btn ghost tiny" onclick="autoBalance()">⚖ ${t('btn_autobal')}</button>
+     <button class="btn ghost tiny" onclick="clearFormula()">${t('btn_clear')}</button>
+   </div>
+   ${rowsHtml}
+   ${S.formula.length?`<div class="divider"></div>
+   <div class="row">
+     <div class="field"><label class="lab">${LANG==='fa'?'هرم نت':'Note pyramid'}</label>${pyHtml}</div>
+   </div>
+   ${classHtml}
+   <div style="margin-top:14px"><button class="btn primary" onclick="saveToCollection()">${t('btn_savecoll')}</button></div>`:''}
+   ${funBlock('formula')}`;
+}
+function accordNotePills(refId){
+  const a=S.accords.find(x=>x.id===refId); if(!a)return '';
+  const set=new Set(a.components.map(c=>(MAT_BY_ID[c.matId]||{}).pos));
+  return [...set].slice(0,3).map(p=>p?notePill(p):'').join(' ');
+}
+function blendImpression(cl,py){
+  const pt=py.total||1;
+  const top = topDescriptors('top'), heart=topDescriptors('heart'), base=topDescriptors('base');
+  const parts=[];
+  if(top) parts.push(`opens <b>${top}</b>`);
+  if(heart) parts.push(`a heart of <b>${heart}</b>`);
+  if(base) parts.push(`drying down to <b>${base}</b>`);
+  if(!parts.length) return 'Add a few notes to read the blend\u2019s story.';
+  return 'It '+parts.join(', ')+'.';
+}
+function topDescriptors(layer){
+  const tally={};
+  S.formula.forEach(r=>expandRow(r).forEach(p=>{
+    if(!isAromatic(p.mat))return;
+    const inLayer = (layer==='top'&&p.mat.pos.includes('top')) || (layer==='base'&&p.mat.pos.includes('base')) ||
+      (layer==='heart'&&(p.mat.pos==='heart'||p.mat.pos==='top-heart'||p.mat.pos==='heart-base'));
+    if(!inLayer)return;
+    p.mat.tags.forEach(t=>tally[t]=(tally[t]||0)+p.finalPct);
+  }));
+  const top=Object.entries(tally).sort((a,b)=>b[1]-a[1]).slice(0,3).map(x=>x[0]);
+  return top.join(', ');
+}
+
+/* ---- COLLECTIONS ---- */
+function renderCollection(){
+  if(!S.collections.length) return `<div class="empty">${LANG==='fa'?'هنوز فرمولی ذخیره نشده. یکی در ماشین‌حساب بسازید و سپس «ذخیره در مجموعه».':'No saved formulas yet. Build one in the calculator, then “Save to collection”.'}</div>${funBlock('collection')}`;
+  return `<div class="collgrid">${S.collections.map(c=>{
+    const prod=PRODUCTS.find(p=>p.id===c.snapshot.product.id)||{};
+    return `<div class="collcard"><h4>📖 ${c.name}</h4>
+      <div class="meta2">${prod.id?productName(prod):'—'} · ${c.snapshot.product.conc}% · ${c.snapshot.formula.length} ${LANG==='fa'?'ماده':'ingredients'}<br>${c.date}</div>
+      <button class="btn ghost tiny" onclick="loadCollection('${c.id}')">${t('btn_load')}</button>
+      <button class="btn ghost tiny" onclick="delCollection('${c.id}')">${t('btn_delete')}</button></div>`;
+  }).join('')}</div>${funBlock('collection')}`;
+}
+
+/* ---- COMMERCIAL / ARCHETYPE LIBRARY ---- */
+function renderCommercial(){
+  return `
+   <label class="lab">${LANG==='fa'?'فرمول‌های شروع عمومی — هرکدام را به‌عنوان پایه بارگذاری کنید و از آنِ خود کنید':'Public starter formulas — load any as a base, then make it yours'}</label>
+   <div class="collgrid">${ARCHETYPES.map((a,i)=>`<div class="collcard">
+      <h4>${archName(a)}</h4>
+      <div class="meta2">${(()=>{const p=PRODUCTS.find(p=>p.id===a.type);return p?productName(p):'';})()} · ${a.comp.length} ${LANG==='fa'?'ماده':'materials'}<br><i>${archVibe(a)}</i></div>
+      <button class="btn primary tiny" onclick="loadArchetype(${i})">${t('btn_load')}</button>
+   </div>`).join('')}</div>
+   <div class="divider"></div>
+   <label class="lab">${LANG==='fa'?'کتابخانهٔ شخصی عطر — عطرهایی که دارید یا دوست دارید ثبت کنید':'Your personal perfume library — log bottles you own or admire'}</label>
+   <div class="row">
+     <div class="field" style="flex:2"><input class="inp" id="libN" placeholder="${LANG==='fa'?'نام عطر':'Perfume name'}"></div>
+     <div class="field"><input class="inp" id="libB" placeholder="${LANG==='fa'?'برند / خانه':'House / brand'}"></div>
+   </div>
+   <div class="row" style="margin-top:8px">
+     <div class="field" style="flex:2"><input class="inp" id="libNotes" placeholder="${LANG==='fa'?'نت‌هایی که حس می‌کنید — برگاموت، رز، وتیور…':'Notes you detect — bergamot, rose, vetiver…'}"></div>
+     <button class="btn primary" id="libAdd" style="align-self:flex-end">${LANG==='fa'?'افزودن به کتابخانه':'Add to library'}</button>
+   </div>
+   <div style="margin-top:12px">${S.library.length?`<div class="collgrid">${S.library.map(l=>`<div class="collcard">
+       <h4 style="font-size:16px">🧴 ${l.name}</h4><div class="meta2">${l.brand||'—'}<br>${l.notes||''}</div>
+       <button class="btn ghost tiny" onclick="delLib('${l.id}')">${t('btn_remove')}</button></div>`).join('')}</div>`:`<div class="empty">${LANG==='fa'?'هنوز چیزی ثبت نشده.':'Nothing logged yet.'}</div>`}</div>`;
+}
+
+/* ---- ACCOUNT ---- */
+function renderAccount(){
+  const fa=LANG==='fa';
+  const counts = fa
+    ? `${S.formula.length} ماده · ${S.collections.length} فرمول ذخیره‌شده · ${S.accords.length} آکورد · ${S.library.length} عطر ثبت‌شده`
+    : `${S.formula.length} ingredient${S.formula.length===1?'':'s'} · ${S.collections.length} saved formula${S.collections.length===1?'':'s'} · ${S.accords.length} accord${S.accords.length===1?'':'s'} · ${S.library.length} logged perfume${S.library.length===1?'':'s'}`;
+  return `
+  <div class="row" style="align-items:center;gap:16px">
+    <div class="ix" style="width:56px;height:56px;font-size:26px;border-radius:16px;background:linear-gradient(135deg,var(--gold),var(--rose));display:grid;place-items:center;color:#fff;flex:none">👤</div>
+    <div style="flex:1;min-width:160px">
+      <div style="font-family:Fraunces;font-size:20px">${S.email}${isAdmin()?' <span class="badge-pro" style="font-size:10px;vertical-align:middle">ADMIN</span>':''}</div>
+      <div style="margin-top:5px">${isPaid()?`<span class="badge-pro">⭐ ${t('mem_pro')}</span>`:`<span class="badge-free">${t('mem_free')}</span>`}</div>
+    </div>
+  </div>
+  <div class="divider"></div>
+  <label class="lab">${fa?'کارهای شما':'Your work'}</label>
+  <div class="muted" style="font-size:14px">${counts}</div>
+  <div class="funfact" style="margin-top:14px">
+    <div class="fi">🔒</div>
+    <div class="ft"><b>${fa?'دربارهٔ داده‌های شما':'About your data'}</b><br>${fa?'این نمونه همه‌چیز را به‌صورت خصوصی در همین مرورگر و متصل به ایمیل شما نگه می‌دارد. چیزی آپلود نمی‌شود. راهنمای انتشار، روش افزودن حساب ابری واقعی با ورود بین دستگاه‌ها را توضیح می‌دهد.':'This prototype keeps everything privately in this browser, tied to your email. Nothing is uploaded. See the guide for real cloud accounts with sign-in across devices.'}</div>
+  </div>
+  <div style="margin-top:16px"><button class="btn ghost" id="signOut">${t('btn_signout')}</button></div>`;
+}
+
+/* ---- PROFILE / PREFERENCES ---- */
+function renderProfile(){
+  const k=S.prefs.geminiKey||'';
+  return `
+  <label class="lab">${t('lang_label')}</label>
+  <div class="langtoggle" style="margin-bottom:4px">
+    <button data-lang="en" class="${LANG==='en'?'on':''}" onclick="applyLang('en')">English</button>
+    <button data-lang="fa" class="${LANG==='fa'?'on':''}" onclick="applyLang('fa')">فارسی</button>
+  </div>
+  <div class="divider"></div>
+  <label class="lab">${t('basis_label')}</label>
+  <select class="inp" id="pBasis" style="max-width:300px">
+    <option value="weight" ${S.prefs.basis==='weight'?'selected':''}>${t('ob_w_t')} — ${t('ob_w_d')}</option>
+    <option value="volume" ${S.prefs.basis==='volume'?'selected':''}>${t('ob_v_t')} — ${t('ob_v_d')}</option>
+  </select>
+  <div class="divider"></div>
+  <label class="lab">${t('defprod_label')}</label>
+  <select class="inp" id="pProd" style="max-width:340px">${PRODUCTS.map(x=>`<option value="${x.id}" ${x.id===S.product.id?'selected':''}>${x.name} (${x.min}–${x.max}%)</option>`).join('')}</select>
+  <div class="divider"></div>
+  <label class="lab">${t('funfacts_label')}</label>
+  <div class="row" style="align-items:center;gap:12px">
+    <button class="btn ${S.prefs.fun?'primary':'ghost'}" id="pFun">${S.prefs.fun?'✨ '+(LANG==='fa'?'روشن':'On'):(LANG==='fa'?'خاموش':'Off')}</button>
+  </div>
+  <div class="divider"></div>
+  <label class="lab">${LANG==='fa'?'واحد پول (برای هزینه‌ها)':'Currency (for costs)'}</label>
+  <select class="inp" id="pCur" style="max-width:220px">${['$','€','£','﷼','تومان','₺','₽','¥'].map(s=>`<option ${cur()===s?'selected':''}>${s}</option>`).join('')}</select>
+  <div class="divider"></div>
+  <label class="lab">🪄 ${LANG==='fa'?'هوش مصنوعی (Gemini)':'AI composer (Gemini)'}</label>
+  <div class="muted" style="font-size:12.5px;margin-bottom:8px">${LANG==='fa'?'یک کلید رایگان Gemini از Google AI Studio بگیرید و اینجا بچسبانید تا بخش «یک حس را توصیف کنید» فعال شود. کلید فقط در همین مرورگر ذخیره می‌شود.':'Get a free Gemini key from Google AI Studio and paste it here to enable the “Describe a Feeling” composer. The key is stored only in this browser.'}</div>
+  <input class="inp" id="pKey" type="password" placeholder="AIza…" value="${k.replace(/"/g,'&quot;')}" style="max-width:420px" autocomplete="off">
+  <div style="margin-top:8px"><a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener" class="btn ghost tiny">${LANG==='fa'?'دریافت کلید رایگان ↗':'Get a free key ↗'}</a>
+   <span class="muted" style="font-size:12px;margin:0 8px">${k?'🔑 '+(LANG==='fa'?'کلید ذخیره شد':'key saved'):''}</span></div>`;
+}
+
+/* ---- AI COMPOSER (Gemini) ---- */
+function lockGate(){
+  return `<div class="lockoverlay">
+    <div class="lk">🔒</div>
+    <div class="lt">${t('lock_title')}</div>
+    <div class="ld">${t('lock_desc')}</div>
+    <div class="row" style="gap:8px;justify-content:center">
+      <button class="btn primary tiny" onclick="setTab('account');setTimeout(()=>{var p=document.querySelector('.panel[data-sec=membership]');if(p){p.classList.remove('collapsed');p.scrollIntoView({behavior:'smooth'});}},150)">${t('lock_cta')}</button>
+    </div>
+  </div>`;
+}
+function renderAI(){
+  if(!isPaid()){
+    return `<div class="lockwrap" style="min-height:170px">
+      <div class="blurred"><div class="muted" style="font-size:14px;margin-bottom:10px">${t('ai_intro')}</div>
+      <textarea class="inp" placeholder="${t('ai_ph')}"></textarea>
+      <div style="margin-top:10px"><button class="btn primary">${t('btn_compose')}</button></div></div>
+      ${lockGate()}</div>`;
+  }
+  const hasKey=!!(S.prefs.geminiKey||'').trim();
+  return `
+  <div class="muted" style="font-size:14px;margin-bottom:10px">${t('ai_intro')}</div>
+  <textarea class="inp" id="aiIn" data-i18n-ph="ai_ph" placeholder="${t('ai_ph')}"></textarea>
+  <div style="margin-top:10px;display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+    <button class="btn primary" id="aiGo">${t('btn_compose')}</button>
+    ${hasKey?'':`<span class="muted" style="font-size:12.5px">${t('ai_nokey')}</span>`}
+  </div>
+  <div id="aiOut" style="margin-top:12px"></div>
+  ${funBlock('inspiration')}`;
+}
+
+/* ---- SCENT MAP / MATRIX ---- */
+const SCENT_AXES={
+  fresh:{citrus:1.2,green:1,aquatic:1.2,herb:.7,fruity:.4,aldehyde:.7, tags:{fresh:1,citrus:1,green:.8,aquatic:1,sharp:.6,ozonic:1,sparkling:.8}},
+  warm:{resin:1.1,amber:1.2,spice:1,woody:.9,balsamic:1,animalic:.8,leather:.7,gourmand:.5, tags:{warm:1.2,spicy:.9,balsamic:1,amber:1,woody:.6,resinous:.9,powdery:.4}},
+  sweet:{gourmand:1.3,fruity:.8,floral:.4,amber:.5,resin:.4, tags:{sweet:1.3,vanilla:1.1,gourmand:1,fruity:.7,honeyed:1,caramel:1,creamy:.7}},
+  smoky:{leather:1.2,mossy:.6,woody:.5,resin:.5,animalic:.6, tags:{smoky:1.4,leathery:1,woody:.4,incense:1.2,tarry:1.2,earthy:.6,phenolic:1}}
+};
+function scentScores(){
+  const out={fresh:0,warm:0,sweet:0,smoky:0}; let tot=0;
+  S.formula.forEach(r=>expandRow(r).forEach(p=>{
+    if(!isAromatic(p.mat))return; const w=p.finalPct; if(w<=0)return; tot+=w;
+    Object.keys(SCENT_AXES).forEach(ax=>{
+      const def=SCENT_AXES[ax]; let s=(def[p.mat.family]||0);
+      (p.mat.tags||[]).forEach(tg=>{ if(def.tags[tg]) s+=def.tags[tg]; });
+      out[ax]+=s*w;
+    });
+  }));
+  if(tot>0){ Object.keys(out).forEach(k=>out[k]=out[k]/tot); }
+  // normalise each axis to 0..1 with a soft ceiling
+  const norm={}; Object.keys(out).forEach(k=>norm[k]=Math.max(0,Math.min(1, out[k]/1.6)));
+  return {raw:out, norm, tot};
+}
+function renderMatrix(){
+  const sc=scentScores();
+  if(sc.tot<=0){ return `<div class="empty">${t('m_empty')}</div>`; }
+  // map to 2D: x = warm(1) vs fresh(0) ; y = sweet(1 top) vs smoky(0 bottom)
+  const ax = sc.norm.fresh+sc.norm.warm || 1;
+  const ay = sc.norm.sweet+sc.norm.smoky || 1;
+  const px = (sc.norm.warm/ (ax))*100;          // 0 fresh-left .. 100 warm-right
+  const py = 100-(sc.norm.sweet/(ay))*100;       // 0 sweet-top .. 100 smoky-bottom
+  const cx=8+px*0.84, cy=8+py*0.84;              // padding inside 0..100 box
+  const fa=LANG==='fa';
+  const bar=(lab,v,c)=>`<div class="pyrow"><div class="ttl">${lab}</div>
+     <div class="pytrack"><div class="pyfill" style="width:${Math.round(v*100)}%;background:${c}"></div></div>
+     <div class="v">${Math.round(v*100)}</div></div>`;
+  const body=`
+  <div class="scentmap">
+    <svg viewBox="0 0 100 100" preserveAspectRatio="none" class="smap-svg" aria-hidden="true">
+      <defs>
+        <radialGradient id="gFresh" cx="15%" cy="85%" r="90%"><stop offset="0%" stop-color="#4fb0b8" stop-opacity=".55"/><stop offset="60%" stop-color="#4fb0b8" stop-opacity="0"/></radialGradient>
+        <radialGradient id="gWarm" cx="85%" cy="50%" r="90%"><stop offset="0%" stop-color="#e08a3a" stop-opacity=".5"/><stop offset="60%" stop-color="#e08a3a" stop-opacity="0"/></radialGradient>
+        <radialGradient id="gSweet" cx="50%" cy="12%" r="90%"><stop offset="0%" stop-color="#e0789a" stop-opacity=".5"/><stop offset="60%" stop-color="#e0789a" stop-opacity="0"/></radialGradient>
+        <radialGradient id="gSmoky" cx="50%" cy="92%" r="90%"><stop offset="0%" stop-color="#3c2b22" stop-opacity=".5"/><stop offset="60%" stop-color="#3c2b22" stop-opacity="0"/></radialGradient>
+      </defs>
+      <rect width="100" height="100" fill="#fbf6ee"/>
+      <rect width="100" height="100" fill="url(#gFresh)"/><rect width="100" height="100" fill="url(#gWarm)"/>
+      <rect width="100" height="100" fill="url(#gSweet)"/><rect width="100" height="100" fill="url(#gSmoky)"/>
+      <line x1="50" y1="6" x2="50" y2="94" stroke="#00000018" stroke-width=".4" stroke-dasharray="2 2"/>
+      <line x1="6" y1="50" x2="94" y2="50" stroke="#00000018" stroke-width=".4" stroke-dasharray="2 2"/>
+    </svg>
+    <div class="smap-lab top">${t('m_sweet')}</div>
+    <div class="smap-lab bottom">${t('m_smoky')}</div>
+    <div class="smap-lab left">${t('m_fresh')}</div>
+    <div class="smap-lab right">${t('m_warm')}</div>
+    <div class="smap-dot" style="left:${cx}%;top:${cy}%"></div>
+  </div>
+  <div class="pyramid" style="margin-top:16px">
+    ${bar(t('m_fresh'),sc.norm.fresh,'#4fb0b8')}
+    ${bar(t('m_warm'),sc.norm.warm,'#e08a3a')}
+    ${bar(t('m_sweet'),sc.norm.sweet,'#e0789a')}
+    ${bar(t('m_smoky'),sc.norm.smoky,'#6b4a3a')}
+  </div>`;
+  if(!isPaid()) return `<div class="lockwrap"><div class="blurred">${body}</div>${lockGate()}</div>`;
+  return body;
+}
+
+/* ============================================================
+   ANALYSIS & VISUALS — composition · scent journey · performance · cost
+   ============================================================ */
+function familyComposition(){
+  const map={}; let tot=0;
+  S.formula.forEach(r=>expandRow(r).forEach(p=>{ if(!isAromatic(p.mat))return; const w=p.finalPct; if(w<=0)return; tot+=w; map[p.mat.family]=(map[p.mat.family]||0)+w; }));
+  const arr=Object.entries(map).map(([f,v])=>({f,v,pct:tot>0?v/tot:0})).sort((a,b)=>b.v-a.v);
+  return {arr,tot};
+}
+function performance(){
+  const py=pyramid(); const tot=py.total||1;
+  const top=py.acc.top/tot, heart=py.acc.heart/tot, base=py.acc.base/tot;
+  // fixative + heavy-base bonus for durability; concentration scales both
+  let fix=0; S.formula.forEach(r=>expandRow(r).forEach(p=>{ if(isAromatic(p.mat)&&p.mat.fix) fix+=p.finalPct; }));
+  const fixR=Math.min(1,(tot>0?fix/tot:0)*1.5);
+  const conc=Math.max(0,Math.min(1,(+S.product.conc||10)/30)); // 0..1 by strength
+  let proj=(top*1.0+heart*0.6+base*0.2)*(0.55+0.6*conc);
+  let dur =(base*1.0+heart*0.5+top*0.12)*(0.5+0.6*conc)+fixR*0.25;
+  return {proj:Math.max(0,Math.min(1,proj)), dur:Math.max(0,Math.min(1,dur)), top,heart,base};
+}
+function donutSVG(arr){
+  let a=-Math.PI/2; const R=42,r=24,cx=50,cy=50;
+  const seg=arr.filter(s=>s.pct>0.001).map(s=>{
+    const a2=a+s.pct*Math.PI*2;
+    const x1=cx+R*Math.cos(a), y1=cy+R*Math.sin(a), x2=cx+R*Math.cos(a2), y2=cy+R*Math.sin(a2);
+    const xi2=cx+r*Math.cos(a2), yi2=cy+r*Math.sin(a2), xi1=cx+r*Math.cos(a), yi1=cy+r*Math.sin(a);
+    const big=(a2-a)>Math.PI?1:0; a=a2;
+    return `<path d="M${x1} ${y1} A${R} ${R} 0 ${big} 1 ${x2} ${y2} L${xi2} ${yi2} A${r} ${r} 0 ${big} 0 ${xi1} ${yi1} Z" fill="${famColor(s.f)}"/>`;
+  }).join('');
+  return `<svg viewBox="0 0 100 100" class="donut-svg">${seg}<circle cx="50" cy="50" r="${r-1}" fill="#fff"/></svg>`;
+}
+function journeySVG(top,heart,base){
+  const W=300,H=120,n=60,T=10; // hours
+  const f=(t,peak,decay,rise)=>{ const up=1-Math.exp(-t/rise); const dn=Math.exp(-Math.max(0,t-peak)/decay); return up*dn; };
+  const curves=[
+    {w:top, peak:0.1, rise:0.05, decay:0.8, c:'#e8b13a', n:LANG==='fa'?'سر':'Top'},
+    {w:heart,peak:1.2, rise:0.5,  decay:2.2, c:'#e0789a', n:LANG==='fa'?'قلب':'Heart'},
+    {w:base, peak:3.0, rise:1.2,  decay:7.0, c:'#9c6b3f', n:LANG==='fa'?'پایه':'Base'}
+  ];
+  const paths=curves.map(cv=>{
+    let pts=[]; for(let i=0;i<=n;i++){ const t=i/n*T; const y=cv.w*f(t,cv.peak,cv.decay,cv.rise); pts.push([i/n*W, H-y*H*0.9-2]); }
+    const line=pts.map((p,i)=>(i?'L':'M')+p[0].toFixed(1)+' '+p[1].toFixed(1)).join(' ');
+    const area=line+` L${W} ${H} L0 ${H} Z`;
+    return `<path d="${area}" fill="${cv.c}" opacity=".16"/><path d="${line}" fill="none" stroke="${cv.c}" stroke-width="2.2"/>`;
+  }).join('');
+  const ticks=[0,2,4,6,8,10].map(h=>`<text x="${h/T*W}" y="${H-3}" class="jt">${h}${LANG==='fa'?'':'h'}</text>`).join('');
+  return `<svg viewBox="0 0 ${W} ${H}" class="journey-svg">${paths}${ticks}</svg>
+   <div class="jlegend">${curves.map(c=>`<span><i style="background:${c.c}"></i>${c.n}</span>`).join('')}</div>`;
+}
+function renderAnalysis(){
+  const c=calc();
+  if(!c || (c.detail||[]).every(d=>d.sub.every(x=>!isAromatic(x.mat)))){
+    return `<div class="empty">${LANG==='fa'?'برای دیدن تحلیل‌ها، چند نت به فرمول اضافه کنید.':'Add a few notes to your formula to see the analysis.'}</div>`;
+  }
+  const fa=LANG==='fa';
+  const comp=familyComposition();
+  const perf=performance();
+  const cost=batchCost(c);
+  const unit=S.product.unit; const batch=+S.product.batch||30;
+  const ml = unit==='ml'? batch : batch/0.9;
+  const costPerMl = ml>0? cost/ml : 0;
+  const bd=costBreakdown(c).slice(0,7);
+  const maxc=bd.length?bd[0].cost:1;
+  // performance 2D
+  const px=8+perf.proj*84, py=8+(1-perf.dur)*84;
+
+  const body=`
+  <!-- composition -->
+  <div class="an-block">
+    <div class="an-h">${fa?'ترکیب بر اساس خانواده':'Composition by family'}</div>
+    <div class="comp-row">
+      ${donutSVG(comp.arr)}
+      <div class="comp-legend">${comp.arr.slice(0,8).map(s=>`<div class="cl-row"><span class="cl-sw" style="background:${famColor(s.f)}"></span><span class="cl-n">${famLabel(s.f)}</span><b>${Math.round(s.pct*100)}%</b></div>`).join('')}</div>
+    </div>
+  </div>
+  <!-- scent journey -->
+  <div class="an-block">
+    <div class="an-h">${fa?'سفر رایحه روی پوست (در طول زمان)':'Scent journey on skin (over time)'}</div>
+    ${journeySVG(perf.top,perf.heart,perf.base)}
+  </div>
+  <!-- performance map -->
+  <div class="an-block">
+    <div class="an-h">${fa?'ماندگاری در برابر پخش':'Durability vs Projection'}</div>
+    <div class="scentmap" style="max-width:380px">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="none" class="smap-svg">
+        <defs>
+          <radialGradient id="pPow" cx="85%" cy="85%" r="95%"><stop offset="0%" stop-color="#c95f3f" stop-opacity=".42"/><stop offset="62%" stop-color="#c95f3f" stop-opacity="0"/></radialGradient>
+          <radialGradient id="pLong" cx="15%" cy="12%" r="95%"><stop offset="0%" stop-color="#4fb0b8" stop-opacity=".42"/><stop offset="62%" stop-color="#4fb0b8" stop-opacity="0"/></radialGradient>
+        </defs>
+        <rect width="100" height="100" fill="#fbf6ee"/><rect width="100" height="100" fill="url(#pPow)"/><rect width="100" height="100" fill="url(#pLong)"/>
+        <line x1="50" y1="6" x2="50" y2="94" stroke="#00000018" stroke-width=".4" stroke-dasharray="2 2"/>
+        <line x1="6" y1="50" x2="94" y2="50" stroke="#00000018" stroke-width=".4" stroke-dasharray="2 2"/>
+      </svg>
+      <div class="smap-lab top">${fa?'ماندگار':'Long-lasting'}</div>
+      <div class="smap-lab bottom">${fa?'زودگذر':'Fleeting'}</div>
+      <div class="smap-lab left">${fa?'نزدیک':'Intimate'}</div>
+      <div class="smap-lab right">${fa?'پُرپخش':'Bold'}</div>
+      <div class="smap-dot" style="left:${px}%;top:${py}%"></div>
+    </div>
+    <div class="pyramid" style="margin-top:14px">
+      <div class="pyrow"><div class="ttl">${fa?'پخش':'Projection'}</div><div class="pytrack"><div class="pyfill" style="width:${Math.round(perf.proj*100)}%;background:#c95f3f"></div></div><div class="v">${Math.round(perf.proj*100)}</div></div>
+      <div class="pyrow"><div class="ttl">${fa?'ماندگاری':'Durability'}</div><div class="pytrack"><div class="pyfill" style="width:${Math.round(perf.dur*100)}%;background:#4fb0b8"></div></div><div class="v">${Math.round(perf.dur*100)}</div></div>
+    </div>
+  </div>
+  <!-- cost -->
+  <div class="an-block">
+    <div class="an-h">${fa?'هزینهٔ مواد در برابر دسته':'Material cost vs batch'}</div>
+    <div class="summary-bar" style="margin-bottom:12px">
+      <div class="chip-stat"><span>${fa?'هزینهٔ کل دسته':'Batch cost'}</span><b>${cur()}${fmt(cost,2)}</b></div>
+      <div class="chip-stat"><span>${fa?'هزینه هر میلی‌لیتر':'Cost / mL'}</span><b>${cur()}${fmt(costPerMl,2)}</b></div>
+      <div class="chip-stat"><span>${fa?'هزینهٔ یک بطری ۳۰ml':'Per 30 mL'}</span><b>${cur()}${fmt(costPerMl*30,2)}</b></div>
+    </div>
+    <div class="costbars">${bd.map(b=>`<div class="cb-row">
+       <span class="cb-n">${matName(b.mat)}</span>
+       <div class="cb-track"><div class="cb-fill" style="width:${Math.max(3,Math.round(b.cost/maxc*100))}%;background:${famColor(b.mat.family)}"></div></div>
+       <b class="cb-v">${cur()}${fmt(b.cost,2)}</b></div>`).join('')}</div>
+    <div class="muted" style="font-size:11.5px;margin-top:8px">${fa?'هزینه‌ها تخمینی‌اند؛ هر نت را در کتابخانه می‌توانید ویرایش کنید.':'Costs are estimates — edit any note’s price in the Library.'}</div>
+  </div>`;
+  if(!isPaid()) return `<div class="lockwrap"><div class="blurred">${body}</div>${lockGate()}</div>`;
+  return body;
+}
+
+/* ============================================================
+   EDUCATION  (gated lessons — admin manages real content via DB)
+   ============================================================ */
+const EDU=[
+ {free:true,  yt:'5p6r1Y3yX2k', tagEn:'Start here', tagFa:'از اینجا شروع کنید',
+   tEn:'What actually is a perfume? Top, heart & base', tFa:'عطر واقعاً چیست؟ نت‌های سر، قلب و پایه',
+   dEn:'A 6-minute primer on fragrance structure and how a scent evolves on skin.',
+   dFa:'مقدمه‌ای ۶ دقیقه‌ای دربارهٔ ساختار رایحه و تکامل آن روی پوست.'},
+ {free:false, yt:'mGtKjQqJc5w', tagEn:'Accords', tagFa:'آکوردها',
+   tEn:'Building your first accord like a chord in music', tFa:'ساخت اولین آکورد، مانند یک آکورد موسیقی',
+   dEn:'How to blend 3–5 materials into something that smells like one idea.',
+   dFa:'چطور ۳ تا ۵ ماده را به چیزی تبدیل کنیم که مثل یک ایده واحد بو بدهد.'},
+ {free:false, yt:'9bZkp7q19f0', tagEn:'Materials', tagFa:'مواد',
+   tEn:'Naturals vs aroma chemicals — when to use which', tFa:'مواد طبیعی در برابر شیمیایی — کدام و کِی',
+   dEn:'The trade-offs in cost, strength, longevity and safety.',
+   dFa:'مزایا و معایب از نظر هزینه، قدرت، ماندگاری و ایمنی.'},
+ {free:false, article:true, tagEn:'Article', tagFa:'مقاله',
+   tEn:'A practical guide to IFRA limits for beginners', tFa:'راهنمای عملی محدودیت‌های IFRA برای مبتدیان',
+   dEn:'Why some materials are capped, how to read the categories, and safe starting points.',
+   dFa:'چرا برخی مواد سقف دارند، چطور دسته‌ها را بخوانیم و نقاط شروع ایمن.',
+   bodyEn:'IFRA standards exist to keep finished fragrances safe on skin. Each material has a maximum level depending on the product category (something left on the skin like perfume is stricter than something rinsed off). As a beginner: keep known sensitisers low, dilute everything for evaluation, and never skin-test at full strength. This article is a starting point — always consult the current IFRA Standards before selling.',
+   bodyFa:'استانداردهای IFRA برای ایمن نگه‌داشتن عطر روی پوست وجود دارند. هر ماده بسته به دستهٔ محصول سقف مشخصی دارد (محصولی که روی پوست می‌ماند مثل عطر سخت‌گیرانه‌تر از محصول شسته‌شدنی است). به‌عنوان مبتدی: حساسیت‌زاهای شناخته‌شده را کم نگه دارید، همه‌چیز را برای ارزیابی رقیق کنید و هرگز با غلظت کامل روی پوست آزمایش نکنید. این مقاله نقطهٔ شروع است — پیش از فروش حتماً به استانداردهای روز IFRA مراجعه کنید.'}
+];
+function eduThumb(it){ return it.article?`<div class="edu-thumb" style="background:linear-gradient(135deg,#4fb0b8,#bd9a4e)"><div class="play">📄</div></div>`
+  :`<div class="edu-thumb" style="background-image:url(https://i.ytimg.com/vi/${it.yt}/hqdefault.jpg)"><div class="play">▶</div></div>`; }
+function renderEducation(){
+  const paid=isPaid();
+  return EDU.map((it,i)=>{
+    const open = paid || it.free;
+    const title=LANG==='fa'?it.tFa:it.tEn, desc=LANG==='fa'?it.dFa:it.dEn, tag=LANG==='fa'?it.tagFa:it.tagEn;
+    let inner;
+    if(open){
+      inner = it.article ? `<div class="muted" style="font-size:14px;line-height:1.8;margin-top:8px">${LANG==='fa'?it.bodyFa:it.bodyEn}</div>`
+        : `<iframe class="edu-frame" src="https://www.youtube.com/embed/${it.yt}" title="${title}" loading="lazy" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>`;
+    } else {
+      inner = `<div class="lockwrap" style="margin-top:8px"><div class="blurred" style="height:60px"></div>
+        <div class="lockoverlay"><div class="lk">🔒</div><div class="ld">${t('edu_locked')}</div>
+        <button class="btn primary tiny" onclick="setTab('account')">${t('lock_cta')}</button></div></div>`;
+    }
+    return `<div class="edu-card" style="flex-direction:column">
+      <div style="display:flex;gap:14px">${eduThumb(it)}
+        <div class="edu-body"><div class="tag2">${tag}${it.free?` · ${LANG==='fa'?'رایگان':'free'}`:''}</div><h4>${title}</h4>
+          <div class="muted" style="font-size:13px;margin-top:3px">${desc}</div></div></div>
+      <div style="padding:0 16px 16px">${inner}</div>
+    </div>`;
+  }).join('');
+}
+
+/* ============================================================
+   MEMBERSHIP + REDEEM CODES
+   (prototype: codes live in this browser. Real validation = server, see README)
+   ============================================================ */
+function getCodes(){ try{ return JSON.parse(Store.get('jabir:codes')||'[]'); }catch(e){ return []; } }
+function setCodes(c){ Store.set('jabir:codes', JSON.stringify(c)); }
+function renderMembership(){
+  const paid=isPaid();
+  return `
+  <div style="margin-bottom:14px">${paid?`<span class="badge-pro">⭐ ${t('mem_pro')} — ${t('mem_active')}</span>`:`<span class="badge-free">${t('mem_free')}</span>`}</div>
+  ${paid?`<div class="muted" style="font-size:14px">${t('mem_perks')}</div>`:`
+  <div class="price-card">
+    <div class="amt">$5 <small>/ ${LANG==='fa'?'ماه':'month'}</small></div>
+    <ul>${t('mem_perks').split(' · ').map(p=>`<li>✓ ${p}</li>`).join('')}</ul>
+    <button class="btn primary" style="width:100%" onclick="startCheckout()">${t('mem_subscribe')}</button>
+  </div>
+  <div class="divider"></div>
+  <label class="lab">${t('mem_haveCode')}</label>
+  <div class="row" style="gap:8px;max-width:380px">
+    <input class="inp" id="redeemIn" placeholder="JABIR-XXXX-XXXX" style="flex:1;text-transform:uppercase">
+    <button class="btn ghost" id="redeemBtn">${t('mem_redeem')}</button>
+  </div>
+  <div id="redeemMsg" class="muted" style="font-size:13px;margin-top:8px"></div>`}`;
+}
+window.startCheckout=()=>{
+  // Real version: call your serverless /api/create-checkout (Stripe) — see README.
+  toast(LANG==='fa'?'پرداخت آنلاین پس از اتصال درگاه فعال می‌شود (راهنما را ببینید).':'Online checkout activates once you connect a payment provider (see the guide).');
+};
+window.redeemCode=()=>{
+  const inp=$('#redeemIn'); const msg=$('#redeemMsg'); if(!inp)return;
+  const code=inp.value.trim().toUpperCase();
+  const codes=getCodes(); const hit=codes.find(c=>c.code===code && !c.used);
+  if(hit){ hit.used=true; hit.by=S.email; setCodes(codes);
+    S.account.paid=true; S.account.plan='pro'; S.account.since=new Date().toISOString().slice(0,10); persist();
+    msg.style.color='var(--herb)'; msg.textContent=t('mem_code_ok');
+    setTimeout(()=>buildShell(),700);
+  } else { msg.style.color='var(--spice)'; msg.textContent=t('mem_code_bad'); }
+};
+
+/* ============================================================
+   ADMIN  (prototype gate by email; real admin = server role, see README)
+   ============================================================ */
+function genCode(){ const s='ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; const blk=()=>Array.from({length:4},()=>s[Math.floor(Math.random()*s.length)]).join(''); return 'JABIR-'+blk()+'-'+blk(); }
+window.makeCodes=(n)=>{ const codes=getCodes(); for(let i=0;i<n;i++) codes.push({code:genCode(),used:false,by:null,at:Date.now()}); setCodes(codes); renderSection('admin'); toast(n+(LANG==='fa'?' کد ساخته شد':' codes generated')); };
+window.copyCodes=()=>{ const codes=getCodes().filter(c=>!c.used).map(c=>c.code).join('\n'); navigator.clipboard&&navigator.clipboard.writeText(codes); toast(LANG==='fa'?'کدها کپی شد':'Codes copied'); };
+window.toggleMyPro=()=>{ S.account.paid=!S.account.paid; S.account.plan=S.account.paid?'pro':'free'; persist(); buildShell(); };
+function renderAdmin(){
+  const codes=getCodes(); const used=codes.filter(c=>c.used).length;
+  return `
+  <div class="muted" style="font-size:13px;margin-bottom:10px">${LANG==='fa'?'این پنل فقط برای مدیر نمایش داده می‌شود. در نسخهٔ واقعی، آمار و کدها از پایگاه دادهٔ امن می‌آیند (راهنما را ببینید).':'This panel shows only for the admin. In the live version, stats and codes come from your secure database (see the guide).'}</div>
+  <div class="summary-bar" style="margin-bottom:14px">
+    <div class="chip-stat"><span>${LANG==='fa'?'کل کدها':'Total codes'}</span><b>${codes.length}</b></div>
+    <div class="chip-stat"><span>${LANG==='fa'?'استفاده‌شده':'Used'}</span><b>${used}</b></div>
+    <div class="chip-stat"><span>${LANG==='fa'?'باقی‌مانده':'Available'}</span><b>${codes.length-used}</b></div>
+  </div>
+  <label class="lab">${LANG==='fa'?'ساخت کدهای دسترسی (برای کاربران بدون کارت بانکی)':'Generate access codes (for users without a bank card)'}</label>
+  <div class="row" style="gap:8px;flex-wrap:wrap">
+    <button class="btn ghost" onclick="makeCodes(10)">+10</button>
+    <button class="btn ghost" onclick="makeCodes(40)">+40</button>
+    ${codes.length?`<button class="btn ghost" onclick="copyCodes()">${LANG==='fa'?'کپی کدهای آزاد':'Copy unused'}</button>`:''}
+  </div>
+  ${codes.length?`<div class="codebox">${codes.slice(-60).map(c=>`<span class="codechip ${c.used?'used':''}" title="${c.used?('used by '+(c.by||'')):'available'}">${c.code}</span>`).join('')}</div>`:''}
+  <div class="divider"></div>
+  <label class="lab">${LANG==='fa'?'آزمایش':'Testing'}</label>
+  <button class="btn ghost" onclick="toggleMyPro()">${isPaid()?(LANG==='fa'?'حالت رایگان (آزمایش)':'Switch me to Free (test)'):(LANG==='fa'?'حالت پرو (آزمایش)':'Switch me to Pro (test)')}</button>`;
+}
+
+/* ============================================================
+   ACTIONS
+   ============================================================ */
+function addMaterial(id,silent){
+  const m=MAT_BY_ID[id]; if(!m)return;
+  const existing=S.formula.find(r=>r.kind==='material'&&r.matId===id);
+  const def = isSolvent(m)?0:(isColour(m)?0.2:1);
+  if(existing){ existing.finalPct=+(existing.finalPct+def).toFixed(2); }
+  else S.formula.push({uid:uid(),kind:'material',matId:id,finalPct:def,fixed:false});
+  persist(); renderSection('formula');
+  if(!silent){ toast(m.name+' added'); }
+}
+window.addMaterial=addMaterial;
+function addAccord(id){
+  const a=S.accords.find(x=>x.id===id); if(!a)return;
+  S.formula.push({uid:uid(),kind:'accord',refId:id,finalPct:5,fixed:false});
+  persist(); renderSection('formula'); toast('Accord “'+a.name+'” added'); openFormula();
+}
+window.addAccord=addAccord;
+window.setPct=(u,v)=>{ const r=S.formula.find(x=>x.uid===u); if(r){r.finalPct=+v||0; persist(); renderSection('formula');} };
+window.toggleLock=u=>{ const r=S.formula.find(x=>x.uid===u); if(r){r.fixed=!r.fixed; persist(); renderSection('formula');} };
+window.delRow=u=>{ S.formula=S.formula.filter(x=>x.uid!==u); persist(); renderSection('formula'); };
+window.clearFormula=()=>{ if(S.formula.length&&confirm('Clear the whole formula?')){S.formula=[];persist();renderSection('formula');} };
+
+function autoBalance(){
+  // distribute remaining concentrate across unlocked aromatic rows proportionally
+  const c=calc();
+  const unlocked=S.formula.filter(r=>!r.fixed && expandRow(r).some(p=>isAromatic(p.mat)));
+  if(!unlocked.length){toast('Unlock at least one note to auto-balance');return;}
+  const lockedArom=S.formula.filter(r=>r.fixed).reduce((s,r)=>s+expandRow(r).filter(p=>isAromatic(p.mat)).reduce((a,p)=>a+p.finalPct,0),0);
+  const target=Math.max(0,+S.product.conc - lockedArom);
+  const curUnlocked=unlocked.reduce((s,r)=>s+r.finalPct,0)||1;
+  unlocked.forEach(r=>{ r.finalPct=+(target*(r.finalPct/curUnlocked)).toFixed(3); });
+  persist(); renderSection('formula'); toast('Balanced unlocked notes to hit '+fmt(S.product.conc)+'%');
+}
+window.autoBalance=autoBalance;
+
+function loadArchetype(i){
+  const a=ARCHETYPES[i]; if(!a)return;
+  S.product.id=a.type; const p=PRODUCTS.find(x=>x.id===a.type); S.product.conc=p?p.def:10;
+  const conc=S.product.conc;
+  S.formula=a.comp.filter(([id])=>MAT_BY_ID[id]).map(([id,part])=>({uid:uid(),kind:'material',matId:id,finalPct:+(part/100*conc).toFixed(3),fixed:false}));
+  persist(); renderSection('product'); renderSection('formula'); openFormula();
+  toast('Loaded “'+a.name+'” — '+S.formula.length+' notes at '+conc+'%');
+}
+window.loadArchetype=loadArchetype;
+
+function saveToCollection(){
+  if(!S.formula.length)return;
+  const name=prompt('Name this formula:', 'Untitled — '+(familyName((classify()||{sorted:[]}).sorted)||'blend'));
+  if(!name)return;
+  S.collections.unshift({id:uid(),name,date:new Date().toLocaleDateString(),snapshot:{product:{...S.product},formula:JSON.parse(JSON.stringify(S.formula))}});
+  persist(); renderSection('collection'); toast('Saved to collections ✓');
+}
+window.saveToCollection=saveToCollection;
+window.loadCollection=id=>{ const c=S.collections.find(x=>x.id===id); if(!c)return; S.product={...c.snapshot.product}; S.formula=JSON.parse(JSON.stringify(c.snapshot.formula)); persist(); renderSection('product'); renderSection('formula'); openFormula(); toast('Loaded “'+c.name+'”'); };
+window.delCollection=id=>{ if(confirm('Delete this saved formula?')){S.collections=S.collections.filter(x=>x.id!==id);persist();renderSection('collection');} };
+window.delLib=id=>{ S.library=S.library.filter(x=>x.id!==id); persist(); renderSection('commercial'); };
+window.delAccord=id=>{ if(confirm('Delete this accord?')){S.accords=S.accords.filter(a=>a.id!==id);persist();renderSection('accord');} };
+
+function openFormula(){
+  setTab('perfumery');
+  setTimeout(()=>{
+    const p=$('.panel[data-sec="formula"]');
+    if(p){ p.classList.remove('collapsed'); p.scrollIntoView({behavior:'smooth',block:'start'}); }
+  },120);
+}
+
+/* ============================================================
+   GEMINI AI COMPOSER
+   ============================================================ */
+let lastAI=null;
+async function callGemini(prompt){
+  const key=(S.prefs.geminiKey||'').trim();
+  const model=S.prefs.geminiModel||'gemini-2.5-flash';
+  const url=`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${encodeURIComponent(key)}`;
+  const body={ contents:[{parts:[{text:prompt}]}], generationConfig:{ responseMimeType:'application/json', temperature:0.95, topP:0.95 } };
+  const res=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+  if(!res.ok){ let tx=''; try{tx=await res.text();}catch(e){} throw new Error('HTTP '+res.status+' '+tx.slice(0,300)); }
+  const data=await res.json();
+  const parts=(((data.candidates||[])[0]||{}).content||{}).parts||[];
+  return parts.map(p=>p.text||'').join('');
+}
+function aiPalette(){
+  return MATERIALS.filter(isAromatic).map(m=>`${m.name} [${m.family}/${m.pos}]`).join('; ');
+}
+function buildAIPrompt(feeling){
+  const langName = LANG==='fa' ? 'Persian (Farsi)' : 'English';
+  return `You are a master perfumer composing a starting formula. The user will describe a feeling, mood, or memory.
+Design a balanced perfume using ONLY materials from this palette, referenced by their EXACT names:
+${aiPalette()}
+
+Constraints:
+- Use 6 to 10 materials.
+- Include a clear top, heart and base structure.
+- "percent" values are each material's share of the aromatic concentrate and should sum to about 100.
+- Prefer materials whose family/position fit the described feeling.
+- Write the "description" and each "why" in ${langName}.
+
+Return ONLY valid JSON, no markdown, in exactly this shape:
+{"description":"one vivid sentence describing how the finished perfume smells","fragranceType":"short label e.g. Woody Amber","materials":[{"name":"EXACT palette name","percent":number,"role":"top|heart|base","why":"a few words"}]}
+
+User feeling: """${feeling.replace(/"/g,"'").slice(0,600)}"""`;
+}
+async function composeWithAI(){
+  const out=$('#aiOut'); const txt=($('#aiIn')&&$('#aiIn').value||'').trim();
+  if(!(S.prefs.geminiKey||'').trim()){ out.innerHTML=`<div class="sugg"><div class="muted">${t('ai_nokey')}</div><div style="margin-top:8px"><button class="btn ghost tiny" onclick="setTab('profile')">${LANG==='fa'?'رفتن به پروفایل ↗':'Open Profile ↗'}</button></div></div>`; return; }
+  if(!txt){ out.innerHTML=`<div class="sugg"><div class="muted">${t('ai_intro')}</div></div>`; return; }
+  const go=$('#aiGo'); if(go){ go.disabled=true; go.style.opacity=.6; }
+  out.innerHTML=`<div class="sugg"><div class="muted">⏳ ${t('ai_thinking')}</div></div>`;
+  try{
+    const raw=await callGemini(buildAIPrompt(txt));
+    let obj; try{ obj=JSON.parse(raw); }catch(e){ const m=raw.match(/\{[\s\S]*\}/); obj=m?JSON.parse(m[0]):null; }
+    if(!obj||!Array.isArray(obj.materials)) throw new Error('bad-json');
+    // map names -> material ids
+    const byName={}; MATERIALS.forEach(m=>byName[m.name.toLowerCase()]=m);
+    const mapped=obj.materials.map(r=>{
+      const m=byName[(r.name||'').toLowerCase().trim()] || MATERIALS.find(x=>x.name.toLowerCase().includes((r.name||'').toLowerCase().trim()));
+      return m?{m, percent:+r.percent||0, why:r.why||'', role:r.role||m.pos}:null;
+    }).filter(Boolean);
+    if(!mapped.length) throw new Error('no-match');
+    lastAI={description:obj.description||'', type:obj.fragranceType||'', mats:mapped};
+    out.innerHTML=renderAIResult(lastAI);
+  }catch(e){
+    out.innerHTML=`<div class="sugg"><div class="muted">⚠️ ${t('ai_error')}</div><div class="muted" style="font-size:11px;margin-top:6px;opacity:.7">${(e.message||'').slice(0,160)}</div></div>`;
+  }
+  if(go){ go.disabled=false; go.style.opacity=1; }
+}
+window.composeWithAI=composeWithAI;
+function renderAIResult(r){
+  return `<div class="sugg">
+    ${r.type?`<div style="font-family:Fraunces;font-size:18px;margin-bottom:2px">${r.type}</div>`:''}
+    ${r.description?`<div class="muted" style="font-style:italic;margin-bottom:8px">${r.description}</div>`:''}
+    ${r.mats.map(x=>`<div class="srow">
+       <span class="tag" style="background:${famColor(x.m.family)}">${(FAMILIES[x.m.family]||{l:x.m.family}).l}</span>
+       <span class="n">${matName(x.m)} <span class="muted" style="font-weight:400">— ${x.why}</span></span>
+       ${notePill(x.m.pos)}
+       <b style="font-variant-numeric:tabular-nums">${fmt(x.percent)}%</b>
+     </div>`).join('')}
+    <div style="margin-top:10px"><button class="btn primary tiny" onclick="applyAIFormula()">${t('ai_accept')}</button></div>
+  </div>`;
+}
+window.applyAIFormula=()=>{
+  if(!lastAI) return;
+  const conc=+S.product.conc||20;
+  const tot=lastAI.mats.reduce((s,x)=>s+(x.percent||0),0)||100;
+  S.formula=lastAI.mats.map(x=>({uid:uid(),kind:'material',matId:x.m.id,finalPct:+((x.percent/tot)*conc).toFixed(3),fixed:false}));
+  persist(); renderSection('product'); renderSection('formula');
+  toast(LANG==='fa'?'فرمول هوش مصنوعی بارگذاری شد ✨':'AI formula loaded ✨');
+  openFormula();
+};
+
+/* ============================================================
+   BIND EVENTS PER SECTION
+   ============================================================ */
+function bindSection(id){
+  if(id==='product'){
+    $('#prodSel').onchange=e=>{ S.product.id=e.target.value; const p=PRODUCTS.find(x=>x.id===e.target.value); S.product.conc=p.def; persist(); renderSection('product'); renderSection('formula'); };
+    $('#concIn').oninput=e=>{ S.product.conc=+e.target.value||0; persist(); renderSection('formula'); refreshSummary(); };
+    $('#batchIn').oninput=e=>{ S.product.batch=+e.target.value||0; persist(); renderSection('formula'); refreshSummary(); };
+    $('#unitSel').onchange=e=>{ S.product.unit=e.target.value; persist(); renderSection('formula'); refreshSummary(); };
+    $('#basisSel').onchange=e=>{ S.prefs.basis=e.target.value; persist(); renderSection('formula'); };
+  }
+  if(id==='inspiration'){
+    $('#vibeGo').onclick=()=>{ const txt=$('#vibeIn').value; const tags=new Set();
+      VIBE_MAP.forEach(([re,ts])=>{ if(re.test(txt)) ts.forEach(t=>tags.add(t)); });
+      const mats=suggestFromTags([...tags],8);
+      $('#vibeOut').innerHTML=renderSuggestions(mats, tags.size?'Suggested notes for your vibe':'Tell me a bit more…');
+    };
+  }
+  if(id==='library'){
+    $('#libSearch').oninput=e=>{ libSearch=e.target.value; paintGrid(); };
+    $('#famFilter').querySelectorAll('.fam-pill').forEach(b=>b.onclick=()=>{ libFilter=b.dataset.fam; renderSection('library'); });
+  }
+  if(id==='accord'){
+    const sel=$('#accAddSel'); if(sel) sel.onchange=e=>{ if(e.target.value){ accDraft.comp.push({matId:e.target.value,pct:10}); renderSection('accord'); } };
+    const nm=$('#accName'); if(nm) nm.oninput=e=>accDraft.name=e.target.value;
+    const sv=$('#accSave'); if(sv) sv.onclick=()=>{ if(!accDraft.name){toast('Name your accord first');return;} if(!accDraft.comp.length)return;
+      S.accords.unshift({id:uid(),name:accDraft.name,components:JSON.parse(JSON.stringify(accDraft.comp))}); accDraft={name:'',comp:[]}; persist(); renderSection('accord'); toast('Accord saved 🎼'); };
+  }
+  if(id==='commercial'){
+    const add=$('#libAdd'); if(add) add.onclick=()=>{ const n=$('#libN').value.trim(); if(!n){toast('Enter a perfume name');return;}
+      S.library.unshift({id:uid(),name:n,brand:$('#libB').value.trim(),notes:$('#libNotes').value.trim()}); persist(); renderSection('commercial'); toast('Added to your library'); };
+  }
+  if(id==='membership'){
+    const rb=$('#redeemBtn'); if(rb) rb.onclick=redeemCode;
+    const ri=$('#redeemIn'); if(ri) ri.onkeydown=e=>{ if(e.key==='Enter') redeemCode(); };
+  }
+  if(id==='ai'){
+    const go=$('#aiGo'); if(go) go.onclick=composeWithAI;
+  }
+  if(id==='profile'){
+    const bs=$('#pBasis'); if(bs) bs.onchange=e=>{ S.prefs.basis=e.target.value; persist(); renderSection('formula'); renderSection('product'); toast('Now measuring by '+(e.target.value==='weight'?'weight':'volume')); };
+    const fn=$('#pFun'); if(fn) fn.onclick=()=>{ S.prefs.fun=!S.prefs.fun; persist(); renderSection('profile'); TABS.find(x=>x.id==='perfumery').sections.forEach(renderSection); };
+    const pd=$('#pProd'); if(pd) pd.onchange=e=>{ S.product.id=e.target.value; const p=PRODUCTS.find(x=>x.id===e.target.value); S.product.conc=p.def; persist(); renderSection('product'); renderSection('formula'); refreshSummary(); };
+    const key=$('#pKey'); if(key) key.oninput=e=>{ S.prefs.geminiKey=e.target.value.trim(); persist(); const ai=$('#pad-ai'); if(ai) renderSection('ai'); };
+    const cu=$('#pCur'); if(cu) cu.onchange=e=>{ S.prefs.currency=e.target.value; persist(); renderSection('library'); const ap=$('#pad-analysis'); if(ap) renderSection('analysis'); toast(LANG==='fa'?'واحد پول تغییر کرد':'Currency updated'); };
+  }
+  if(id==='account'){
+    const so=$('#signOut'); if(so) so.onclick=()=>{ if(confirm('Sign out? Your saved work stays on this device for next time you sign in with the same email.')){ location.reload(); } };
+  }
+}
+
+/* ============================================================
+   SUMMARY BAR + SETTINGS
+   ============================================================ */
+function refreshSummary(){
+  const bar=$('#summaryBar'); if(!bar) return;
+  const c=calc(); const p=PRODUCTS.find(x=>x.id===S.product.id)||{};
+  bar.innerHTML=`
+    <div class="chip-stat"><span>${t('sum_making')}</span><b>${p.id?productName(p):'—'}</b></div>
+    <div class="chip-stat"><span>${t('sum_strength')}</span><b>${fmt(S.product.conc)}%</b></div>
+    <div class="chip-stat"><span>${t('sum_batch')}</span><b>${fmt(S.product.batch)} ${S.product.unit}</b></div>
+    <div class="chip-stat"><span>${t('sum_ingredients')}</span><b>${S.formula.length}</b></div>
+    <div class="chip-stat"><span>${LANG==='fa'?'هزینهٔ دسته':'Batch cost'}</span><b>${cur()}${fmt(batchCost(c),2)}</b></div>
+    <div class="chip-stat"><span>${t('sum_accords')}</span><b>${S.accords.length}</b></div>`;
+}
+$('#settingsBtn').onclick=()=>setTab('profile');
+
+/* ============================================================
+   ONBOARDING FLOW
+   ============================================================ */
+let step=0, ob={product:'edt', basis:'weight', fun:true};
+const obProductOpts=$('#productOpts');
+obProductOpts.innerHTML=PRODUCTS.filter(p=>p.id!=='custom').map(p=>`
+  <button class="opt ${p.id==='edt'?'sel':''}" data-prod="${p.id}">
+    <div class="t">${p.name}</div><div class="d">${p.d}</div><div class="pc">${p.min}–${p.max}% aromatic</div></button>`).join('');
+obProductOpts.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{ obProductOpts.querySelectorAll('.opt').forEach(x=>x.classList.remove('sel')); b.classList.add('sel'); ob.product=b.dataset.prod; setTimeout(()=>{ if(step===1) showStep(2); },200); });
+$$('.step[data-step="2"] .opt[data-basis]').forEach(b=>b.onclick=()=>{ $$('.opt[data-basis]').forEach(x=>x.classList.remove('sel')); b.classList.add('sel'); ob.basis=b.dataset.basis; });
+$$('.step[data-step="2"] .opt[data-fun]').forEach(b=>b.onclick=()=>{ $$('.opt[data-fun]').forEach(x=>x.classList.remove('sel')); b.classList.add('sel'); ob.fun=b.dataset.fun==='yes'; });
+
+function showStep(n){
+  step=n; $$('.step').forEach(s=>s.classList.toggle('active',+s.dataset.step===n));
+  $$('.dots i').forEach((d,i)=>d.classList.toggle('on',i===n));
+  $('#backBtn').style.visibility=n===0?'hidden':'visible';
+  $('#nextBtn').textContent=n===2?'Enter the atelier →':'Continue →';
+}
+$('#backBtn').onclick=()=>showStep(Math.max(0,step-1));
+$('#nextBtn').onclick=()=>{
+  if(step===0){ const email=$('#emailIn').value.trim();
+    if(!email||!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){toast('Please enter a valid email');return;} ob.email=email; }
+  if(step<2){ showStep(step+1); return; }
+  // finish
+  load(ob.email);
+  S.prefs.basis=ob.basis; S.prefs.fun=ob.fun;
+  if(!S.prefs.lang) S.prefs.lang=LANG;
+  if(!Store.get('olfact:'+ob.email)){ const p=PRODUCTS.find(x=>x.id===ob.product); S.product={id:ob.product,conc:p.def,batch:30,unit:'ml'}; }
+  persist();
+  $('#acctEmail').textContent=S.email;
+  $('#onboard').classList.remove('show');
+  activeTab='perfumery';
+  buildShell();
+  applyLang(S.prefs.lang||LANG);
+};
+
+/* prefill known account if returning is not possible without email; start fresh */
+showStep(0);
+applyLang(LANG);
+
+/* PWA: register service worker (only works over http/https, not file://) */
+if('serviceWorker' in navigator && location.protocol.startsWith('http')){
+  window.addEventListener('load',()=>{ navigator.serviceWorker.register('service-worker.js').catch(()=>{}); });
+}
+</script>
+</body>
+</html>
