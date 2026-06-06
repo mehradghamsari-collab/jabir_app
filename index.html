@@ -447,8 +447,7 @@ footer{padding:34px 0 50px;text-align:center;color:var(--ink-soft);font-size:12.
     Concentration conventions and material data are educational starting points, not a substitute for professional safety assessment.<br>
     <div style="margin-top:12px;font-size:12px;opacity:.8">
       Designed by <b>Mehrad Niasari</b> ·
-      <a href="https://youtube.com/@mehrad.explains" target="_blank" style="color:var(--gold-deep)">📺 mehrad.explains</a> ·
-      <a href="https://instagram.com/mehrad.knows" target="_blank" style="color:var(--gold-deep)">📸 mehrad.knows</a>
+      <a href="https://youtube.com/@mehrad.explains" target="_blank" style="color:var(--gold-deep)">📺 mehrad.explains</a>
     </div>
   </footer>
 </main>
@@ -495,6 +494,7 @@ const I18N={
   st_formula:'Formula & Calculator', ss_formula:'Set final %, lock & let Jabir weigh it out',
   st_matrix:'Scent Map', ss_matrix:'See where your blend sits: fresh · warm · sweet · smoky',
   st_analysis:'Analysis & Visuals', ss_analysis:'Composition, scent journey, performance & cost',
+  st_psearch:'Perfume Search', ss_psearch:'Look up any perfume note breakdown with AI',
   st_library:'Material Library', ss_library:'Naturals & synthetics — search & add',
   st_collection:'Saved Formulas', ss_collection:'Save & revisit your finished formulas',
   st_commercial:'Archetypes & Owned Perfumes', ss_commercial:'Public starter formulas + log perfumes you own',
@@ -553,6 +553,7 @@ const I18N={
   st_formula:'فرمول و ماشین‌حساب', ss_formula:'درصد نهایی را تعیین و قفل کنید تا جابر وزن کند',
   st_matrix:'نقشهٔ رایحه', ss_matrix:'ببینید ترکیب شما کجا قرار دارد: تازه · گرم · شیرین · دودی',
   st_analysis:'تحلیل و نمودارها', ss_analysis:'ترکیب، سفر رایحه، عملکرد و هزینه',
+  st_psearch:'جستجوی عطر', ss_psearch:'نت‌های هر عطری را با هوش مصنوعی پیدا کنید',
   st_library:'کتابخانهٔ مواد', ss_library:'مواد طبیعی و مصنوعی — جستجو و افزودن',
   st_collection:'فرمول‌های ذخیره‌شده', ss_collection:'فرمول‌های نهایی را ذخیره و مرور کنید',
   st_commercial:'الگوها و عطرهای شما', ss_commercial:'فرمول‌های شروع عمومی + ثبت عطرهایی که دارید',
@@ -794,6 +795,22 @@ const MATERIALS=[
  M('Cosmetic Colourant — Amber','s','colour','base',1.0,['colour','odourless'],'Tints the liquid warm amber; odourless',1),
  M('Cosmetic Colourant — Green','s','colour','base',1.0,['colour','odourless'],'Tints the liquid green; odourless',1),
  M('Cosmetic Colourant — Blue','s','colour','base',1.0,['colour','odourless'],'Tints the liquid blue; odourless',1),
+ /* ---- Boosters, fixatives & missing aroma chemicals ---- */
+ M('Benzyl Benzoate','s','solvent','base',1.118,['fixative','mild','sweet'],'Faint sweet-almond; superb fixative and solvent for heavy bases',100,true),
+ M('Benzyl Alcohol','s','solvent','heart',1.044,['solvent','mild','floral'],'Faintly sweet and slightly floral; co-solvent and preservative',15),
+ M('Triethyl Citrate','s','solvent','base',1.137,['fixative','odourless'],'Nearly odourless ester; improves scent diffusion and longevity',20,true),
+ M('Indole','s','floral','heart',1.1,['animalic','floral','narcotic'],'Intensely floral-animalic; trace amounts give white florals their depth',0.5),
+ M('Citronellol','s','floral','heart',0.855,['floral','rose','fresh'],'Fresh rosy-citrus; major component of geranium and rose oils',15),
+ M('Geraniol','s','floral','heart',0.889,['floral','rose','sweet'],'Sweet rose-like with a warm fruity nuance',10),
+ M('Cetalox (Ambroxide)','s','amber','base',0.93,['amber','woody','clean'],'Clean translucent amber; one of the most powerful fixatives in modern perfumery',12,true),
+ M('Exaltolide','s','musk','base',0.94,['musk','sweet','powdery'],'Soft, sweet musk with a powdery warmth; excellent fixative',8,true),
+ M('Clearwood','s','woody','base',0.97,['woody','patchouli','clean'],'Clean modern patchouli replacement without the earthiness',10),
+ M('Javanol','s','woody','heart-base',0.95,['woody','creamy','sandalwood'],'Premium synthetic sandalwood; creamy, transparent and long-lasting',15),
+ M('Polysantol','s','woody','heart-base',0.96,['woody','sandalwood','milky'],'Sandalwood-like with a milky-woody softness',12),
+ M('Vertofix (Iso E variant)','s','woody','base',0.94,['woody','amber','velvety'],'Warm woody-amber; longer-lasting cousin of Iso E Super',15,true),
+ M('Romandolide','s','musk','base',0.98,['musk','fruity','clean'],'Fresh fruity musk with excellent tenacity',8),
+ M('Amber Xtreme','s','amber','base',0.96,['amber','woody','powerful'],'Extremely powerful ambergris-amber; use sparingly',5,true),
+ M('Methyl Laitone','s','gourmand','heart',1.05,['creamy','coconut','milky'],'Coconut-creamy with a milky softness',6),
 ];
 const MAT_BY_ID = Object.fromEntries(MATERIALS.map(m=>[m.id,m]));
 
@@ -915,7 +932,7 @@ const MAT_FA={
  'cade-juniper-tar-':['کاد (قطران سرو)','دودی، قیری و چرمی'],'suede-accord':['آکورد جیر','چرمی نرم و پودری'],'castoreum-accord':['آکورد کاستوریوم','چرمی گرم و حیوانی'],'civet-accord':['آکورد سیوت','حیوانی گرم و نافذ'],'ambrette-seed':['تخم اَمبرت','مشکی گیاهی، گلابی و پودری'],'hyraceum-tincture':['تنتور هیراسئوم','حیوانی عمیق و چرمی'],'beeswax-absolute':['اَبسولوت موم عسل','عسلی، گرم و کمی تنباکویی'],'galaxolide':['گالاکسولاید','مشک تمیز، پودری و لباس‌شسته'],'habanolide':['هابانولاید','مشک فلزی و کمی آبی'],'ethylene-brassylate':['اتیلن براسیلات','مشک نرم، شیرین و پودری'],
  'helvetolide':['هلوتولاید','مشک میوه‌ای-گلابی و پاک'],'muscone-type':['نوع موسکون','مشک گرم، پوستی و نرم'],'vanillin':['وانیلین','وانیلی شیرین و گرم'],'ethyl-vanillin':['اتیل وانیلین','وانیلی قوی‌تر و شکلاتی'],'vanilla-absolute':['اَبسولوت وانیل','وانیل غنی، رزینی و واقعی'],'tonka-coumarin':['تونکا (کومارین)','یونجه‌ای، بادامی و شیرین'],'ethyl-maltol':['اتیل مالتول','پشمک و قند سوخته'],'maltol':['مالتول','کاراملی و نان‌مانند شیرین'],'cocoa-absolute':['اَبسولوت کاکائو','شکلات تلخ و گرم'],'coffee':['قهوه','برشته، تلخ و گرم'],
  'praline-accord':['آکورد پرالین','فندقی، کاراملی و شیرین'],'immortelle-helichrysum-':['ایمورتل (هلیکریزوم)','عسلی، افرایی و کمی ادویه‌ای'],'heliotropin':['هلیوتروپین','بادامی، پودری و گل‌مانند'],'honey-absolute':['اَبسولوت عسل','عسلی غنی، گرم و کمی حیوانی'],'calone':['کالون','آبکی، خربزه‌ای و نسیم دریا'],'floralozone':['فلورالوزون','ازنی، تازه و هوای پاک'],'perfumer-u2019s-alcohol-ethanol-':['الکل عطرسازی (اتانول)','حلال پایهٔ بی‌بو'],'dipropylene-glycol-dpg-':['دی‌پروپیلن گلیکول (DPG)','حلال بی‌بو و کم‌بو'],'isopropyl-myristate-ipm-':['ایزوپروپیل میریستات (IPM)','حلال روغنی سبک'],'fractionated-coconut-oil':['روغن نارگیل تفکیک‌شده','روغن پایهٔ سبک و بی‌بو'],
- 'jojoba-oil':['روغن جوجوبا','روغن پایهٔ پایدار'],'distilled-water':['آب مقطر','حلال برای محصولات آبی'],'cosmetic-colourant-amber':['رنگ آرایشی — کهربایی','رنگ بی‌بو'],'cosmetic-colourant-green':['رنگ آرایشی — سبز','رنگ بی‌بو'],'cosmetic-colourant-blue':['رنگ آرایشی — آبی','رنگ بی‌بو']
+ 'jojoba-oil':['روغن جوجوبا','روغن پایهٔ پایدار'],'distilled-water':['آب مقطر','حلال برای محصولات آبی'],'cosmetic-colourant-amber':['رنگ آرایشی — کهربایی','رنگ بی‌بو'],'cosmetic-colourant-green':['رنگ آرایشی — سبز','رنگ بی‌بو'],'cosmetic-colourant-blue':['رنگ آرایشی — آبی','رنگ بی‌بو'],'benzyl-benzoate':['بنزیل بنزوات','تثبیت‌کننده و حلال عالی'],'benzyl-alcohol':['بنزیل الکل','حلال کمکی شیرین و گلی'],'triethyl-citrate':['تری‌اتیل سیترات','بی‌بو؛ پخش و ماندگاری بهتر'],'indole':['ایندول','گلی-حیوانی؛ عمق گل‌های سفید'],'citronellol':['سیترونلول','رزی-مرکباتی تازه'],'geraniol':['ژرانیول','رز شیرین و میوه‌ای'],'cetalox-ambroxide-':['ستالوکس','کهربایی شفاف و تثبیت‌کنندهٔ قوی'],'exaltolide':['اگزالتولاید','مشک نرم و پودری'],'clearwood':['کلیرود','پاچولی تمیز و مدرن'],'javanol':['جاوانول','صندل خامه‌ای و شفاف'],'polysantol':['پلی‌سانتول','صندلی-شیری'],'vertofix-iso-e-variant-':['ورتوفیکس','چوبی-کهربایی ماندگار'],'romandolide':['روماندولاید','مشک میوه‌ای تازه'],'amber-xtreme':['امبر اکستریم','کهربایی بسیار قوی'],'methyl-laitone':['متیل لایتون','خامه‌ای-نارگیلی']
 };
 const ARCH_FA={
  'Fresh Citrus Cologne':['کلن مرکباتی تازه','کلاسیک، درخشان و یونیسکس به سبک ۴۷۱۱'],
@@ -1111,6 +1128,7 @@ const SECTIONS=[
  {id:'matrix', icon:'🧭', g1:'#4fb0b8',g2:'#c95f3f', clp:true, coll:false},
  {id:'analysis', icon:'🔬', g1:'#9c6b3f',g2:'#4fb0b8', clp:true, coll:true},
  {id:'library', icon:'🌿', g1:'#86b06a',g2:'#7fa05a'},
+ {id:'psearch', icon:'🔍', g1:'#bd9a4e',g2:'#4fb0b8', clp:true, coll:false},
  {id:'collection', icon:'📚', g1:'#a87bb0',g2:'#9aa0c4'},
  {id:'commercial', icon:'🏛️', g1:'#8a5a44',g2:'#c95f3f'},
  {id:'education', icon:'🎓', g1:'#4fb0b8',g2:'#bd9a4e'},
@@ -1125,7 +1143,7 @@ const SEC=id=>SECTIONS.find(s=>s.id===id);
 /* tabs = the navigation views */
 const TABS=[
  {id:'perfumery', icon:'🧪', summary:true, sections:['product','ai','inspiration','type','accord','formula','matrix','analysis']},
- {id:'library', icon:'🌿', sections:['library']},
+ {id:'library', icon:'🌿', sections:['psearch','library']},
  {id:'collections', icon:'📚', sections:['collection','commercial']},
  {id:'education', icon:'🎓', sections:['education']},
  {id:'equipment', icon:'🧰', sections:['equipment']},
@@ -1199,6 +1217,7 @@ function renderSection(id){
   if(id==='inspiration') pad.innerHTML=renderInspiration();
   if(id==='type') pad.innerHTML=renderType();
   if(id==='library') renderLibrary(pad);
+  if(id==='psearch') pad.innerHTML=renderPsearch();
   if(id==='accord') pad.innerHTML=renderAccord();
   if(id==='formula') pad.innerHTML=renderFormula();
   if(id==='matrix') pad.innerHTML=renderMatrix();
@@ -1284,6 +1303,56 @@ function renderType(){
 window.suggestType=k=>{ const mats=suggestFromTags(TYPE_CHIPS[k],8); $('#typeOut').innerHTML=renderSuggestions(mats, k+' — suggested starting palette'); };
 
 /* ---- LIBRARY ---- */
+/* ---- PERFUME SEARCH (AI-powered lookup) ---- */
+function renderPsearch(){
+  if(!isPaid()) return `<div class="lockwrap" style="min-height:120px"><div class="blurred"><div class="muted">Search any perfume by name...</div><input class="inp" placeholder="e.g. Dior Sauvage"></div>${lockGate()}</div>`;
+  const fa=LANG==='fa';
+  return `
+  <div class="muted" style="font-size:14px;margin-bottom:8px">${fa?'نام هر عطر تجاری را وارد کنید تا هوش مصنوعی نت‌های اصلی آن را پیدا کند. سپس می‌توانید آن فرمول را به‌عنوان نقطهٔ شروع استفاده و تنظیم کنید.':'Enter any commercial perfume name — the AI will find its main notes from online resources. Then you can use that formula as a starting point and adjust.'}</div>
+  <div class="row" style="gap:8px">
+    <input class="inp" id="psIn" placeholder="${fa?'مثلاً Dior Sauvage یا شنل نامبر ۵':'e.g. Dior Sauvage, Chanel No.5'}" style="flex:1">
+    <button class="btn primary" id="psGo">🔍 ${fa?'جستجو':'Search'}</button>
+  </div>
+  <div id="psOut" style="margin-top:12px"></div>`;
+}
+window.searchPerfume=async()=>{
+  const inp=$('#psIn'), out=$('#psOut'); if(!inp)return;
+  const name=inp.value.trim(); if(!name){toast(LANG==='fa'?'نام عطر را وارد کنید':'Enter a perfume name');return;}
+  const go=$('#psGo'); if(go){go.disabled=true;go.style.opacity=.6;}
+  out.innerHTML=`<div class="sugg muted">⏳ ${LANG==='fa'?'در حال جستجو…':'Searching…'}</div>`;
+  const langName=LANG==='fa'?'Persian (Farsi)':'English';
+  const prompt=`You are a fragrance expert. The user wants to know the note breakdown of the perfume "${name.replace(/"/g,"'")}".
+Find its known top, heart and base notes from your knowledge. Then map each note to the closest material from this palette (use EXACT names):
+${aiPalette()}
+Return ONLY valid JSON: {"perfumeName":"official name","house":"brand","description":"one sentence in ${langName}","fragranceType":"e.g. Woody Amber","materials":[{"name":"EXACT palette name","percent":number,"role":"top|heart|base","why":"brief in ${langName}"}]}
+Estimate reasonable percent shares that sum to ~100.`;
+  try{
+    const raw=await callGemini(prompt);
+    let obj; try{obj=JSON.parse(raw);}catch(e){const m=raw.match(/\{[\s\S]*\}/);obj=m?JSON.parse(m[0]):null;}
+    if(!obj||!obj.materials) throw new Error('bad');
+    const byName={};MATERIALS.forEach(m=>byName[m.name.toLowerCase()]=m);
+    const mapped=obj.materials.map(r=>{
+      const m=byName[(r.name||'').toLowerCase().trim()]||MATERIALS.find(x=>x.name.toLowerCase().includes((r.name||'').toLowerCase().trim()));
+      return m?{m,percent:+r.percent||0,why:r.why||'',role:r.role||m.pos}:null;
+    }).filter(Boolean);
+    lastAI={description:obj.description||'',type:obj.fragranceType||'',mats:mapped};
+    out.innerHTML=`<div class="sugg">
+      <div style="font-family:Fraunces;font-size:20px">${obj.perfumeName||name}</div>
+      <div class="muted" style="margin-bottom:6px">${obj.house||''} · ${obj.fragranceType||''}</div>
+      ${obj.description?`<div class="muted" style="font-style:italic;margin-bottom:8px">${obj.description}</div>`:''}
+      ${mapped.map(x=>`<div class="srow">
+        <span class="tag" style="background:${famColor(x.m.family)}">${famLabel(x.m.family)}</span>
+        <span class="n">${matName(x.m)} <span class="muted" style="font-weight:400">— ${x.why}</span></span>
+        ${notePill(x.m.pos)} <b>${fmt(x.percent)}%</b>
+      </div>`).join('')}
+      <div style="margin-top:10px"><button class="btn primary tiny" onclick="applyAIFormula()">${LANG==='fa'?'استفاده از این فرمول →':'Use this formula →'}</button></div>
+    </div>`;
+  }catch(e){
+    out.innerHTML=`<div class="sugg muted">⚠️ ${(e.message||'').slice(0,200)}</div>`;
+  }
+  if(go){go.disabled=false;go.style.opacity=1;}
+};
+
 let libFilter='all', libSearch='';
 function renderLibrary(pad){
   const fams=['all',...Object.keys(FAMILIES)];
@@ -2048,19 +2117,22 @@ function aiPalette(){
 }
 function buildAIPrompt(feeling){
   const langName = LANG==='fa' ? 'Persian (Farsi)' : 'English';
-  return `You are a master perfumer composing a starting formula. The user will describe a feeling, mood, or memory.
-Design a balanced perfume using ONLY materials from this palette, referenced by their EXACT names:
+  return `You are a master perfumer composing a professional starting formula. The user will describe a feeling, mood, or memory.
+Design a balanced, COMPLETE perfume using ONLY materials from this palette, referenced by their EXACT names:
 ${aiPalette()}
 
-Constraints:
-- Use 6 to 10 materials.
-- Include a clear top, heart and base structure.
+CRITICAL REQUIREMENTS:
+- Use 8 to 14 materials total.
+- Include a clear top (15-25%), heart (30-45%) and base (25-40%) structure.
+- MUST include at least 1 fixative (e.g. Benzyl Benzoate, Ambroxan, Cetalox, Exaltolide, Vertofix).
+- MUST include at least 1 booster/blender (e.g. Hedione, Iso E Super, Linalool, Triethyl Citrate).
+- Include a solvent recommendation (e.g. Perfumer's Alcohol for spray, DPG for oil).
 - "percent" values are each material's share of the aromatic concentrate and should sum to about 100.
-- Prefer materials whose family/position fit the described feeling.
+- For EACH aromatic material, suggest 2 alternatives from the palette that could substitute it, with a similarity score 0-5 (5=nearly identical, 0=very different).
 - Write the "description" and each "why" in ${langName}.
 
 Return ONLY valid JSON, no markdown, in exactly this shape:
-{"description":"one vivid sentence describing how the finished perfume smells","fragranceType":"short label e.g. Woody Amber","materials":[{"name":"EXACT palette name","percent":number,"role":"top|heart|base","why":"a few words"}]}
+{"description":"one vivid sentence","fragranceType":"short label","materials":[{"name":"EXACT name","percent":number,"role":"top|heart|base|fixative|booster|solvent","why":"a few words","alternatives":[{"name":"EXACT name","similarity":0-5},{"name":"EXACT name","similarity":0-5}]}]}
 
 User feeling: """${feeling.replace(/"/g,"'").slice(0,600)}"""`;
 }
@@ -2077,7 +2149,11 @@ async function composeWithAI(){
     const byName={}; MATERIALS.forEach(m=>byName[m.name.toLowerCase()]=m);
     const mapped=obj.materials.map(r=>{
       const m=byName[(r.name||'').toLowerCase().trim()] || MATERIALS.find(x=>x.name.toLowerCase().includes((r.name||'').toLowerCase().trim()));
-      return m?{m, percent:+r.percent||0, why:r.why||'', role:r.role||m.pos}:null;
+      const alts=((r.alternatives||[]).map(a=>{
+        const am=byName[(a.name||'').toLowerCase().trim()] || MATERIALS.find(x=>x.name.toLowerCase().includes((a.name||'').toLowerCase().trim()));
+        return am?{m:am,sim:Math.min(5,Math.max(0,+a.similarity||0))}:null;
+      }).filter(Boolean)).slice(0,2);
+      return m?{m, percent:+r.percent||0, why:r.why||'', role:r.role||m.pos, alts}:null;
     }).filter(Boolean);
     if(!mapped.length) throw new Error('no-match');
     lastAI={description:obj.description||'', type:obj.fragranceType||'', mats:mapped};
@@ -2088,15 +2164,22 @@ async function composeWithAI(){
   if(go){ go.disabled=false; go.style.opacity=1; }
 }
 window.composeWithAI=composeWithAI;
+function simDots(n){ return Array.from({length:5},(_,i)=>`<span style="display:inline-block;width:8px;height:8px;border-radius:50%;margin:0 1px;background:${i<n?'var(--gold)':'var(--line)'}"></span>`).join(''); }
 function renderAIResult(r){
+  const fa=LANG==='fa';
   return `<div class="sugg">
     ${r.type?`<div style="font-family:Fraunces;font-size:18px;margin-bottom:2px">${r.type}</div>`:''}
     ${r.description?`<div class="muted" style="font-style:italic;margin-bottom:8px">${r.description}</div>`:''}
-    ${r.mats.map(x=>`<div class="srow">
-       <span class="tag" style="background:${famColor(x.m.family)}">${(FAMILIES[x.m.family]||{l:x.m.family}).l}</span>
+    ${r.mats.map(x=>`<div class="srow" style="flex-wrap:wrap">
+       <span class="tag" style="background:${famColor(x.m.family)}">${famLabel(x.m.family)}</span>
        <span class="n">${matName(x.m)} <span class="muted" style="font-weight:400">— ${x.why}</span></span>
        ${notePill(x.m.pos)}
        <b style="font-variant-numeric:tabular-nums">${fmt(x.percent)}%</b>
+       <button class="btn ghost tiny" style="font-size:10.5px;padding:3px 8px" onclick="addMaterial('${x.m.id}')">+</button>
+       ${x.alts&&x.alts.length?`<div style="width:100%;padding:4px 0 2px 24px;display:flex;flex-wrap:wrap;gap:8px;font-size:11.5px;color:var(--ink-soft)">
+         <span style="opacity:.7">${fa?'جایگزین:':'Alt:'}</span>
+         ${x.alts.map(a=>`<span style="display:inline-flex;align-items:center;gap:4px;background:var(--paper-2);padding:3px 8px;border-radius:8px;cursor:pointer" onclick="addMaterial('${a.m.id}')" title="${fa?'افزودن':'Add'}">${matName(a.m)} ${simDots(a.sim)}</span>`).join('')}
+       </div>`:''}
      </div>`).join('')}
     <div style="margin-top:10px"><button class="btn primary tiny" onclick="applyAIFormula()">${t('ai_accept')}</button></div>
   </div>`;
@@ -2150,6 +2233,10 @@ function bindSection(id){
   if(id==='equipment'){
     const add=$('#eqAdd'); if(add) add.onclick=addEquip;
   }
+  if(id==='psearch'){
+    const go=$('#psGo'); if(go) go.onclick=searchPerfume;
+    const inp=$('#psIn'); if(inp) inp.onkeydown=e=>{ if(e.key==='Enter') searchPerfume(); };
+  }
   if(id==='ai'){
     const go=$('#aiGo'); if(go) go.onclick=composeWithAI;
   }
@@ -2179,7 +2266,7 @@ function refreshSummary(){
     <div class="chip-stat"><span>${LANG==='fa'?'هزینهٔ دسته':'Batch cost'}</span><b>${cur()}${fmt(batchCost(c),2)}</b></div>
     <div class="chip-stat"><span>${t('sum_accords')}</span><b>${S.accords.length}</b></div>`;
 }
-$('#settingsBtn').onclick=()=>setTab('profile');
+$('#settingsBtn').onclick=()=>setTab('account');
 
 /* ============================================================
    ONBOARDING FLOW
@@ -2236,7 +2323,7 @@ $('#nextBtn').onclick=async()=>{
   if(!S.prefs.lang) S.prefs.lang=LANG;
   if(!Store.get('olfact:'+ob.email)){ const p=PRODUCTS.find(x=>x.id===ob.product); S.product={id:ob.product,conc:p.def,batch:30,unit:'ml'}; }
   persist();
-  $('#acctEmail').textContent=S.email;
+  $('#acctEmail').textContent=S.name||S.email;
   $('#onboard').classList.remove('show');
   activeTab='perfumery';
   buildShell();
