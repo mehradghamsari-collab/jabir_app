@@ -335,26 +335,71 @@ footer{padding:34px 0 50px;text-align:center;color:var(--ink-soft);font-size:12.
 ::-webkit-scrollbar{width:9px;height:9px}::-webkit-scrollbar-thumb{background:var(--line);border-radius:9px}
 /* ---------- RESPONSIVE ---------- */
 @media(max-width:860px){
-  main.wrap{padding-bottom:92px}            /* clear the fixed bottom bar */
+  body{overflow-x:hidden}
+  main.wrap{padding:0 12px 96px!important}
   .topnav{display:none}
-  .ftable{font-size:12.5px}
-  .ftable-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:0 -4px;border-radius:12px}
-  .ftable-scroll > .ftable{min-width:560px}
+  .wrap{padding:0 12px}
+  .view-head{padding:16px 0 4px}
+  .view-head h2{font-size:clamp(22px,5vw,32px)}
+  .view-head p{font-size:13.5px}
+  .summary-bar{gap:6px;flex-wrap:wrap}
+  .chip-stat{padding:6px 10px;font-size:12px;flex:1 1 auto;min-width:0}
+  .chip-stat b{font-size:14px}
+  .panel{margin:10px 0}
+  .panel-head{padding:13px 14px;gap:10px}
+  .panel-head h3{font-size:17px}
+  .panel-head .ix{width:36px;height:36px;font-size:16px;border-radius:10px}
+  .panel-body{padding:4px 14px 16px}
+  .row{flex-direction:column;gap:8px}
+  .field{min-width:0!important;width:100%}
+  .inp,.inp[type=number]{width:100%;max-width:100%!important;font-size:16px}
+  select.inp{font-size:15px}
+  textarea.inp{min-height:80px}
+  .opt-grid{grid-template-columns:1fr 1fr;gap:8px}
+  .ftable{font-size:12px}
+  .ftable-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:0 -4px;border-radius:10px}
+  .ftable-scroll>.ftable{min-width:520px}
   .matgrid{grid-template-columns:1fr;max-height:none}
-  .panel-head{padding:15px 15px}
-  .panel-body{padding:4px 15px 18px}
-  .hero{padding:18px 0 4px}
-  .pyrow{grid-template-columns:54px 1fr 46px}
+  .matcard{padding:12px}
+  .matcard h4{font-size:16px}
+  .denrow{flex-wrap:wrap;gap:4px}
+  .deninp{width:60px!important;font-size:12px}
+  .pyrow{grid-template-columns:48px 1fr 40px;gap:6px}
+  .pyrow .ttl{font-size:10px}
+  .scentmap{max-width:100%!important}
+  .smap-lab{font-size:11px}
+  .comp-row{flex-direction:column;align-items:stretch}
+  .donut-svg{width:100px;height:100px;margin:0 auto}
+  .comp-legend{min-width:0}
+  .journey-svg{border-radius:10px}
+  .an-block{margin:4px 0 14px}
+  .an-h{font-size:15px}
+  .costbars{font-size:12px}
+  .cb-row{grid-template-columns:1fr 1.2fr auto;gap:6px}
+  .collgrid{grid-template-columns:1fr}
+  .collcard{padding:12px}
+  .edu-card{flex-direction:column}
+  .edu-thumb{width:100%}
+  .srow{flex-wrap:wrap;gap:6px;font-size:13px}
+  .sugg{padding:12px}
+  .tag{font-size:10px;padding:3px 8px}
+  .note-badge{font-size:10px}
+  .funfact{padding:12px}
+  .lockoverlay{padding:14px}
+  .lockoverlay .lt{font-size:16px}
+  .lockoverlay .ld{font-size:12px}
+  .codebox{gap:6px}
+  .codechip{font-size:11px;padding:5px 8px}
+  .price-card{padding:16px}
+  .price-card .amt{font-size:32px}
+  .btn{padding:10px 18px;font-size:13.5px}
+  .btn.tiny{padding:7px 12px;font-size:12px}
+  footer{font-size:11px;padding:16px 0}
 }
-@media(max-width:560px){
+@media(max-width:380px){
   .opt-grid{grid-template-columns:1fr}
-  .panel-head h3{font-size:18px}
-  .panel-head .ix{width:38px;height:38px;font-size:18px}
-  .row{gap:10px}
-  .field{min-width:130px}
-  .summary-bar{gap:7px}
-  .chip-stat{padding:7px 11px}
-  .view-head h2{font-size:26px}
+  .view-head h2{font-size:22px}
+  .tabbtn .tl{font-size:8.5px}
 }
 </style>
 </head>
@@ -377,6 +422,17 @@ footer{padding:34px 0 50px;text-align:center;color:var(--ink-soft);font-size:12.
       <!-- step 1: account -->
       <div class="step active" data-step="0">
         <h3 style="font-size:22px" data-i18n="ob_welcome">Welcome</h3>
+        <p class="muted" style="margin:6px 0 10px">How will you use Jabir?</p>
+        <div class="opt-grid" style="grid-template-columns:1fr 1fr;margin-bottom:14px;max-width:400px" id="obModeType">
+          <button class="opt sel" data-usermode="enthusiast" onclick="obPickMode('enthusiast')">
+            <div class="t">🌸 Enthusiast</div>
+            <div class="d" style="font-size:11px">Explore perfume science, discover notes and learn how fragrances are built</div>
+          </button>
+          <button class="opt" data-usermode="perfumer" onclick="obPickMode('perfumer')">
+            <div class="t">🧪 Perfumer</div>
+            <div class="d" style="font-size:11px">Formulate, calculate, and build perfumes with professional tools</div>
+          </button>
+        </div>
         <p class="muted" style="margin:6px 0 12px">Sign up or sign in to save your work.</p>
         <div class="langtoggle" style="margin-bottom:14px" id="obMode">
           <button class="on" data-mode="signup" onclick="obSetMode('signup')">Sign up</button>
@@ -946,6 +1002,8 @@ const ARCH_FA={
 };
 function matName(m){ return (LANG==='fa'&&MAT_FA[m.id])?MAT_FA[m.id][0]:m.name; }
 function matDesc(m){ return (LANG==='fa'&&MAT_FA[m.id])?MAT_FA[m.id][1]:m.desc; }
+function matImg(m){ return m?`notes/${m.id}.png`:null; }
+function matImgHtml(m,sz=40){ const src=matImg(m); return src?`<img src="${src}" width="${sz}" height="${sz}" style="border-radius:50%;object-fit:cover;border:1.5px solid var(--line);flex:none;display:inline-block" onerror="this.style.display='none'" alt="${m?m.name:''}">`:''; }
 function famLabel(f){ return LANG==='fa'?(FAM_FA[f]||f):((FAMILIES[f]||{l:f}).l); }
 function posLabel(p){ return LANG==='fa'?(POS_FA[p]||p):p; }
 function productName(p){ return (LANG==='fa'&&PROD_FA[p.id])?PROD_FA[p.id]:p.name; }
@@ -971,7 +1029,7 @@ function batchCost(c){ let tot=0; (c.detail||[]).forEach(d=>d.sub.forEach(x=>{ i
 function costBreakdown(c){ const map={}; (c.detail||[]).forEach(d=>d.sub.forEach(x=>{ if(!x.mat)return; const cst=x.amt.mass*costOf(x.mat); map[x.mat.id]=(map[x.mat.id]||{mat:x.mat,cost:0}); map[x.mat.id].cost+=cst; })); return Object.values(map).sort((a,b)=>b.cost-a.cost); }
 
 let S = {
-  email:'guest',
+  email:'guest', mode:'enthusiast',
   prefs:{basis:'weight', fun:true, lang:LANG, currency:'$'},
   densities:{},        // {matId: density override}
   costs:{},            // {matId: cost value}
@@ -986,7 +1044,7 @@ let S = {
 };
 let uidc=1; const uid=()=>'r'+(uidc++)+'-'+Date.now().toString(36);
 
-function persist(){ Store.set('olfact:'+S.email, JSON.stringify({name:S.name,prefs:S.prefs,product:S.product,formula:S.formula,accords:S.accords,collections:S.collections,library:S.library,equipment:S.equipment,densities:S.densities,costs:S.costs,costUnits:S.costUnits,account:S.account})); }
+function persist(){ Store.set('olfact:'+S.email, JSON.stringify({name:S.name,mode:S.mode,prefs:S.prefs,product:S.product,formula:S.formula,accords:S.accords,collections:S.collections,library:S.library,equipment:S.equipment,densities:S.densities,costs:S.costs,costUnits:S.costUnits,account:S.account})); }
 function load(email){
   const raw = Store.get('olfact:'+email);
   if(raw){ try{ const d=JSON.parse(raw); Object.assign(S,{email},d); if(!S.densities)S.densities={}; if(!S.costs)S.costs={}; if(!S.costUnits)S.costUnits={}; if(!S.equipment)S.equipment=[]; if(!S.account)S.account={paid:false,plan:'free',since:null}; if(!S.prefs.currency)S.prefs.currency='$'; }catch(e){ S.email=email; } }
@@ -1168,23 +1226,30 @@ function panelHTML(id){
 }
 
 function buildShell(){
+  // sections visible by mode + admin
+  const proOnly=['inspiration','type','accord','analysis','equipment','admin'];
+  const visible = tab => tab.sections.filter(s=>{
+    if(s==='admin'&&!isAdmin()) return false;
+    if(proOnly.includes(s)&&S.mode==='enthusiast') return false;
+    return true;
+  });
+  const visTabs = TABS.filter(tab=>tab.id!=='equipment'||S.mode==='perfumer');
   // desktop top nav
-  $('#topNav').innerHTML = TABS.map(tab=>`
+  $('#topNav').innerHTML = visTabs.map(tab=>`
     <button class="navbtn ${tab.id===activeTab?'on':''}" data-tab="${tab.id}" onclick="setTab('${tab.id}')">
       <span class="nic">${tab.icon}</span>${t('nav_'+tab.id)}</button>`).join('');
   // mobile bottom nav
-  $('#bottomNav').innerHTML = TABS.map(tab=>`
+  $('#bottomNav').innerHTML = visTabs.map(tab=>`
     <button class="tabbtn ${tab.id===activeTab?'on':''}" data-tab="${tab.id}" onclick="setTab('${tab.id}')">
       <span class="tic">${tab.icon}</span><span class="tl">${t('nav_'+tab.id)}</span></button>`).join('');
   // view shells
-  const visible = tab => tab.sections.filter(s=> s!=='admin' || isAdmin());
-  viewWrap.innerHTML = TABS.map(tab=>`
+  viewWrap.innerHTML = visTabs.map(tab=>`
     <div class="view ${tab.id===activeTab?'on':''}" data-view="${tab.id}">
       <div class="view-head"><h2>${t('vt_'+tab.id)}</h2><p>${t('vi_'+tab.id)}</p>
         ${tab.summary?'<div class="summary-bar" id="summaryBar"></div>':''}</div>
       ${visible(tab).map(panelHTML).join('')}
     </div>`).join('');
-  TABS.forEach(tab=>visible(tab).forEach(renderSection));
+  visTabs.forEach(tab=>visible(tab).forEach(renderSection));
   refreshSummary();
 }
 
@@ -1284,6 +1349,7 @@ function renderSuggestions(mats, title){
   if(!mats.length) return `<div class="sugg"><div class="muted">${LANG==='fa'?'تطابق قوی نیست — کلماتی مثل «تازه»، «چوبی»، «شیرین»، «رمانتیک» یا «دودی» را امتحان کنید.':'No strong match — try words like “fresh”, “woody”, “sweet”, “romantic”, “smoky”.'}</div></div>`;
   return `<div class="sugg"><div style="font-family:Fraunces;font-size:17px;margin-bottom:6px">${title}</div>
   ${mats.map(m=>`<div class="srow">
+     ${matImgHtml(m,30)}
      <span class="tag" style="background:${famColor(m.family)}">${famLabel(m.family)}</span>
      <span class="n">${matName(m)} <span class="muted" style="font-weight:400">— ${matDesc(m)}</span></span>
      ${notePill(m.pos)}
@@ -1380,9 +1446,12 @@ function paintGrid(){
   grid.innerHTML = list.length? list.map(m=>`
     <div class="matcard">
       <div class="fbar" style="background:${famColor(m.family)}"></div>
-      <h4>${matName(m)}</h4>
-      <div class="meta" style="margin-top:5px"><span class="syn ${m.type==='n'?'nat':'syngen'}">${m.type==='n'?(LANG==='fa'?'طبیعی':'Natural'):(LANG==='fa'?'مصنوعی':'Synthetic')}</span>
-        <span class="tag" style="background:${famColor(m.family)}">${famLabel(m.family)}</span></div>
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px">
+        ${matImgHtml(m,52)}
+        <div style="flex:1;min-width:0"><h4 style="margin:0">${matName(m)}</h4>
+          <div class="meta" style="margin-top:3px"><span class="syn ${m.type==='n'?'nat':'syngen'}">${m.type==='n'?(LANG==='fa'?'طبیعی':'Natural'):(LANG==='fa'?'مصنوعی':'Synthetic')}</span>
+          <span class="tag" style="background:${famColor(m.family)}">${famLabel(m.family)}</span></div></div>
+      </div>
       <div class="desc">“${matDesc(m)}”</div>
       <div class="meta">${notePill(m.pos)} ${m.fix?`<span class="note-badge nb-base">⚓ ${LANG==='fa'?'تثبیت‌کننده':'fixative'}</span>`:''}</div>
       <div class="denrow"><span>${LANG==='fa'?'چگالی':'Density'}</span>
@@ -1459,7 +1528,7 @@ function renderFormula(){
       const m = isAcc? null : MAT_BY_ID[r.matId];
       const totMass=d.sub.reduce((s,x)=>s+x.amt.mass,0), totVol=d.sub.reduce((s,x)=>s+x.amt.vol,0);
       rowsHtml+=`<tr>
-        <td class="fname">${isAcc?'🎼 ':''}${head}${m?`<span class="em">${matDesc(m)}</span>`:`<span class="em">${LANG==='fa'?'آکورد · '+d.sub.length+' ماده':'accord · '+d.sub.length+' materials'}</span>`}</td>
+        <td class="fname"><div style="display:flex;align-items:center;gap:7px">${m?matImgHtml(m,32):''}${isAcc?'🎼 ':''}${head}${m?`<span class="em">${matDesc(m)}</span>`:`<span class="em">${LANG==='fa'?'آکورد · '+d.sub.length+' ماده':'accord · '+d.sub.length+' materials'}</span>`}</div></td>
         <td>${isAcc?accordNotePills(r.refId):notePill(m.pos)}</td>
         <td><input class="pctin" type="number" min="0" step="0.1" value="${fmt(r.finalPct,3)}" oninput="setPct('${r.uid}',this.value)"></td>
         <td><button class="lockbtn ${r.fixed?'on':''}" title="Lock this %" onclick="toggleLock('${r.uid}')">${r.fixed?'🔒':'🔓'}</button></td>
@@ -1624,6 +1693,16 @@ function renderAccount(){
   <div style="margin-top:16px;display:flex;gap:10px;flex-wrap:wrap">
     <button class="btn ghost" id="signOut">${t('btn_signout')}</button>
     <button class="btn ghost" id="switchAcct">${LANG==='fa'?'تعویض حساب':'Switch account'}</button>
+  </div>
+  <div class="divider"></div>
+  <label class="lab">${fa?'حالت استفاده':'App mode'}</label>
+  <div class="opt-grid" style="grid-template-columns:1fr 1fr;max-width:360px" id="modeSwitcher">
+    <button class="opt ${S.mode==='enthusiast'?'sel':''}" data-usermode="enthusiast" onclick="switchMode('enthusiast')">
+      <div class="t">🌸 ${fa?'علاقه‌مند':'Enthusiast'}</div>
+      <div class="d" style="font-size:11px">${fa?'کاوش و یادگیری':'Explore & learn'}</div></button>
+    <button class="opt ${S.mode==='perfumer'?'sel':''}" data-usermode="perfumer" onclick="switchMode('perfumer')">
+      <div class="t">🧪 ${fa?'عطرساز':'Perfumer'}</div>
+      <div class="d" style="font-size:11px">${fa?'ابزارهای حرفه‌ای':'Pro tools'}</div></button>
   </div>`;
 }
 
@@ -2149,31 +2228,17 @@ async function callGemini(prompt){
   return parts.map(p=>p.text||'').join('');
 }
 function aiPalette(){
-  return MATERIALS.filter(isAromatic).map(m=>`${m.name} [${m.family}/${m.pos}]`).join('; ');
+  return MATERIALS.filter(m=>isAromatic(m)||m.fix).map(m=>m.name).join(', ');
 }
 function buildAIPrompt(feeling){
-  const langName = LANG==='fa' ? 'Persian (Farsi)' : 'English';
+  const lang = LANG==='fa' ? 'Persian' : 'English';
   const genderEl=document.querySelector('#aiGenderGrid .opt.sel');
-  const gender=genderEl?genderEl.dataset.gender:'unisex';
-  const genderLabel={unisex:'unisex (for anyone)',feminine:'feminine (for women)',masculine:'masculine (for men)'}[gender]||'unisex';
-  return `You are a master perfumer composing a professional starting formula. The user describes a feeling, mood, or memory.
-This perfume is for: ${genderLabel}. Tailor the note selection accordingly.
-Design a balanced, COMPLETE perfume using ONLY materials from this palette (EXACT names):
-${aiPalette()}
-
-REQUIREMENTS:
-- 8 to 14 materials. Clear top (15-25%), heart (30-45%), base (25-40%).
-- MUST include at least 1 fixative and 1 booster/blender.
-- Include a solvent recommendation.
-- Percentages sum to ~100.
-- For EACH material, suggest 2 alternatives with similarity 0-5.
-- Write ALL text in ${langName}.
-- Add an "explanation" field: 2-3 sentences explaining WHY these specific notes were chosen together, how they create the desired mood, and why this combination works for ${genderLabel}.
-
-Return ONLY valid JSON:
-{"description":"one vivid sentence","fragranceType":"label","explanation":"2-3 sentences on why these notes were chosen and how they work together for the target audience","materials":[{"name":"EXACT name","percent":number,"role":"top|heart|base|fixative|booster|solvent","why":"brief","alternatives":[{"name":"EXACT name","similarity":0-5},{"name":"EXACT name","similarity":0-5}]}]}
-
-User feeling: """${feeling.replace(/"/g,"'").slice(0,600)}"""`;
+  const gender=(genderEl?genderEl.dataset.gender:'unisex');
+  return `Master perfumer. Create a ${gender} perfume formula for this feeling.
+Materials (use EXACT names only): ${aiPalette()}
+Rules: 8-12 materials, top/heart/base structure, include 1 fixative + 1 booster. Percentages sum to ~100. For each note give 2 alternatives with similarity 0-5. Write in ${lang}.
+Return JSON only: {"description":"sentence","fragranceType":"label","explanation":"why these notes work together for ${gender}","materials":[{"name":"exact","percent":N,"role":"top|heart|base|fixative|booster","why":"brief","alternatives":[{"name":"exact","similarity":N},{"name":"exact","similarity":N}]}]}
+Feeling: "${feeling.replace(/"/g,"'").slice(0,400)}"`;
 }
 async function composeWithAI(){
   const out=$('#aiOut'); const txt=($('#aiIn')&&$('#aiIn').value||'').trim();
@@ -2210,6 +2275,7 @@ function renderAIResult(r){
     ${r.type?`<div style="font-family:Fraunces;font-size:18px;margin-bottom:2px">${r.type}</div>`:''}
     ${r.description?`<div class="muted" style="font-style:italic;margin-bottom:8px">${r.description}</div>`:''}
     ${r.mats.map(x=>`<div class="srow" style="flex-wrap:wrap">
+       ${matImgHtml(x.m,36)}
        <span class="tag" style="background:${famColor(x.m.family)}">${famLabel(x.m.family)}</span>
        <span class="n">${matName(x.m)} <span class="muted" style="font-weight:400">— ${x.why}</span></span>
        ${notePill(x.m.pos)}
@@ -2227,6 +2293,7 @@ function renderAIResult(r){
     </div>`:''}
   </div>`;
 }
+window.switchMode=(m)=>{ S.mode=m; persist(); activeTab='perfumery'; buildShell(); toast(m==='perfumer'?(LANG==='fa'?'حالت عطرساز فعال شد':'Perfumer mode activated'):(LANG==='fa'?'حالت علاقه‌مند فعال شد':'Enthusiast mode activated')); };
 window.applyAIFormula=()=>{
   if(!lastAI) return;
   const conc=+S.product.conc||20;
@@ -2331,6 +2398,8 @@ function showStep(n){
   $('#nextBtn').textContent=n===2?t('ob_enter'):t('ob_continue');
 }
 let obAuthMode='signup';
+let obUserMode='enthusiast';
+window.obPickMode=(m)=>{ obUserMode=m; $$('#obModeType .opt').forEach(b=>b.classList.toggle('sel',b.dataset.usermode===m)); };
 window.obSetMode=(mode)=>{ obAuthMode=mode; $$('#obMode button').forEach(b=>b.classList.toggle('on',b.dataset.mode===mode));
   const nr=$('#obNameRow'); if(nr) nr.style.display=mode==='signin'?'none':''; };
 $('#backBtn').onclick=()=>showStep(Math.max(0,step-1));
@@ -2364,6 +2433,7 @@ $('#nextBtn').onclick=async()=>{
   load(ob.email);
   S.prefs.basis=ob.basis; S.prefs.fun=ob.fun;
   if(ob.name) S.name=ob.name;
+  S.mode=obUserMode||S.mode||'enthusiast';
   if(!S.prefs.lang) S.prefs.lang=LANG;
   if(!Store.get('olfact:'+ob.email)){ const p=PRODUCTS.find(x=>x.id===ob.product); S.product={id:ob.product,conc:p.def,batch:30,unit:'ml'}; }
   persist();
