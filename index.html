@@ -91,29 +91,31 @@ header.top{
 /* ---------- BOTTOM TAB BAR (mobile) ---------- */
 .bottomnav{display:none}
 @media(max-width:860px){
-  html{touch-action:manipulation}
+  html{touch-action:manipulation;-webkit-text-size-adjust:100%}
+  body{overflow-x:hidden!important}
   .bottomnav{
-    display:flex;position:fixed;left:0;right:0;bottom:0;z-index:9999;align-items:stretch;gap:0;
-    background:rgba(251,246,238,.97);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
-    border-top:1.5px solid var(--line);
-    padding:4px 6px calc(4px + env(safe-area-inset-bottom,0px)) 6px;
-    box-shadow:0 -8px 24px -12px rgba(60,40,20,.35);
+    display:flex!important;position:fixed!important;left:0!important;right:0!important;bottom:0!important;
+    z-index:99999!important;align-items:stretch;gap:0;
+    background:#fbf6ee;border-top:2px solid var(--line);
+    padding:2px 2px calc(2px + env(safe-area-inset-bottom,0px));
+    box-shadow:0 -4px 16px -6px rgba(60,40,20,.25);
+    min-height:54px;width:100vw;
   }
   .tabbtn{
     flex:1 1 0;min-width:0;border:0;background:transparent;cursor:pointer;
-    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
-    padding:8px 2px;color:var(--ink-soft);transition:color .12s;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;
+    padding:6px 1px 4px;color:var(--ink-soft);
     -webkit-tap-highlight-color:transparent;touch-action:manipulation;
-    min-height:52px;
+    min-height:48px;user-select:none;
   }
-  .tabbtn .tic{width:44px;height:28px;border-radius:999px;display:flex;align-items:center;justify-content:center;font-size:19px;line-height:1;transition:background .15s,transform .15s}
-  .tabbtn .tl{font-size:9.5px;font-weight:700;letter-spacing:0;line-height:1.15;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  html[lang="fa"] .tabbtn .tl{font-family:'Vazirmatn',sans-serif;font-size:10px}
+  .tabbtn .tic{width:36px;height:24px;border-radius:999px;display:flex;align-items:center;justify-content:center;font-size:17px;line-height:1}
+  .tabbtn .tl{font-size:8.5px;font-weight:700;line-height:1.1;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  html[lang="fa"] .tabbtn .tl{font-family:'Vazirmatn',sans-serif;font-size:9px}
   .tabbtn.on{color:var(--gold-deep)}
-  .tabbtn.on .tic{background:linear-gradient(135deg,rgba(189,154,78,.25),rgba(189,154,78,.10));transform:scale(1.06)}
-  .tabbtn:active{opacity:.7}
-  .topnav{display:none}
-  main.wrap{padding-bottom:96px!important}
+  .tabbtn.on .tic{background:rgba(189,154,78,.2)}
+  .tabbtn:active{transform:scale(.93);opacity:.7}
+  .topnav{display:none!important}
+  main.wrap{padding-bottom:100px!important}
 }
 
 /* ---------- VIEWS + PANELS ---------- */
@@ -1186,7 +1188,7 @@ const SECTIONS=[
  {id:'type', icon:'🎨', g1:'#4fb0b8',g2:'#86b06a', clp:true, coll:true},
  {id:'accord', icon:'🎼', g1:'#c79a5e',g2:'#cf8a3a', clp:true, coll:true},
  {id:'formula', icon:'📐', g1:'#bd9a4e',g2:'#9c6b3f', clp:true, coll:false},
- {id:'matrix', icon:'🧭', g1:'#4fb0b8',g2:'#c95f3f', clp:true, coll:false},
+ {id:'matrix', icon:'🧭', g1:'#4fb0b8',g2:'#c95f3f', clp:false},
  {id:'analysis', icon:'🔬', g1:'#9c6b3f',g2:'#4fb0b8', clp:true, coll:true},
  {id:'library', icon:'🌿', g1:'#86b06a',g2:'#7fa05a'},
  {id:'psearch', icon:'🔍', g1:'#bd9a4e',g2:'#4fb0b8', clp:true, coll:false},
@@ -2347,13 +2349,16 @@ function openFormula(){
    GEMINI AI COMPOSER
    ============================================================ */
 let lastAI=null;
-/* AI powered by Groq (free Llama). Get a key at console.groq.com */
-const AI_KEY=''; /* paste your free Groq key here */
+/* AI powered by Groq (free Llama). Master key serves all Pro users. */
+const AI_MASTER='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';
 async function callGemini(prompt){
-  const key=AI_KEY||(S.prefs&&S.prefs.aiKey)||'';
-  if(!key) throw new Error('No AI key set. Get a free one at console.groq.com → API Keys, then paste it in Profile → AI.');
+  const key=AI_MASTER||(S.prefs&&S.prefs.aiKey)||'';
+  if(!key) throw new Error(LANG==='fa'?'کلید AI تنظیم نشده.':'AI key not configured.');
   const url='https://api.groq.com/openai/v1/chat/completions';
-  const body={model:'llama-3.3-70b-versatile',messages:[{role:'user',content:prompt}],temperature:0.9,response_format:{type:'json_object'}};
+  const body={model:'llama-3.3-70b-versatile',messages:[
+    {role:'system',content:`You are a master perfumer with deep knowledge of fragrance chemistry. You create formulas based on REAL perfumery science: molecular weight determines volatility (top=light/volatile, base=heavy/lingering), fixatives anchor lighter notes, boosters like Hedione and Iso E Super add diffusion. You know which materials are traditionally feminine (rose, tuberose, iris, vanilla, peach), masculine (leather, vetiver, oud, tobacco, fougere accords), or unisex (citrus, woods, ambers, musks). Your formulas MUST be realistic and commercially viable. Always include proper fixatives and blenders. Return ONLY valid JSON.`},
+    {role:'user',content:prompt}
+  ],temperature:0.85,response_format:{type:'json_object'},max_tokens:2000};
   const res=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+key},body:JSON.stringify(body)});
   if(!res.ok){ let tx=''; try{tx=await res.text();}catch(e){} throw new Error('HTTP '+res.status+' '+tx.slice(0,200)); }
   const data=await res.json();
@@ -2366,11 +2371,28 @@ function buildAIPrompt(feeling){
   const lang = LANG==='fa' ? 'Persian' : 'English';
   const genderEl=document.querySelector('#aiGenderGrid .opt.sel');
   const gender=(genderEl?genderEl.dataset.gender:'unisex');
-  return `Master perfumer. Create a ${gender} perfume formula for this feeling.
-Materials (use EXACT names only): ${aiPalette()}
-Rules: 8-12 materials, top/heart/base structure, include 1 fixative + 1 booster. Percentages sum to ~100. For each note give 2 alternatives with similarity 0-5. Write in ${lang}.
-Return JSON only: {"description":"sentence","fragranceType":"label","explanation":"why these notes work together for ${gender}","materials":[{"name":"exact","percent":N,"role":"top|heart|base|fixative|booster","why":"brief","alternatives":[{"name":"exact","similarity":N},{"name":"exact","similarity":N}]}]}
-Feeling: "${feeling.replace(/"/g,"'").slice(0,400)}"`;
+  const genderGuide={
+    feminine:'Use traditionally feminine materials: white florals (jasmine, tuberose, rose), fruity notes (peach, pear), soft musks, vanillic bases, iris/violet. Avoid heavy leather, birch tar, strong fougere structures.',
+    masculine:'Use traditionally masculine materials: aromatic herbs (lavender, rosemary), woody bases (vetiver, cedarwood, oud), leather/smoky notes, fougere accords, sharp citrus. Minimize sweet florals and fruity notes.',
+    unisex:'Balance feminine and masculine elements: use citrus + woods + musks as the backbone, with moderate florals or spices for character.'
+  }[gender]||'';
+  return `Create a REALISTIC perfume formula for: "${feeling.replace(/"/g,"'").slice(0,400)}"
+Gender: ${gender}. ${genderGuide}
+
+AVAILABLE MATERIALS (use EXACT names): ${aiPalette()}
+
+RULES based on real perfumery science:
+- Top notes (15-25%): volatile molecules, first impression, fade in 30min-2hrs. Use citrus, light fruits, aldehydes, green notes.
+- Heart notes (30-45%): the character, 1-6hrs. Use florals, spices, aromatic herbs.  
+- Base notes (25-40%): heavy molecules, 4-12+hrs. Use woods, resins, musks, amber, vanilla.
+- MUST include 1-2 fixatives (Benzyl Benzoate, Ambroxan, Cetalox, Exaltolide, Vertofix) to anchor the top.
+- MUST include 1 blender/booster (Hedione for radiance, Iso E Super for woody veil, Linalool for smoothness).
+- Percentages = share of aromatic concentrate, sum to 100.
+- For each note, give 2 alternatives with similarity 0-5.
+- Give a detailed explanation of WHY each note was chosen and how they interact chemically and olfactively.
+- Write in ${lang}.
+
+Return JSON: {"description":"vivid sentence","fragranceType":"label","explanation":"2-3 detailed sentences on why these notes create the desired effect, referencing molecular behavior and olfactive principles","materials":[{"name":"EXACT","percent":N,"role":"top|heart|base|fixative|booster","why":"specific reason based on perfumery science","alternatives":[{"name":"EXACT","similarity":N},{"name":"EXACT","similarity":N}]}]}`;
 }
 async function composeWithAI(){
   const out=$('#aiOut'); const txt=($('#aiIn')&&$('#aiIn').value||'').trim();
