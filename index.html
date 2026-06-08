@@ -542,6 +542,7 @@ const I18N={
   vt_collections:'Your <em>collections.</em>', vi_collections:'Save finished formulas to revisit anytime, load classic archetypes as a starting point, and keep a library of perfumes you own or admire.',
   vt_account:'Your <em>account.</em>', vi_account:'Your sign-in identity and where your work is stored.',
   vt_profile:'Profile & <em>preferences.</em>', vi_profile:'Language, how Jabir measures, what it shows you, and your default product.',
+  st_discover:'Discover Perfumery', ss_discover:'Learn how fragrances are built, explore famous perfumes, and develop your nose',
   st_product:'Product & Batch', ss_product:'Choose form, strength and batch size',
   st_ai:'Describe a Feeling', ss_ai:'Tell the AI a mood or memory — get a starting formula',
   st_inspiration:'Inspiration & Vibe', ss_inspiration:'Describe a feeling — get real note suggestions',
@@ -601,6 +602,7 @@ const I18N={
   vt_collections:'<em>مجموعه‌های</em> شما.', vi_collections:'فرمول‌های نهایی را ذخیره کنید، الگوهای کلاسیک را به‌عنوان نقطهٔ شروع بارگذاری کنید و کتابخانه‌ای از عطرهایتان بسازید.',
   vt_account:'<em>حساب</em> شما.', vi_account:'هویت ورود شما و محل ذخیرهٔ کارهایتان.',
   vt_profile:'پروفایل و <em>تنظیمات.</em>', vi_profile:'زبان، نحوهٔ اندازه‌گیری جابر، نمایش‌ها و محصول پیش‌فرض شما.',
+  st_discover:'دنیای عطر را کشف کنید', ss_discover:'بیاموزید عطرها چگونه ساخته می‌شوند، عطرهای معروف را بشناسید و بینی خود را تقویت کنید',
   st_product:'محصول و دسته', ss_product:'فرم، غلظت و اندازهٔ دسته را انتخاب کنید',
   st_ai:'یک حس را توصیف کنید', ss_ai:'حال‌وهوا یا خاطره‌ای را به هوش مصنوعی بگویید تا فرمول اولیه بدهد',
   st_inspiration:'الهام و حال‌وهوا', ss_inspiration:'یک حس را توصیف کنید — پیشنهاد نت‌های واقعی بگیرید',
@@ -1002,8 +1004,8 @@ const ARCH_FA={
 };
 function matName(m){ return (LANG==='fa'&&MAT_FA[m.id])?MAT_FA[m.id][0]:m.name; }
 function matDesc(m){ return (LANG==='fa'&&MAT_FA[m.id])?MAT_FA[m.id][1]:m.desc; }
-function matImg(m){ return m?`notes/${m.id}.png`:null; }
-function matImgHtml(m,sz=40){ const src=matImg(m); return src?`<img src="${src}" width="${sz}" height="${sz}" style="border-radius:50%;object-fit:cover;border:1.5px solid var(--line);flex:none;display:inline-block" onerror="this.style.display='none'" alt="${m?m.name:''}">`:''; }
+function matImg(m){ return m?`${m.id}.png`:null; }
+function matImgHtml(m,sz=40){ const src=matImg(m); return src?`<img src="${src}" width="${sz}" height="${sz}" style="border-radius:50%;object-fit:cover;border:2px solid var(--gold);box-shadow:0 2px 8px -2px rgba(120,90,40,.35);flex:none;display:inline-block;background:var(--paper-2)" onerror="this.style.display='none'" alt="${m?m.name:''}" loading="lazy">`:''; }
 function famLabel(f){ return LANG==='fa'?(FAM_FA[f]||f):((FAMILIES[f]||{l:f}).l); }
 function posLabel(p){ return LANG==='fa'?(POS_FA[p]||p):p; }
 function productName(p){ return (LANG==='fa'&&PROD_FA[p.id])?PROD_FA[p.id]:p.name; }
@@ -1030,7 +1032,7 @@ function costBreakdown(c){ const map={}; (c.detail||[]).forEach(d=>d.sub.forEach
 
 let S = {
   email:'guest', mode:'enthusiast',
-  prefs:{basis:'weight', fun:true, lang:LANG, currency:'$'},
+  prefs:{basis:'weight', fun:true, lang:LANG, currency:'$', aiKey:''},
   densities:{},        // {matId: density override}
   costs:{},            // {matId: cost value}
   costUnits:{},        // {matId: 'g'|'ml'} default g
@@ -1178,6 +1180,7 @@ function fmt(n,d=2){ if(!isFinite(n))return '0'; return (+n).toFixed(d).replace(
 /* each section is a card panel; clp=collapsible, coll=start collapsed */
 const SECTIONS=[
  {id:'product', icon:'⚗️', g1:'#e8b13a',g2:'#ef8a6a', clp:true, coll:false},
+ {id:'discover', icon:'🌸', g1:'#e0789a',g2:'#bd9a4e'},
  {id:'ai', icon:'🪄', g1:'#a87bb0',g2:'#e0789a', clp:true, coll:false},
  {id:'inspiration', icon:'✨', g1:'#e0789a',g2:'#a87bb0', clp:true, coll:true},
  {id:'type', icon:'🎨', g1:'#4fb0b8',g2:'#86b06a', clp:true, coll:true},
@@ -1226,13 +1229,15 @@ function panelHTML(id){
 }
 
 function buildShell(){
-  // sections visible by mode + admin
-  const proOnly=['inspiration','type','accord','analysis','equipment','admin'];
-  const visible = tab => tab.sections.filter(s=>{
-    if(s==='admin'&&!isAdmin()) return false;
-    if(proOnly.includes(s)&&S.mode==='enthusiast') return false;
-    return true;
-  });
+  // sections visible by mode
+  const ENT_SECTIONS = {perfumery:['discover'],library:['library'],collections:['collection','commercial'],education:['education'],account:['account','membership','profile']};
+  const visible = tab => {
+    if(S.mode==='enthusiast' && ENT_SECTIONS[tab.id]) return ENT_SECTIONS[tab.id];
+    return tab.sections.filter(s=>{
+      if(s==='admin'&&!isAdmin()) return false;
+      return true;
+    });
+  };
   const visTabs = TABS.filter(tab=>tab.id!=='equipment'||S.mode==='perfumer');
   // desktop top nav
   $('#topNav').innerHTML = visTabs.map(tab=>`
@@ -1278,6 +1283,7 @@ function funBlock(key){
 function renderSection(id){
   const pad=$('#pad-'+id); if(!pad)return;
   if(id==='product') pad.innerHTML=renderProduct();
+  if(id==='discover') pad.innerHTML=renderDiscover();
   if(id==='ai') pad.innerHTML=renderAI();
   if(id==='inspiration') pad.innerHTML=renderInspiration();
   if(id==='type') pad.innerHTML=renderType();
@@ -1298,6 +1304,126 @@ function renderSection(id){
   bindSection(id);
   if(id==='formula'||id==='product'||id==='accord') refreshSummary();
   if(id==='formula'){ const mp=$('#pad-matrix'); if(mp) mp.innerHTML=renderMatrix(); const ap=$('#pad-analysis'); if(ap) ap.innerHTML=renderAnalysis(); }
+}
+
+/* ---- DISCOVER (enthusiast educational content) ---- */
+const FAMOUS_PERFUMES=[
+ {name:'Chanel No. 5',house:'Chanel',year:1921,type:'Floral Aldehyde',gender:'feminine',
+  top:['Aldehyde C-11','Bergamot','Lemon','Neroli'],heart:['Jasmine Absolute','Rose Otto','Ylang Ylang','Orris / Iris'],base:['Sandalwood','Vetiver','Vanillin','Benzoin'],
+  desc:'The world\'s most iconic fragrance. The aldehydes give it a sparkling, abstract quality that lifted perfumery into modernism.'},
+ {name:'Dior Sauvage',house:'Dior',year:2015,type:'Aromatic Woody',gender:'masculine',
+  top:['Bergamot','Black Pepper','Pink Pepper'],heart:['Lavender','Geranium','Hedione'],base:['Ambroxan','Cedarwood Virginia','Patchouli','Cashmeran'],
+  desc:'A massive modern hit. Ambroxan creates that persistent "clean skin" trail, while bergamot keeps it fresh.'},
+ {name:'Baccarat Rouge 540',house:'Maison Francis Kurkdjian',year:2015,type:'Amber Floral',gender:'unisex',
+  top:['Saffron','Jasmine Absolute'],heart:['Ambroxan','Cetalox (Ambroxide)'],base:['Cedarwood Virginia','Benzoin','Vanillin'],
+  desc:'Polarizing and addictive. The ambroxan-saffron combination creates a sugary mineral glow that\'s instantly recognizable.'},
+ {name:'Acqua di Giò',house:'Giorgio Armani',year:1996,type:'Aquatic Aromatic',gender:'masculine',
+  top:['Bergamot','Lime','Lemon','Calone'],heart:['Jasmine Sambac','Rosemary','Hedione'],base:['Cedarwood Atlas','Patchouli','Galaxolide'],
+  desc:'The original aquatic fresh. Calone and hedione create the sea-breeze transparency. One of the best-selling perfumes ever.'},
+ {name:'Black Opium',house:'Yves Saint Laurent',year:2014,type:'Gourmand Floral',gender:'feminine',
+  top:['Pink Pepper','Pear','Green Apple'],heart:['Coffee','Jasmine Sambac','Orange Blossom'],base:['Vanillin','Cashmeran','Benzoin','Cedarwood Virginia'],
+  desc:'A gourmand revolution. Coffee meets vanilla over white flowers — addictive sweetness with a dark edge.'},
+ {name:'Tom Ford Oud Wood',house:'Tom Ford',year:2007,type:'Woody Spicy',gender:'unisex',
+  top:['Cardamom','Cinnamon','Ginger'],heart:['Oud (Agarwood)','Sandalwood','Vetiver'],base:['Tonka / Coumarin','Vanillin','Ambroxan'],
+  desc:'The fragrance that brought oud to the Western mainstream. Smoky, creamy, and refined.'},
+];
+function renderDiscover(){
+  const fa=LANG==='fa';
+  const gLabel={feminine:fa?'زنانه':'Feminine',masculine:fa?'مردانه':'Masculine',unisex:fa?'یونیسکس':'Unisex'};
+  return `
+  <!-- HOW PERFUME WORKS -->
+  <div class="an-block" style="text-align:center;padding:20px 0">
+    <h3 style="font-family:Fraunces;font-size:24px;margin-bottom:8px">${fa?'عطر چگونه کار می‌کند؟':'How does perfume work?'}</h3>
+    <p class="muted" style="max-width:500px;margin:0 auto 16px">${fa?'هر عطر از سه لایه ساخته شده که در طول زمان یکی پس از دیگری آشکار می‌شوند:':'Every perfume is built in three layers that unfold over time on your skin:'}</p>
+    <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;max-width:600px;margin:0 auto">
+      <div style="flex:1;min-width:160px;background:linear-gradient(135deg,#fef3c7,#fde68a);padding:18px;border-radius:16px;text-align:center">
+        <div style="font-size:28px">🍋</div>
+        <div style="font-family:Fraunces;font-size:18px;margin:6px 0">${fa?'نت‌های سَر':'Top Notes'}</div>
+        <div style="font-size:13px;color:var(--ink-soft)">${fa?'اولین برداشت · ۱۵ تا ۳۰ دقیقه · مرکبات، میوه، ادویه':'First impression · 15–30 min · Citrus, fruit, spice'}</div>
+      </div>
+      <div style="flex:1;min-width:160px;background:linear-gradient(135deg,#fce7f3,#f9a8d4);padding:18px;border-radius:16px;text-align:center">
+        <div style="font-size:28px">🌹</div>
+        <div style="font-family:Fraunces;font-size:18px;margin:6px 0">${fa?'نت‌های قلب':'Heart Notes'}</div>
+        <div style="font-size:13px;color:var(--ink-soft)">${fa?'شخصیت عطر · ۱ تا ۴ ساعت · گل، ادویه، سبز':'The character · 1–4 hours · Floral, spice, green'}</div>
+      </div>
+      <div style="flex:1;min-width:160px;background:linear-gradient(135deg,#e4d5b7,#c4a875);padding:18px;border-radius:16px;text-align:center">
+        <div style="font-size:28px">🪵</div>
+        <div style="font-family:Fraunces;font-size:18px;margin:6px 0">${fa?'نت‌های پایه':'Base Notes'}</div>
+        <div style="font-size:13px;color:var(--ink-soft)">${fa?'ماندگاری · ۴ تا ۱۲+ ساعت · چوب، رزین، مشک':'The foundation · 4–12+ hrs · Wood, resin, musk'}</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- FAMOUS PERFUMES -->
+  <div class="an-block">
+    <h3 style="font-family:Fraunces;font-size:22px;margin-bottom:14px">${fa?'عطرهای معروف جهان':'Iconic perfumes, decoded'}</h3>
+    ${FAMOUS_PERFUMES.map(p=>`
+    <div style="border:1px solid var(--line);border-radius:16px;padding:18px;margin:12px 0;background:#fff">
+      <div style="display:flex;justify-content:space-between;align-items:start;flex-wrap:wrap;gap:8px">
+        <div><div style="font-family:Fraunces;font-size:20px">${p.name}</div>
+          <div class="muted" style="font-size:13px">${p.house} · ${p.year} · ${p.type} · ${gLabel[p.gender]||p.gender}</div></div>
+      </div>
+      <div class="muted" style="font-style:italic;margin:8px 0;font-size:13.5px">${p.desc}</div>
+      <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:10px">
+        <div style="flex:1;min-width:140px"><div style="font-weight:700;font-size:11px;text-transform:uppercase;color:#e8b13a;margin-bottom:6px">🍋 ${fa?'سر':'Top'}</div>
+          <div style="display:flex;flex-wrap:wrap;gap:4px">${p.top.map(n=>{const m=MATERIALS.find(x=>x.name===n); return `<span style="display:inline-flex;align-items:center;gap:4px;background:var(--paper-2);padding:4px 8px;border-radius:8px;font-size:12px">${m?matImgHtml(m,22):''}${m?matName(m):n}</span>`;}).join('')}</div></div>
+        <div style="flex:1;min-width:140px"><div style="font-weight:700;font-size:11px;text-transform:uppercase;color:#e0789a;margin-bottom:6px">🌹 ${fa?'قلب':'Heart'}</div>
+          <div style="display:flex;flex-wrap:wrap;gap:4px">${p.heart.map(n=>{const m=MATERIALS.find(x=>x.name===n); return `<span style="display:inline-flex;align-items:center;gap:4px;background:var(--paper-2);padding:4px 8px;border-radius:8px;font-size:12px">${m?matImgHtml(m,22):''}${m?matName(m):n}</span>`;}).join('')}</div></div>
+        <div style="flex:1;min-width:140px"><div style="font-weight:700;font-size:11px;text-transform:uppercase;color:#9c6b3f;margin-bottom:6px">🪵 ${fa?'پایه':'Base'}</div>
+          <div style="display:flex;flex-wrap:wrap;gap:4px">${p.base.map(n=>{const m=MATERIALS.find(x=>x.name===n); return `<span style="display:inline-flex;align-items:center;gap:4px;background:var(--paper-2);padding:4px 8px;border-radius:8px;font-size:12px">${m?matImgHtml(m,22):''}${m?matName(m):n}</span>`;}).join('')}</div></div>
+      </div>
+    </div>`).join('')}
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- PROJECTION vs DURABILITY -->
+  <div class="an-block">
+    <h3 style="font-family:Fraunces;font-size:20px;margin-bottom:10px">${fa?'ماندگاری در مقابل پخش — چه تفاوتی دارند؟':'Durability vs Projection — what\'s the difference?'}</h3>
+    <div style="display:flex;gap:14px;flex-wrap:wrap">
+      <div style="flex:1;min-width:200px;padding:16px;border-radius:14px;background:linear-gradient(135deg,#e0f4f5,#c5eded)">
+        <div style="font-size:22px">⏱️</div>
+        <div style="font-family:Fraunces;font-size:17px;margin:4px 0">${fa?'ماندگاری (Longevity)':'Durability (Longevity)'}</div>
+        <div class="muted" style="font-size:13px">${fa?'چند ساعت عطر روی پوست قابل حس است. نت‌های پایه و تثبیت‌کننده‌ها مانند بنزیل بنزوات و امبروکسان ماندگاری را افزایش می‌دهند. غلظت بالاتر (مثل Parfum) هم کمک می‌کند.':'How many hours the perfume stays detectable on skin. Base notes and fixatives like benzyl benzoate and ambroxan increase longevity. Higher concentration (e.g., Parfum vs EDT) also helps.'}</div>
+      </div>
+      <div style="flex:1;min-width:200px;padding:16px;border-radius:14px;background:linear-gradient(135deg,#fde8e0,#f5c5b5)">
+        <div style="font-size:22px">🌬️</div>
+        <div style="font-family:Fraunces;font-size:17px;margin:4px 0">${fa?'پخش (Sillage)':'Projection (Sillage)'}</div>
+        <div class="muted" style="font-size:13px">${fa?'عطر تا چه فاصله‌ای از بدن حس می‌شود. نت‌های سر و آلدهیدها پخش اولیه را تقویت می‌کنند. مولکول‌هایی مثل هدیون و امبروکسان «هالهٔ» بزرگی ایجاد می‌کنند.':'How far from your body the scent is noticed. Top notes and aldehydes boost initial sillage. Molecules like Hedione and Ambroxan create a large "scent bubble."'}</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- BUYING TIPS -->
+  <div class="an-block">
+    <h3 style="font-family:Fraunces;font-size:20px;margin-bottom:10px">${fa?'راهنمای خرید عطر باکیفیت':'Tips for buying quality perfumes'}</h3>
+    <div style="display:flex;flex-direction:column;gap:10px">
+      ${[
+        {i:'1️⃣',t:fa?'روی پوست تست کنید، نه کاغذ':'Test on skin, not paper',d:fa?'شیمی بدن شما عطر را تغییر می‌دهد. حداقل ۲ ساعت صبر کنید تا نت‌های قلب و پایه مشخص شوند.':'Your body chemistry changes the scent. Wait at least 2 hours for the heart and base to develop.'},
+        {i:'2️⃣',t:fa?'Eau de Parfum را انتخاب کنید':'Choose Eau de Parfum',d:fa?'EDP معمولاً ۱۵-۲۰٪ عصاره دارد و ماندگاری بهتری نسبت به EDT (۵-۱۵٪) دارد.':'EDP typically has 15–20% fragrance oil and lasts longer than EDT (5–15%). Better value per spray.'},
+        {i:'3️⃣',t:fa?'به نت‌های پایه توجه کنید':'Pay attention to base notes',d:fa?'نت‌های پایه (صندل، وتیور، وانیل) بیشتر از نت‌های سر روی پوست می‌مانند. آنها شخصیت واقعی عطر هستند.':'Base notes (sandalwood, vetiver, vanilla) stay on skin longest. They\'re the real personality of the fragrance.'},
+        {i:'4️⃣',t:fa?'فصل و موقعیت مهم است':'Season and occasion matter',d:fa?'عطرهای تازه‌مرکباتی برای تابستان، عطرهای گرم‌عنبری برای زمستان، و عطرهای ملایم‌مشکی برای محل کار بهترند.':'Fresh citrus for summer, warm amber for winter, subtle musks for the office.'},
+      ].map(tip=>`<div style="display:flex;gap:12px;align-items:start;padding:12px;background:var(--paper-2);border-radius:12px">
+        <span style="font-size:20px;flex:none">${tip.i}</span>
+        <div><div style="font-weight:700;font-size:14px">${tip.t}</div><div class="muted" style="font-size:13px;margin-top:2px">${tip.d}</div></div>
+      </div>`).join('')}
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- UPGRADE CTA -->
+  <div style="text-align:center;padding:24px;background:linear-gradient(135deg,#2a201a,#3c2b22);border-radius:18px;color:#f6ecdc">
+    <div style="font-size:32px;margin-bottom:8px">🧪</div>
+    <div style="font-family:Fraunces;font-size:22px">${fa?'آمادهٔ ساختن عطر خودتان هستید؟':'Ready to create your own fragrances?'}</div>
+    <div style="margin:10px auto 16px;max-width:400px;font-size:14px;opacity:.85">${fa?'نسخهٔ عطرساز شامل ماشین‌حساب فرمولاسیون، آهنگساز هوش مصنوعی، نمودارهای پیشرفته و ۱۳۹ مادهٔ معطر است.':'The Perfumer version includes the formulation calculator, AI composer, advanced diagrams, and 139 aromatic materials.'}</div>
+    <button class="btn primary" style="font-size:16px;padding:14px 32px" onclick="if(confirm('${fa?'به نسخهٔ عطرساز ارتقا دهید؟':'Upgrade to Perfumer mode?'}')){S.mode='perfumer';persist();activeTab='perfumery';buildShell();}">
+      ${fa?'ورود به دنیای عطرسازی →':'Enter the Perfumer\'s Atelier →'}</button>
+  </div>`;
 }
 
 /* ---- PRODUCT ---- */
@@ -1695,15 +1821,19 @@ function renderAccount(){
     <button class="btn ghost" id="switchAcct">${LANG==='fa'?'تعویض حساب':'Switch account'}</button>
   </div>
   <div class="divider"></div>
+  ${S.mode==='enthusiast'?`
+  <div class="price-card" style="border-color:var(--rose);background:linear-gradient(135deg,#fff,#fde8ef);max-width:100%">
+    <div style="font-family:Fraunces;font-size:22px">🧪 ${fa?'آمادهٔ عطرسازی هستید؟':'Ready to create your own perfumes?'}</div>
+    <div class="muted" style="margin:8px 0 12px;font-size:14px">${fa?'نسخهٔ عطرساز شامل ماشین‌حساب فرمولاسیون، آهنگساز هوش مصنوعی، نمودارهای پیشرفته، ابزار آکورد، مدیریت دارایی‌ها و موارد بیشتر است.':'The Perfumer version includes the formulation calculator, AI composer, advanced diagrams, accord builder, asset management, and more.'}</div>
+    <button class="btn primary" style="width:100%" onclick="if(confirm('${fa?'به نسخهٔ عطرساز ارتقا می‌دهید؟':'Upgrade to Perfumer mode?'}')){S.mode='perfumer';persist();activeTab='perfumery';buildShell();toast('${fa?'حالت عطرساز فعال شد ✨':'Perfumer mode activated ✨'}');}">${fa?'ارتقا به عطرساز 🧪':'Upgrade to Perfumer 🧪'}</button>
+  </div>`:`
   <label class="lab">${fa?'حالت استفاده':'App mode'}</label>
   <div class="opt-grid" style="grid-template-columns:1fr 1fr;max-width:360px" id="modeSwitcher">
     <button class="opt ${S.mode==='enthusiast'?'sel':''}" data-usermode="enthusiast" onclick="switchMode('enthusiast')">
-      <div class="t">🌸 ${fa?'علاقه‌مند':'Enthusiast'}</div>
-      <div class="d" style="font-size:11px">${fa?'کاوش و یادگیری':'Explore & learn'}</div></button>
+      <div class="t">🌸 ${fa?'علاقه‌مند':'Enthusiast'}</div></button>
     <button class="opt ${S.mode==='perfumer'?'sel':''}" data-usermode="perfumer" onclick="switchMode('perfumer')">
-      <div class="t">🧪 ${fa?'عطرساز':'Perfumer'}</div>
-      <div class="d" style="font-size:11px">${fa?'ابزارهای حرفه‌ای':'Pro tools'}</div></button>
-  </div>`;
+      <div class="t">🧪 ${fa?'عطرساز':'Perfumer'}</div></button>
+  </div>`}`;
 }
 
 /* ---- PROFILE / PREFERENCES ---- */
@@ -1732,8 +1862,10 @@ function renderProfile(){
   <label class="lab">${LANG==='fa'?'واحد پول (برای هزینه‌ها)':'Currency (for costs)'}</label>
   <select class="inp" id="pCur" style="max-width:220px">${['$','€','£','﷼','تومان','₺','₽','¥'].map(s=>`<option ${cur()===s?'selected':''}>${s}</option>`).join('')}</select>
   <div class="divider"></div>
-  <label class="lab">🪄 ${LANG==='fa'?'هوش مصنوعی':'AI composer'}</label>
-  <div class="muted" style="font-size:13px">${LANG==='fa'?'هوش مصنوعی برای اعضای پرو فعال است. نیازی به تنظیمات نیست — فقط در بخش «یک حس را توصیف کنید» استفاده کنید.':'AI is included for Pro members. No setup needed — just use the "Describe a Feeling" panel in the Perfumery tab.'}</div>`;
+  <label class="lab">🪄 ${LANG==='fa'?'هوش مصنوعی (Llama)':'AI composer (Llama via Groq)'}</label>
+  <div class="muted" style="font-size:12.5px;margin-bottom:8px">${LANG==='fa'?'یک کلید رایگان از console.groq.com بگیرید و اینجا بچسبانید. این کلید بسیار سخاوتمندانه‌تر از Gemini است و اعتبار خیلی بیشتری دارد.':'Get a free key from console.groq.com → API Keys. Groq offers much more generous free limits than Gemini — no more running out of tokens.'}</div>
+  <input class="inp" id="pAiKey" type="password" placeholder="gsk_..." value="${(S.prefs&&S.prefs.aiKey)||''}" style="max-width:420px" autocomplete="off">
+  <div style="margin-top:8px"><a href="https://console.groq.com/keys" target="_blank" rel="noopener" class="btn ghost tiny">${LANG==='fa'?'دریافت کلید رایگان Groq ↗':'Get free Groq key ↗'}</a></div>`;
 }
 
 /* ---- AI COMPOSER (Gemini) ---- */
@@ -2215,17 +2347,17 @@ function openFormula(){
    GEMINI AI COMPOSER
    ============================================================ */
 let lastAI=null;
-/* Pro users' Gemini key — calls Google directly from the browser.
-   Move to a server proxy (/api/gemini) when you scale up. */
-const GEMINI_API_KEY='AIzaSyCFI8uJEa5rT0mqdrJ2NPWCSKKW4_xaBfo';
+/* AI powered by Groq (free Llama). Get a key at console.groq.com */
+const AI_KEY=''; /* paste your free Groq key here */
 async function callGemini(prompt){
-  const url='https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key='+encodeURIComponent(GEMINI_API_KEY);
-  const body={contents:[{parts:[{text:prompt}]}],generationConfig:{responseMimeType:'application/json',temperature:0.95,topP:0.95}};
-  const res=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
-  if(!res.ok){ let tx=''; try{tx=await res.text();}catch(e){} throw new Error('HTTP '+res.status+' '+tx.slice(0,300)); }
+  const key=AI_KEY||(S.prefs&&S.prefs.aiKey)||'';
+  if(!key) throw new Error('No AI key set. Get a free one at console.groq.com → API Keys, then paste it in Profile → AI.');
+  const url='https://api.groq.com/openai/v1/chat/completions';
+  const body={model:'llama-3.3-70b-versatile',messages:[{role:'user',content:prompt}],temperature:0.9,response_format:{type:'json_object'}};
+  const res=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+key},body:JSON.stringify(body)});
+  if(!res.ok){ let tx=''; try{tx=await res.text();}catch(e){} throw new Error('HTTP '+res.status+' '+tx.slice(0,200)); }
   const data=await res.json();
-  const parts=(((data.candidates||[])[0]||{}).content||{}).parts||[];
-  return parts.map(p=>p.text||'').join('');
+  return (data.choices&&data.choices[0]&&data.choices[0].message&&data.choices[0].message.content)||'';
 }
 function aiPalette(){
   return MATERIALS.filter(m=>isAromatic(m)||m.fix).map(m=>m.name).join(', ');
@@ -2356,6 +2488,7 @@ function bindSection(id){
     const fn=$('#pFun'); if(fn) fn.onclick=()=>{ S.prefs.fun=!S.prefs.fun; persist(); renderSection('profile'); TABS.find(x=>x.id==='perfumery').sections.forEach(renderSection); };
     const pd=$('#pProd'); if(pd) pd.onchange=e=>{ S.product.id=e.target.value; const p=PRODUCTS.find(x=>x.id===e.target.value); S.product.conc=p.def; persist(); renderSection('product'); renderSection('formula'); refreshSummary(); };
     const cu=$('#pCur'); if(cu) cu.onchange=e=>{ S.prefs.currency=e.target.value; persist(); renderSection('library'); const ap=$('#pad-analysis'); if(ap) renderSection('analysis'); toast(LANG==='fa'?'واحد پول تغییر کرد':'Currency updated'); };
+    const ak=$('#pAiKey'); if(ak) ak.oninput=e=>{ S.prefs.aiKey=e.target.value.trim(); persist(); toast(LANG==='fa'?'کلید ذخیره شد':'Key saved'); };
   }
   if(id==='account'){
     const so=$('#signOut'); if(so) so.onclick=async()=>{ if(window.sb) await sb.auth.signOut().catch(()=>{}); location.reload(); };
@@ -2437,6 +2570,7 @@ $('#nextBtn').onclick=async()=>{
   if(!S.prefs.lang) S.prefs.lang=LANG;
   if(!Store.get('olfact:'+ob.email)){ const p=PRODUCTS.find(x=>x.id===ob.product); S.product={id:ob.product,conc:p.def,batch:30,unit:'ml'}; }
   persist();
+  Store.set('jabir:lastEmail', S.email);
   $('#acctEmail').textContent=S.name||S.email;
   $('#onboard').classList.remove('show');
   activeTab='perfumery';
@@ -2455,6 +2589,34 @@ const fp=$('#forgotPass'); if(fp) fp.onclick=async(e)=>{
 };
 showStep(0);
 applyLang(LANG);
+
+/* Auto-login: restore last session from localStorage or Supabase */
+(async()=>{
+  // Check Supabase session first
+  if(window.sb){
+    try{
+      const {data}=await sb.auth.getSession();
+      if(data&&data.session&&data.session.user){
+        const email=data.session.user.email;
+        load(email);
+        if(!S.prefs.lang) S.prefs.lang=LANG;
+        $('#acctEmail').textContent=S.name||S.email;
+        $('#onboard').classList.remove('show');
+        activeTab='perfumery'; buildShell(); applyLang(S.prefs.lang||LANG);
+        return;
+      }
+    }catch(e){}
+  }
+  // Fallback: check if we have a saved email in localStorage
+  const lastEmail=Store.get('jabir:lastEmail');
+  if(lastEmail && Store.get('olfact:'+lastEmail)){
+    load(lastEmail);
+    if(!S.prefs.lang) S.prefs.lang=LANG;
+    $('#acctEmail').textContent=S.name||S.email;
+    $('#onboard').classList.remove('show');
+    activeTab='perfumery'; buildShell(); applyLang(S.prefs.lang||LANG);
+  }
+})();
 
 /* PWA: register service worker (only works over http/https, not file://) */
 if('serviceWorker' in navigator && location.protocol.startsWith('http')){
