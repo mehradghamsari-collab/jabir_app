@@ -1450,6 +1450,15 @@ function isPaid(){ return isAdmin() || !!(S.account&&S.account.paid); }
    ============================================================ */
 function expandRow(r){
   // returns array of {mat, finalPct} contributions
+  if(r.kind==='accord' && r.accordNotes){
+    // Library accord: accordNotes = [{id, pct}], r.finalPct = total % in formula
+    const tot = r.accordNotes.reduce((s,c)=>s+(+c.pct||0),0)||1;
+    const rPct = r.finalPct||10;
+    return r.accordNotes.map(c=>{
+      const m=MAT_BY_ID[c.id]; 
+      return m?{mat:m, finalPct:rPct*(c.pct/tot)}:null;
+    }).filter(Boolean);
+  }
   if(r.kind==='accord'){
     const acc = S.accords.find(a=>a.id===r.refId); if(!acc) return [];
     const tot = acc.components.reduce((s,c)=>s+(+c.pct||0),0)||1;
@@ -2073,12 +2082,15 @@ function renderFormula(){
       <th style="text-align:right">${S.prefs.basis==='weight'?(LANG==='fa'?'وزن':'Weigh'):(LANG==='fa'?'حجم':'Measure')}</th><th></th></tr></thead><tbody>`;
     c.detail.forEach(d=>{
       const r=d.row; const isAcc=r.kind==='accord';
-      const head = isAcc? (S.accords.find(a=>a.id===r.refId)||{}).name : (MAT_BY_ID[r.matId]?matName(MAT_BY_ID[r.matId]):'');
+      const isLibAccord=isAcc&&r.accordName;
+      const head = isLibAccord? r.accordName : (isAcc? (S.accords.find(a=>a.id===r.refId)||{}).name : (MAT_BY_ID[r.matId]?matName(MAT_BY_ID[r.matId]):''));
       const m = isAcc? null : MAT_BY_ID[r.matId];
+      const noteCount=isLibAccord?(r.accordNotes||[]).length:(isAcc?d.sub.length:0);
       const totMass=d.sub.reduce((s,x)=>s+x.amt.mass,0), totVol=d.sub.reduce((s,x)=>s+x.amt.vol,0);
-      rowsHtml+=`<tr>
-        <td class="fname"><div style="display:flex;align-items:center;gap:7px">${m?matImgHtml(m,32):''}${isAcc?'🎼 ':''}${head}${m?`<span class="em">${matDesc(m)}</span>`:`<span class="em">${LANG==='fa'?'آکورد · '+d.sub.length+' ماده':'accord · '+d.sub.length+' materials'}</span>`}</div></td>
-        <td>${isAcc?accordNotePills(r.refId):notePill(m.pos)}</td>
+      const noteList=isLibAccord?(r.accordNotes||[]).map(n=>{const nm=MAT_BY_ID[n.id];return nm?matName(nm):n.n;}).slice(0,5).join(', '):'';
+      rowsHtml+=`<tr${isLibAccord?' style="background:linear-gradient(90deg,#f9f3e8,#fff)"':''}>
+        <td class="fname"><div style="display:flex;align-items:center;gap:7px">${m?matImgHtml(m,32):(isLibAccord?'<span style="font-size:22px">🎼</span>':'')}${isAcc?'':''}${head}${m?`<span class="em">${matDesc(m)}</span>`:`<span class="em">${isLibAccord?noteList+(noteCount>5?'…':''):LANG==='fa'?'آکورد · '+noteCount+' ماده':'accord · '+noteCount+' materials'}</span>`}</div></td>
+        <td>${isLibAccord?'<span class="note-badge nb-heart" style="font-size:9px">accord</span>':(isAcc?accordNotePills(r.refId):notePill(m.pos))}</td>
         <td><input class="pctin" type="number" min="0" step="0.1" value="${fmt(r.finalPct,3)}" oninput="setPct('${r.uid}',this.value)"></td>
         <td><button class="lockbtn ${r.fixed?'on':''}" title="Lock this %" onclick="toggleLock('${r.uid}')">${r.fixed?'🔒':'🔓'}</button></td>
         <td style="text-align:right" class="amt">${fmt(totMass,3)}<small> g</small><br><small>${fmt(totVol,3)} mL</small></td>
@@ -2779,11 +2791,15 @@ function addMaterial(id,silent){
 }
 window.addMaterial=addMaterial;
 window.addAccord=(notes,name)=>{
-  notes.forEach(n=>{ if(!S.formula.find(r=>r.matId===n.id)) S.formula.push({matId:n.id,pct:n.pct,locked:false}); });
+  if(S.formula.find(r=>r.kind==='accord'&&r.accordName===name)){toast(LANG==='fa'?'قبلاً اضافه شده':'Already added');return;}
+  S.formula.push({uid:uid(),kind:'accord',accordName:name,accordNotes:notes.filter(n=>n.id),finalPct:10,fixed:false});
   persist(); renderSection('formula'); toast((LANG==='fa'?'آکورد افزوده شد: ':'Accord added: ')+name);
 };
 window.addAccordNew=(notes,name)=>{
-  notes.forEach(n=>{ if(n.id&&MAT_BY_ID[n.id]&&!S.formula.find(r=>r.matId===n.id)) S.formula.push({matId:n.id,pct:n.pct,locked:false}); });
+  const valid=notes.filter(n=>n.id&&MAT_BY_ID[n.id]);
+  if(!valid.length){toast('No mapped materials');return;}
+  if(S.formula.find(r=>r.kind==='accord'&&r.accordName===name)){toast(LANG==='fa'?'قبلاً اضافه شده':'Already added');return;}
+  S.formula.push({uid:uid(),kind:'accord',accordName:name,accordNotes:valid,finalPct:10,fixed:false});
   persist(); renderSection('formula'); toast((LANG==='fa'?'آکورد افزوده شد: ':'Accord added: ')+name);
 };
 function addAccord(id){
