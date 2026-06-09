@@ -1526,14 +1526,18 @@ window.searchPerfume=async()=>{
   const hits=pdbSearch(name);
   const dbMatch=hits.length?hits[0]:null;
   // 2. Build AI prompt with database context
-  const dbContext=dbMatch?`VERIFIED DATA for "${dbMatch[0]}" by ${dbMatch[1]}: Top=[${dbMatch[2].join(',')}] Heart=[${dbMatch[3].join(',')}] Base=[${dbMatch[4].join(',')}] Accords=${dbMatch[5]} Profile=${dbMatch[6]}. Use these EXACT notes as the primary source.`:'No verified data found. Use your perfumery knowledge.';
-  const prompt=`Fragrance expert. Analyze "${name.replace(/"/g,"'")}".
+  const dbContext=dbMatch?`VERIFIED notes for "${dbMatch[0]}" by ${dbMatch[1]}:
+Top: ${dbMatch[2].join(', ')}
+Heart: ${dbMatch[3].join(', ')}
+Base: ${dbMatch[4].join(', ')}
+Accords: ${dbMatch[5]}
+YOU MUST use EXACTLY these notes as the foundation. Map each one to the closest material in the palette below. Do NOT invent notes that aren't listed above. You may add 1-2 fixatives or boosters from the palette for a complete formula.`:'No verified data. Use your perfumery knowledge for this perfume.';
+  const prompt=`Analyze the perfume "${name.replace(/"/g,"'")}".
 ${dbContext}
-Map each note to closest material from this palette (EXACT names): ${aiPalette()}
-If a database note has no exact match in the palette, use the closest equivalent and explain.
-Also suggest fixatives and boosters for a realistic recreation.
+PALETTE (use EXACT names): ${aiPalette()}
+For each note from the verified data, find the closest palette match. Explain why each note is present in the perfume.
 Write in ${fa?'Persian':'English'}.
-Return JSON: {"perfumeName":"name","house":"brand","description":"sentence","fragranceType":"type","dayNight":"day|night|both","season":"spring-summer|autumn-winter|all-season","materials":[{"name":"EXACT palette name","percent":N,"role":"top|heart|base|fixative|booster","why":"explain based on the perfume's character"}]}`;
+Return JSON: {"perfumeName":"name","house":"brand","description":"sentence","fragranceType":"type","dayNight":"day|night|both","season":"spring-summer|autumn-winter|all-season","materials":[{"name":"EXACT palette name","percent":N,"role":"top|heart|base|fixative|booster","why":"why this note is in this perfume"}]}`;
   try{
     const raw=await callGemini(prompt);
     let obj; try{obj=JSON.parse(raw);}catch(e){const m=raw.match(/\{[\s\S]*\}/);obj=m?JSON.parse(m[0]):null;}
@@ -1569,17 +1573,49 @@ Return JSON: {"perfumeName":"name","house":"brand","description":"sentence","fra
   if(go){go.disabled=false;go.style.opacity=1;}
 };
 
-let libFilter='all', libSearch='';
+let libFilter='all', libSearch='', libTab='notes';
+/* Classic accords with real formulations */
+const ACCORDS=[
+ {name:'Chypre',desc:'The classic oakmoss-citrus-labdanum triangle from 1917',notes:[{id:'bergamot',pct:25},{id:'oakmoss',pct:20},{id:'labdanum',pct:20},{id:'patchouli',pct:15},{id:'rose-absolute',pct:10},{id:'benzyl-benzoate',pct:10}]},
+ {name:'Fougère',desc:'The barbershop classic — lavender, oakmoss, coumarin',notes:[{id:'lavender',pct:30},{id:'oakmoss',pct:15},{id:'tonka-coumarin',pct:15},{id:'geranium',pct:12},{id:'bergamot',pct:18},{id:'hedione',pct:10}]},
+ {name:'Amber Oriental',desc:'Warm, sweet, resinous — the classic oriental base',notes:[{id:'vanillin',pct:25},{id:'benzoin',pct:20},{id:'labdanum',pct:20},{id:'tonka-coumarin',pct:15},{id:'sandalwood',pct:10},{id:'benzyl-benzoate',pct:10}]},
+ {name:'Rose',desc:'A natural rose reconstruction from its key molecules',notes:[{id:'rose-absolute',pct:25},{id:'citronellol',pct:25},{id:'geraniol',pct:20},{id:'phenylethyl-alcohol',pct:15},{id:'linalool',pct:10},{id:'eugenol-clove-',pct:5}]},
+ {name:'White Floral',desc:'Jasmine-tuberose-neroli for opulent femininity',notes:[{id:'jasmine-absolute',pct:25},{id:'tuberose-absolute',pct:20},{id:'neroli',pct:15},{id:'ylang-ylang',pct:15},{id:'hedione',pct:15},{id:'indole',pct:10}]},
+ {name:'Oud',desc:'The Middle Eastern classic — smoky, complex, animalic',notes:[{id:'oud-agarwood',pct:25},{id:'saffron-safranal-',pct:15},{id:'rose-absolute',pct:15},{id:'sandalwood',pct:15},{id:'ambroxan',pct:15},{id:'benzyl-benzoate',pct:15}]},
+ {name:'Woody Amber',desc:'Modern woody transparency — the Iso E + ambroxan combination',notes:[{id:'iso-e-super',pct:35},{id:'ambroxan',pct:25},{id:'cedarwood-virginia',pct:20},{id:'hedione',pct:10},{id:'benzyl-benzoate',pct:10}]},
+ {name:'Leather',desc:'Smoky, animalic leather from birch tar and resins',notes:[{id:'birch-tar',pct:20},{id:'castoreum-accord',pct:15},{id:'styrax',pct:15},{id:'labdanum',pct:15},{id:'iso-e-super',pct:15},{id:'benzyl-benzoate',pct:20}]},
+ {name:'Gourmand',desc:'Edible sweetness — vanilla, caramel, chocolate',notes:[{id:'vanillin',pct:30},{id:'ethyl-maltol',pct:15},{id:'tonka-coumarin',pct:15},{id:'cocoa-absolute',pct:15},{id:'benzoin',pct:15},{id:'benzyl-benzoate',pct:10}]},
+ {name:'Aquatic Fresh',desc:'Clean, marine, ozonic — the 1990s revolution',notes:[{id:'calone',pct:20},{id:'hedione',pct:20},{id:'linalool',pct:15},{id:'bergamot',pct:20},{id:'iso-e-super',pct:15},{id:'galaxolide',pct:10}]},
+ {name:'Clean Musk',desc:'Freshly-laundered skin — galaxolide and aldehydes',notes:[{id:'galaxolide',pct:30},{id:'hedione',pct:20},{id:'aldehyde-c-11',pct:15},{id:'linalool',pct:15},{id:'iso-e-super',pct:10},{id:'ambroxan',pct:10}]},
+ {name:'Spice',desc:'Warm oriental spice blend',notes:[{id:'cardamom',pct:25},{id:'cinnamon',pct:20},{id:'clove-eugenol-',pct:15},{id:'pink-pepper',pct:15},{id:'black-pepper',pct:15},{id:'benzyl-benzoate',pct:10}]},
+];
 function renderLibrary(pad){
+  const fa=LANG==='fa';
   const fams=['all',...Object.keys(FAMILIES)];
   pad.innerHTML=`
-   <div class="lib-controls">
-     <input class="inp" id="libSearch" placeholder="${LANG==='fa'?'🔍 جستجوی نت‌ها — نام، رایحه یا خانواده…':'🔍 Search 100+ notes — name, smell, or family…'}" style="flex:1;min-width:220px" value="${libSearch}">
+   <div class="langtoggle" style="margin-bottom:12px" id="libTabToggle">
+     <button class="${libTab==='notes'?'on':''}" data-libtab="notes" onclick="libTab='notes';renderSection('library')">🌿 ${fa?'نت‌ها':'Notes'}</button>
+     <button class="${libTab==='accords'?'on':''}" data-libtab="accords" onclick="libTab='accords';renderSection('library')">🎼 ${fa?'آکوردها':'Accords'}</button>
    </div>
-   <div class="famfilter" id="famFilter">${fams.map(f=>`<button class="fam-pill ${f===libFilter?'on':''}" data-fam="${f}" ${f!=='all'?`style="${f===libFilter?`background:${famColor(f)}`:''}"`:''}>${f!=='all'?`<span class="swatch" style="background:${famColor(f)}"></span>`:''}${f==='all'?(LANG==='fa'?'همه':'All'):famLabel(f)}</button>`).join('')}</div>
+   ${libTab==='notes'?`
+   <div class="lib-controls">
+     <input class="inp" id="libSearch" placeholder="${fa?'🔍 جستجوی نت‌ها…':'🔍 Search notes…'}" style="flex:1;min-width:220px" value="${libSearch}">
+   </div>
+   <div class="famfilter" id="famFilter">${fams.map(f=>`<button class="fam-pill ${f===libFilter?'on':''}" data-fam="${f}" ${f!=='all'?`style="${f===libFilter?`background:${famColor(f)}`:''}"`:''}>${f!=='all'?`<span class="swatch" style="background:${famColor(f)}"></span>`:''}${f==='all'?(fa?'همه':'All'):famLabel(f)}</button>`).join('')}</div>
    <div class="matgrid" id="matgrid"></div>
+   `:`
+   <div class="muted" style="font-size:14px;margin-bottom:14px">${fa?'آکوردها ترکیبات پایه‌ای هستند که عطرسازان به‌عنوان بلوک ساختمانی استفاده می‌کنند. هر آکورد را می‌توانید مستقیماً به فرمول اضافه کنید.':'Accords are foundational blends perfumers use as building blocks. Add any accord directly to your formula.'}</div>
+   <div class="collgrid">${ACCORDS.map(ac=>`<div class="collcard" style="border-left:4px solid var(--gold)">
+     <h4 style="font-size:17px">🎼 ${ac.name}</h4>
+     <div class="muted" style="font-size:12.5px;margin:4px 0 10px">${ac.desc}</div>
+     <div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:10px">${ac.notes.map(n=>{
+       const m=MAT_BY_ID[n.id]; return m?`<span style="display:inline-flex;align-items:center;gap:4px;background:var(--paper-2);padding:3px 8px;border-radius:8px;font-size:12px">${matImgHtml(m,20)}<span>${matName(m)}</span><b style="color:var(--gold-deep)">${n.pct}%</b></span>`:'';
+     }).join('')}</div>
+     <button class="btn ghost tiny" onclick="addAccord(${JSON.stringify(ac.notes).replace(/"/g,'&quot;')},'${ac.name}')">${fa?'+ افزودن به فرمول':'+ Add to formula'}</button>
+   </div>`).join('')}</div>
+   `}
    ${funBlock('library')}`;
-  paintGrid();
+  if(libTab==='notes') paintGrid();
 }
 function paintGrid(){
   const grid=$('#matgrid'); if(!grid)return;
@@ -2119,71 +2155,69 @@ function renderAnalysis(){
       ${(+S.product.conc||10)<=6?`${fa?'غلظت پایین ('+S.product.conc+'٪) پخش و ماندگاری را محدود می‌کند.':'Low concentration ('+S.product.conc+'%) limits both sillage and wear time.'}`:''} 
     </div>
   </div>
-  <!-- day/night + season -->
+  <!-- day/night + season pie charts -->
   <div class="an-block">
-    <div class="an-h">${fa?'بهترین زمان استفاده':'Best time to wear'}</div>
+    <div class="an-h">${fa?'بهترین زمان و فصل':'Best time & season'}</div>
     ${(()=>{
-      // compute day/night and season scores from formula notes
-      const dayFams={citrus:1.2,green:1,aquatic:1.3,aldehyde:0.9,herb:0.8,fruity:0.7};
-      const nightFams={resin:1.2,amber:1.3,leather:1.2,animalic:1,gourmand:1.1,woody:0.8,musk:0.6};
-      const sprFams={citrus:1.3,aquatic:1.2,green:1,floral:0.7,aldehyde:0.8,fruity:0.9,herb:0.6};
-      const autFams={gourmand:1.3,spice:1.2,woody:1.1,resin:1.2,leather:1.1,amber:1.3,animalic:0.9,musk:0.5};
-      let dS=0,nS=0,spS=0,auS=0,tot=0;
+      const dayW={citrus:1.2,green:1,aquatic:1.3,aldehyde:0.9,herb:0.8,fruity:0.7};
+      const nightW={resin:1.2,amber:1.3,leather:1.2,animalic:1,gourmand:1.1,woody:0.8,musk:0.6};
+      const sprW={floral:1,green:1.1,herb:0.8,aldehyde:0.7};
+      const sumW={citrus:1.3,aquatic:1.3,fruity:1,green:0.6};
+      const autW={spice:1.2,woody:1.1,amber:1,resin:0.8};
+      const winW={gourmand:1.3,resin:1.2,leather:1.2,animalic:1,amber:0.8,woody:0.6};
+      let dS=0,nS=0,sp=0,su=0,au=0,wi=0;
       S.formula.forEach(r=>expandRow(r).forEach(p=>{
-        if(!isAromatic(p.mat))return; const w=p.finalPct; tot+=w;
-        dS+=w*(dayFams[p.mat.family]||0.2);
-        nS+=w*(nightFams[p.mat.family]||0.2);
-        spS+=w*(sprFams[p.mat.family]||0.2);
-        auS+=w*(autFams[p.mat.family]||0.2);
+        if(!isAromatic(p.mat))return; const w=p.finalPct; const f=p.mat.family;
+        dS+=w*(dayW[f]||0.15); nS+=w*(nightW[f]||0.15);
+        sp+=w*(sprW[f]||0.1); su+=w*(sumW[f]||0.1);
+        au+=w*(autW[f]||0.1); wi+=w*(winW[f]||0.1);
       }));
-      const mx=Math.max(dS,nS,spS,auS,1);
-      const day=Math.min(1,dS/mx), night=Math.min(1,nS/mx);
-      const spr=Math.min(1,spS/mx), aut=Math.min(1,auS/mx);
       const conc=+S.product.conc||10;
-      // concentration adjusts: low conc = more day, high = more night
-      const cDay=Math.min(1,day*(conc<=10?1.2:0.8));
-      const cNight=Math.min(1,night*(conc>=15?1.2:0.8));
-      // Diamond chart: Day(top), Night(bottom), Spring-Summer(left), Autumn-Winter(right)
-      const W=200,H=200,cx=100,cy=100,R=80;
-      const pts=[ // top, right, bottom, left
-        [cx, cy-R*cDay],         // Day (top)
-        [cx+R*aut, cy],          // Autumn-Winter (right)
-        [cx, cy+R*cNight],       // Night (bottom)
-        [cx-R*spr, cy]           // Spring-Summer (left)
-      ];
-      const shape=pts.map((p,i)=>(i?'L':'M')+p[0].toFixed(0)+','+p[1].toFixed(0)).join(' ')+'Z';
-      const labels=[
-        {x:cx,y:18,t:fa?'☀️ روز':'☀️ Day',a:'middle'},
-        {x:W-4,y:cy+4,t:fa?'🍂 پاییز-زمستان':'🍂 Aut-Win',a:'end'},
-        {x:cx,y:H-6,t:fa?'🌙 شب':'🌙 Night',a:'middle'},
-        {x:4,y:cy+4,t:fa?'🌸 بهار-تابستان':'🌸 Spr-Sum',a:'start'}
-      ];
-      const dayPct=Math.round(cDay/(cDay+cNight+0.01)*100);
-      const bestTime=dayPct>65?(fa?'روزانه':'Daytime'):dayPct<35?(fa?'شبانه':'Nighttime'):(fa?'همه‌وقت':'Anytime');
-      const sprPct=Math.round(spr/(spr+aut+0.01)*100);
-      const bestSeason=sprPct>65?(fa?'بهار و تابستان':'Spring & Summer'):sprPct<35?(fa?'پاییز و زمستان':'Autumn & Winter'):(fa?'چهارفصل':'All-season');
+      dS*=(conc<=10?1.15:0.85); nS*=(conc>=15?1.15:0.85);
+      const dTot=dS+nS||1, sTot=sp+su+au+wi||1;
+      const dayPct=Math.round(dS/dTot*100), nightPct=100-dayPct;
+      const spPct=Math.round(sp/sTot*100), suPct=Math.round(su/sTot*100);
+      const auPct=Math.round(au/sTot*100), wiPct=100-spPct-suPct-auPct;
+      // pie SVG helper
+      function pie(segs,sz){
+        let a=-Math.PI/2; const R=sz/2-2,cx=sz/2,cy=sz/2;
+        return segs.map(s=>{
+          if(s.pct<=0) return '';
+          const a2=a+s.pct/100*Math.PI*2;
+          const x1=cx+R*Math.cos(a),y1=cy+R*Math.sin(a);
+          const x2=cx+R*Math.cos(a2),y2=cy+R*Math.sin(a2);
+          const big=(a2-a)>Math.PI?1:0;
+          const path=s.pct>=99.5?
+            `<circle cx="${cx}" cy="${cy}" r="${R}" fill="${s.c}"/>`:
+            `<path d="M${cx} ${cy} L${x1.toFixed(1)} ${y1.toFixed(1)} A${R} ${R} 0 ${big} 1 ${x2.toFixed(1)} ${y2.toFixed(1)} Z" fill="${s.c}"/>`;
+          a=a2; return path;
+        }).join('');
+      }
+      const dnSegs=[{pct:dayPct,c:'#f0c040'},{pct:nightPct,c:'#2a3050'}];
+      const ssSegs=[{pct:spPct,c:'#f5a0c0'},{pct:suPct,c:'#60b8c0'},{pct:auPct,c:'#d08030'},{pct:wiPct,c:'#8090b0'}];
       return `
-      <div style="display:flex;gap:16px;flex-wrap:wrap;align-items:center">
-        <svg viewBox="0 0 ${W} ${H}" style="width:180px;height:180px;flex:none">
-          <line x1="${cx}" y1="${cy-R}" x2="${cx}" y2="${cy+R}" stroke="var(--line)" stroke-width=".5" stroke-dasharray="3 3"/>
-          <line x1="${cx-R}" y1="${cy}" x2="${cx+R}" y2="${cy}" stroke="var(--line)" stroke-width=".5" stroke-dasharray="3 3"/>
-          <polygon points="${[cx,cy-R,cx+R,cy,cx,cy+R,cx-R,cy].join(',')}" fill="none" stroke="var(--line)" stroke-width=".8"/>
-          <polygon points="${[cx,cy-R*.5,cx+R*.5,cy,cx,cy+R*.5,cx-R*.5,cy].join(',')}" fill="none" stroke="var(--line)" stroke-width=".4"/>
-          <path d="${shape}" fill="var(--gold)" opacity=".3" stroke="var(--gold-deep)" stroke-width="2"/>
-          ${pts.map((p,i)=>`<circle cx="${p[0]}" cy="${p[1]}" r="4" fill="var(--gold-deep)"/>`).join('')}
-          ${labels.map(l=>`<text x="${l.x}" y="${l.y}" text-anchor="${l.a}" style="font-size:10px;fill:var(--ink-soft)">${l.t}</text>`).join('')}
-        </svg>
-        <div style="flex:1;min-width:150px">
-          <div style="font-size:14px;margin-bottom:10px"><b>${fa?'زمان:':'Time:'}</b> ${bestTime} <span class="muted">(${dayPct}% ${fa?'روز':'day'})</span></div>
-          <div style="font-size:14px;margin-bottom:10px"><b>${fa?'فصل:':'Season:'}</b> ${bestSeason} <span class="muted">(${sprPct}% ${fa?'بهار-تابستان':'spr-sum'})</span></div>
-          <div class="muted" style="font-size:12px;line-height:1.6">
-            ${conc>=15?`${fa?'غلظت بالا ('+conc+'%) برای شب مناسب‌تر است.':'High concentration ('+conc+'%) suits evening wear.'} `:''}
-            ${cDay>0.6?`${fa?'نت‌های سبک و فرّار پخش سریع و تازه‌ای ایجاد می‌کنند — عالی برای روز.':'Light volatile notes create a fresh, polite sillage — great for daytime.'} `:''}
-            ${cNight>0.6?`${fa?'نت‌های سنگین پایه و رزین ماندگاری طولانی و حضور قوی ایجاد می‌کنند — ایده‌آل برای شب.':'Heavy base notes and resins create lasting presence and strong sillage — ideal for evening.'} `:''}
-            ${spr>0.6?`${fa?'پروفایل مرکباتی-آبی در گرما عالی عمل می‌کند.':'Citrus-aquatic profile performs beautifully in warm weather.'} `:''}
-            ${aut>0.6?`${fa?'نت‌های گرم ادویه‌ای و چوبی در هوای سرد بهتر جلوه می‌کنند.':'Warm spicy-woody notes cut through cold air effectively.'} `:''}
+      <div style="display:flex;gap:20px;flex-wrap:wrap;justify-content:center">
+        <div style="text-align:center">
+          <svg viewBox="0 0 100 100" style="width:110px;height:110px">${pie(dnSegs,100)}</svg>
+          <div style="margin-top:6px;font-size:13px;font-weight:700">${fa?'روز / شب':'Day / Night'}</div>
+          <div style="font-size:12px;margin-top:4px;display:flex;gap:10px;justify-content:center">
+            <span>☀️ ${dayPct}%</span><span>🌙 ${nightPct}%</span>
           </div>
         </div>
+        <div style="text-align:center">
+          <svg viewBox="0 0 100 100" style="width:110px;height:110px">${pie(ssSegs,100)}</svg>
+          <div style="margin-top:6px;font-size:13px;font-weight:700">${fa?'فصل مناسب':'Best season'}</div>
+          <div style="font-size:11px;margin-top:4px;display:flex;gap:6px;justify-content:center;flex-wrap:wrap">
+            <span style="color:#f5a0c0">🌸 ${spPct}%</span>
+            <span style="color:#60b8c0">☀️ ${suPct}%</span>
+            <span style="color:#d08030">🍂 ${auPct}%</span>
+            <span style="color:#8090b0">❄️ ${wiPct}%</span>
+          </div>
+        </div>
+      </div>
+      <div class="muted" style="font-size:12px;margin-top:12px;line-height:1.6">
+        ${dayPct>60?(fa?'نت‌های سبک و فرّار — مناسب استفادهٔ روزانه و محیط کار.':'Light volatile notes — suits daytime and office wear.'):(nightPct>60?(fa?'نت‌های سنگین و ماندگار — ایده‌آل برای شب و مهمانی.':'Heavy lingering notes — ideal for evening and events.'):(fa?'تعادل بین نت‌های سبک و سنگین — مناسب هر زمان.':'Balanced light and heavy notes — versatile for any time.'))}
+        ${conc>=15?' '+(fa?'غلظت بالا پخش قوی‌تری ایجاد می‌کند.':'High concentration creates stronger projection.'):''}
       </div>`;
     })()}
   </div>
@@ -2381,6 +2415,10 @@ function addMaterial(id,silent){
   if(!silent){ toast(m.name+' added'); }
 }
 window.addMaterial=addMaterial;
+window.addAccord=(notes,name)=>{
+  notes.forEach(n=>{ if(!S.formula.find(r=>r.matId===n.id)) S.formula.push({matId:n.id,pct:n.pct,locked:false}); });
+  persist(); renderSection('formula'); toast((LANG==='fa'?'آکورد افزوده شد: ':'Accord added: ')+name);
+};
 function addAccord(id){
   const a=S.accords.find(x=>x.id===id); if(!a)return;
   S.formula.push({uid:uid(),kind:'accord',refId:id,finalPct:5,fixed:false});
